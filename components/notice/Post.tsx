@@ -7,9 +7,10 @@ import ContentSection from '@/components/notice/post/ContentSection';
 
 interface NoticeData {
   title?: string;
-  text?: string;
-  author?: string;
+  content?: string;
+  user?: string;
   date?: string;
+  imageUrls?: string[] | string | null;
 }
 interface PostProps {
   noticeData: NoticeData;
@@ -22,7 +23,6 @@ const Post: React.FC<PostProps> = ({
   commentCount,
   replyCount,
 }) => {
-  const [chatCount, setChatCount] = useState(0);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
   const handleDeleteClick = () => {
@@ -38,19 +38,30 @@ const Post: React.FC<PostProps> = ({
     // 글 삭제 취소
     setShowDeletePopup(false);
   };
-
+  const imageUrls = noticeData?.imageUrls
+    ? Array.isArray(noticeData?.imageUrls)
+      ? noticeData?.imageUrls // 배열이면 그대로
+      : typeof noticeData?.imageUrls === 'string'
+        ? noticeData?.imageUrls.split(',').map((img) => img.trim()) // 문자열일 경우 , 기준으로 나누어 배열로 변환
+        : [] // null이나 undefined일 경우 빈 배열
+    : [];
   return (
     <div className="w-full">
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-16">
           <TitleSection
             title={noticeData?.title || 'No Title'}
-            author={noticeData?.author || 'Unknown'}
+            user={noticeData?.user || 'Unknown'}
             date={noticeData?.date || 'Unknown'}
+            content={noticeData?.content || 'No Content'}
+            imageUrls={imageUrls}
             onDeleteClick={handleDeleteClick}
           />
           <div className="w-full border-b border-gray-15" />
-          <ContentSection text={noticeData?.text || ''} />
+          <ContentSection
+            text={noticeData?.content || ''}
+            imageUrls={imageUrls}
+          />
         </div>
         <InfoSection commentCount={commentCount} replyCount={replyCount} />
       </div>

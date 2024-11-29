@@ -1,7 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-const ImageUpload = () => {
-  const [images, setImages] = useState<string[]>([]);
+interface ImageUploadProps {
+  image: string[];
+  setImage: (value: string[]) => void;
+  isEditMode: boolean;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  image,
+  setImage,
+  isEditMode,
+}) => {
+  const [images, setImages] = useState<string[]>(image);
   const [hasScrollbar, setHasScrollbar] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -12,14 +22,22 @@ const ImageUpload = () => {
       const newImages = Array.from(files).map(
         (file) => URL.createObjectURL(file) // 이미지 미리 볼 수 있게
       );
-      setImages((prevImages) => [...prevImages, ...newImages]);
+      setImages((prevImages) => {
+        const updatedImages = [...prevImages, ...newImages];
+        setImage(updatedImages); // Passing updated images to parent component
+        return updatedImages;
+      });
       setTimeout(checkScrollbar, 20);
     }
   };
 
   // 이미지 삭제
   const handleImageDelete = (index: number) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImages((prevImages) => {
+      const updatedImages = prevImages.filter((_, i) => i !== index); // Remove image at index
+      setImage(updatedImages); // Pass updated images to parent
+      return updatedImages;
+    });
   };
 
   // 스크롤바 유무 감지 함수
@@ -30,6 +48,13 @@ const ImageUpload = () => {
       setHasScrollbar(hasScroll);
     }
   };
+
+  // 이미지가 추가되거나 삭제될 때마다 부모 컴포넌트에 전달
+  useEffect(() => {
+    if (isEditMode) {
+      setImages(image); // 수정 모드일 때 부모로부터 전달받은 이미지를 사용
+    }
+  }, [isEditMode, image]);
 
   // 이미지가 추가될 때마다 오른쪽으로 스크롤 이동
   useEffect(() => {

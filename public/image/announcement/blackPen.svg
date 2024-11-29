@@ -1,0 +1,13 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Pen-nib">
+<mask id="mask0_7_4517" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+<rect id="Rectangle 162" width="24" height="24" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_7_4517)">
+<path id="Polygon 2" d="M5.71273 20.9212C4.45323 21.1314 3.82347 21.2365 3.45949 20.8725C3.0955 20.5085 3.2006 19.8787 3.41079 18.6192L4.75799 10.5467C4.84354 10.034 4.88632 9.7777 5.0376 9.58004C5.18889 9.38238 5.42514 9.27414 5.89765 9.05765L10.6473 6.88152C11.2586 6.60143 11.5643 6.46138 11.8728 6.51685C12.1813 6.57231 12.4191 6.81006 12.8946 7.28556L17.0464 11.4374C17.5219 11.9129 17.7597 12.1506 17.8151 12.4592C17.8706 12.7677 17.7305 13.0733 17.4504 13.6847L15.2743 18.4343C15.0578 18.9068 14.9496 19.1431 14.7519 19.2944C14.5543 19.4456 14.2979 19.4884 13.7853 19.574L5.71273 20.9212Z" stroke="black" stroke-width="1.8"/>
+<rect id="Rectangle 175" x="19.9204" y="14.3125" width="13" height="3" rx="1.5" transform="rotate(-135 19.9204 14.3125)" stroke="black" stroke-width="1.8"/>
+<path id="Vector 91" d="M3.65674 20.6758L9.31359 15.0189" stroke="black" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+<circle id="Ellipse 23" cx="10.0208" cy="14.3123" r="1" transform="rotate(-135 10.0208 14.3123)" stroke="black" stroke-width="1.8"/>
+</g>
+</g>
+</svg>

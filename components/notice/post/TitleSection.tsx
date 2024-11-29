@@ -1,18 +1,23 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import defaultImg from '@/public/image/notice/defaultProfile.svg';
 
 interface TitleSectionProps {
   title?: string;
-  author?: string;
+  user?: string;
   date?: string;
+  content?: string;
+  imageUrls?: string[] | string | null;
   onDeleteClick: () => void;
 }
 
 const TitleSection: React.FC<TitleSectionProps> = ({
   title = 'No Title',
-  author = 'Unknown',
+  user = 'Unknown',
   date = 'Unknown',
+  content = 'No Content',
+  imageUrls = '',
   onDeleteClick,
 }) => {
   return (
@@ -31,7 +36,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({
         <span className="w-full flex flex-row mt-[16px] items-center justify-between">
           <div className="flex flex-row gap-2">
             <span className="font-pretendard text-base font-medium flex">
-              {author}
+              {user}
             </span>
             <div className="border-l border-black h-[24px]" />
             <span className="font-pretendard text-base font-medium flex">
@@ -39,9 +44,18 @@ const TitleSection: React.FC<TitleSectionProps> = ({
             </span>
           </div>
           <div className="flex gap-4">
-            <span className="font-pretendard text-base font-normal cursor-pointer">
-              수정
-            </span>
+            <Link
+              href={{
+                pathname: '/announcement/posting',
+                query: { title, content, imageUrls },
+              }}
+              passHref
+            >
+              <span className="font-pretendard text-base font-normal cursor-pointer">
+                수정
+              </span>
+            </Link>
+
             <span
               className="font-pretendard text-base text-danger-50 font-normal cursor-pointer"
               onClick={onDeleteClick}

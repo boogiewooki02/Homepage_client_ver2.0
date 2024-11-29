@@ -5,9 +5,10 @@ import CancelPopup from '@/components/announcement/posting/CancelPopup';
 
 interface TopButtonsProps {
   isPostActive: boolean;
+  onPublish: () => void;
 }
 
-const TopButtons: React.FC<TopButtonsProps> = ({ isPostActive }) => {
+const TopButtons: React.FC<TopButtonsProps> = ({ isPostActive, onPublish }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
@@ -24,6 +25,12 @@ const TopButtons: React.FC<TopButtonsProps> = ({ isPostActive }) => {
     setIsModalOpen(false);
   };
 
+  const handlePublishClick = () => {
+    if (isPostActive) {
+      onPublish();
+    }
+  };
+
   return (
     <>
       <div className="flex justify-end mb-10">
@@ -34,6 +41,7 @@ const TopButtons: React.FC<TopButtonsProps> = ({ isPostActive }) => {
           취소
         </div>
         <div
+          onClick={handlePublishClick}
           className={`w-[100px] h-[46px] flex justify-center items-center rounded-[12px] ${
             isPostActive
               ? 'bg-primary-50 cursor-pointer'
