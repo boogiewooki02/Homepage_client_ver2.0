@@ -23,10 +23,16 @@ const ButtonModal: React.FC<ModalProps> = ({
     }
   };
 
+  // 버튼 동작 실행 시 모달 닫기 및 handleSubmit 실행
+  const handleButtonClick = () => {
+    handleSubmit();
+    onClose();
+  };
+
   return (
     <div
       onClick={handleOverlayClick}
-      className="fixed z-50 top-0 left-0 right-0 bottom-0 flex justify-center items-center text-black"
+      className="fixed z-50 top-0 left-0 right-0 bottom-0 flex justify-center items-center text-black bg-[#0000008a]"
     >
       <div className="fixed flex flex-col w-[328px] pad:w-[560px] h-auto">
         <div className="flex flex-col rounded-t-3xl w-full h-[152px] pad:h-[236px] bg-gray-0 px-[50px] justify-center text-center">
@@ -36,7 +42,7 @@ const ButtonModal: React.FC<ModalProps> = ({
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            className="absolute right-[40px] top-[24px]"
+            className="absolute right-[40px] top-[24px] cursor-pointer"
             onClick={onClose}
           >
             <path
@@ -52,8 +58,8 @@ const ButtonModal: React.FC<ModalProps> = ({
           </div>
         </div>
         <div
-          className="flex flex-col rounded-b-3xl w-full h-[48px] pad:h-[64px] px-[40px] bg-danger-50 justify-center text-center font-semibold text-[18px] pad:text-[22px] cursor-pointer"
-          onClick={handleSubmit}
+          className="flex flex-col rounded-b-3xl w-full h-[48px] pad:h-[64px] px-[40px] bg-danger-50 text-gray-0 justify-center text-center font-semibold text-[18px] pad:text-[22px] cursor-pointer"
+          onClick={handleButtonClick}
         >
           {buttonContent}
         </div>
