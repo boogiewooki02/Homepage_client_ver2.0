@@ -4,6 +4,7 @@ import CalendarUI from '@/components/reservation/CalendarUI';
 import ReservationForm from '@/components/reservation/ReservationForm';
 import RoomNotice from '@/components/reservation/RoomNotice';
 import TimeTable from '@/components/reservation/TimeTable';
+import axios from 'axios';
 import React, { useState } from 'react';
 
 export type Reservation = {
@@ -12,6 +13,17 @@ export type Reservation = {
   reservationDate: string; // '2024-01-01'
   startTime: string; // '11:00:00'
   endTime: string; //'12:00:00'
+};
+
+export type ReservationResponse = {
+  reservationId: number;
+  email: string;
+  type: string;
+  clubroomUsername: string;
+  reservationDate: string;
+  startTime: string;
+  endTime: string;
+  status: string; // ex) RESERVED
 };
 
 const page = () => {
@@ -24,12 +36,33 @@ const page = () => {
     startTime: '',
     endTime: '',
   });
+  const [reservationsForDate, setReservationsForDate] = useState<
+    ReservationResponse[]
+  >([]);
 
   const handleChange = (key: keyof Reservation, value: string) => {
     setReservation((prev) => ({
       ...prev,
       [key]: value,
     }));
+  };
+
+  const fetchReservationsForDate = async (date: string) => {
+    try {
+      // todo: header 설정 및 axios 인스턴스화
+      const response = await axios.get(
+        `https://api.kahluaband.com/v1/reservation?date=${date}`
+      );
+      if (response.data.isSuccess) {
+        const reservationData =
+          response.data.result.reservationResponseList || [];
+        setReservationsForDate(reservationData);
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.log('Error fetching reservations:', error);
+    }
   };
 
   // 다음 버튼 클릭시 컴포넌트 전환
@@ -46,8 +79,19 @@ const page = () => {
 
   const renderFormView = () => (
     <div className="mx-4 pad:m-0 flex flex-col items-center gap-y-6">
-      <CalendarUI onChane={handleChange} />
-      <TimeTable reservation={reservation} onChane={handleChange} />
+      <CalendarUI
+        onChange={(key, value) => {
+          handleChange(key, value);
+          if (key === 'reservationDate') {
+            fetchReservationsForDate(value);
+          }
+        }}
+      />
+      <TimeTable
+        reservation={reservation}
+        reservationsForDate={reservationsForDate}
+        onChange={handleChange}
+      />
       <RoomNotice />
       <button
         onClick={handleNext}

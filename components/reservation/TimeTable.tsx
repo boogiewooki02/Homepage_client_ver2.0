@@ -1,4 +1,7 @@
-import { Reservation } from '@/app/(kahlua)/reservation/page';
+import {
+  Reservation,
+  ReservationResponse,
+} from '@/app/(kahlua)/reservation/page';
 import React, { useState, useEffect } from 'react';
 
 export const reservationStatuses = [
@@ -10,13 +13,21 @@ export const reservationStatuses = [
 
 interface TimeTableProps {
   reservation: Reservation;
-  onChane: (key: keyof Reservation, value: string) => void;
+  reservationsForDate: ReservationResponse[];
+  onChange: (key: keyof Reservation, value: string) => void;
 }
 
-const TimeTable = ({ reservation, onChane }: TimeTableProps) => {
+// todo: reservationsForDate 타임 테이블에 반영
+const TimeTable = ({
+  reservation,
+  reservationsForDate,
+  onChange,
+}: TimeTableProps) => {
   const hours = Array.from({ length: 12 }, (_, i) => i + 10); // 10시부터 22시까지
 
-  const [selectedTimes, setSelectedTimes] = useState<string[]>([]); 
+  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+
+  const [countClick, setCountClick] = useState<number>(0);
 
   // 시간 선택 및 해제
   const handleTimeClick = (startTimeStr: string, endTimeStr: string) => {
@@ -26,24 +37,30 @@ const TimeTable = ({ reservation, onChane }: TimeTableProps) => {
     }
 
     // 이미 시작과 종료 시간이 선택된 상태에서 다시 클릭하면 초기화
-    if (reservation.startTime && reservation.endTime) {
+    if (countClick == 2) {
       setSelectedTimes([]);
-      onChane("startTime", '');
-      onChane("endTime", '');
+      onChange('startTime', '');
+      onChange('endTime', '');
+      setCountClick(0); // 초기화
       return;
     }
 
     // 시작 시간이 없을 때: 시작 시간으로 설정
     if (!reservation.startTime) {
-      onChane("startTime", startTimeStr);
-      onChane("endTime", endTimeStr);
+      onChange('startTime', startTimeStr);
+      onChange('endTime', endTimeStr);
       setSelectedTimes([`${startTimeStr} ~ ${endTimeStr}`]);
+      setCountClick(countClick + 1); // 1
     }
     // 시작 시간이 설정된 상태에서 두 번째 클릭: 종료 시간으로 설정
     else {
-      onChane("endTime", endTimeStr);
-      const newSelectedTimes = generateTimeRange(reservation.startTime, endTimeStr); // 사이 시간 모두 선택
+      onChange('endTime', endTimeStr);
+      const newSelectedTimes = generateTimeRange(
+        reservation.startTime,
+        endTimeStr
+      ); // 사이 시간 모두 선택
       setSelectedTimes(newSelectedTimes);
+      setCountClick(countClick + 1); // 2
     }
   };
 

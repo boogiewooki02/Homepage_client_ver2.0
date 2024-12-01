@@ -9,18 +9,17 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface CalendarProps {
-  onChane: (key: keyof Reservation, value: string) => void;
+  onChange: (key: keyof Reservation, value: string) => void;
 }
 
-
-const CalendarUI = ({ onChane }: CalendarProps) => {
+const CalendarUI = ({ onChange }: CalendarProps) => {
   const [value, setValue] = useState<Value>(null);
 
-  const handleDateChange = (newValue: Value) => {
+  const handleDateChange = async (newValue: Value) => {
     setValue(newValue);
     if (newValue instanceof Date) {
-      const dateString = newValue.toLocaleDateString("en-CA"); // Date -> string 변환
-      onChane("reservationDate", dateString);
+      const dateString = newValue.toLocaleDateString('en-CA'); // Date -> string 변환
+      onChange('reservationDate', dateString);
     }
   };
 
@@ -41,7 +40,6 @@ const CalendarUI = ({ onChane }: CalendarProps) => {
     return day === 2 || day === 3 || day === 6;
   };
 
-
   return (
     <div className="mt-10">
       <p className="text-black font-normal text-xl pad:text-2xl mb-6">
@@ -53,10 +51,12 @@ const CalendarUI = ({ onChane }: CalendarProps) => {
         locale="ko"
         calendarType="gregory"
         formatDay={(locale, date) => `${date.getDate()}`}
-        navigationLabel={({ date }) => `${date.getFullYear()}.${date.getMonth() + 1}`}
+        navigationLabel={({ date }) =>
+          `${date.getFullYear()}.${date.getMonth() + 1}`
+        }
         prevLabel="<"
         nextLabel=">"
-        tileDisabled={({date}) => !isSelectable(date)}
+        tileDisabled={({ date }) => !isSelectable(date)}
       />
     </div>
   );
