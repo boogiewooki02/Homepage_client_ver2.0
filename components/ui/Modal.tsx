@@ -33,9 +33,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           <path
             d="M6 6L18 18M6 18L18 6"
             stroke="#31333F"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
         <div className="w-full">{children}</div>

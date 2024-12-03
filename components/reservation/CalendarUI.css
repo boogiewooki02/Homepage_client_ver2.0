@@ -83,9 +83,6 @@
     padding-top: 10px;
     font-size: 24px;
   }
-  .react-calendar__navigation__label {
-    font-size: 20px;
-  }
 }
 
 @media (max-width: 834px) {
@@ -93,7 +90,10 @@
     height: 60px;
     font-size: 14px;
   }
-  .react-calendar__month-view__weekdays {
-    font-size: 18px;
+  .react-calendar__month-view__weekdays__weekday {
+    font-size: 24px;
+  }
+  .react-calendar__navigation__label {
+    font-size: 20px;
   }
 }

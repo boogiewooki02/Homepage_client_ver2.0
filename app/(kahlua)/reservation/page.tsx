@@ -6,16 +6,31 @@ import RoomNotice from '@/components/reservation/RoomNotice';
 import TimeTable from '@/components/reservation/TimeTable';
 import React, { useState } from 'react';
 
+export type Reservation = {
+  type: string; // ex) TEAM
+  clubroomUsername: string;
+  reservationDate: string; // '2024-01-01'
+  startTime: string; // '11:00:00'
+  endTime: string; //'12:00:00'
+};
+
 const page = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isFormVisible, setIsFormVisible] = useState(true);
 
-  // 날짜 선택
-  const handleDateSelect = (date: Date) => setSelectedDate(date);
+  const [reservation, setReservation] = useState<Reservation>({
+    type: '',
+    clubroomUsername: '',
+    reservationDate: '',
+    startTime: '',
+    endTime: '',
+  });
 
-  // 시간 선택
-  const handleTimeSelect = (time: string) => setSelectedTime(time);
+  const handleChange = (key: keyof Reservation, value: string) => {
+    setReservation((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   // 다음 버튼 클릭시 컴포넌트 전환
   const handleNext = () => {
@@ -23,43 +38,42 @@ const page = () => {
     setIsFormVisible(false);
   };
 
-  // 예약 정보 서버로 전송 함수 (추가수정필요)
-  const handleReservationSubmit = async (name: string) => {
-    const reservationData = {
-      date: selectedDate?.toISOString(),
-      time: selectedTime,
-      name,
-    };
-    window.location.reload(); // 페이지 새로고침
-    // 서버로 전송하는 로직 추가 필요
+  // 예약 정보 서버로 전송 함수 (todo: 추가수정필요)
+  const handleReservationSubmit = async (reservation: Reservation) => {
+    console.log('예약 정보:', reservation);
+    // 서버로 reservationData 전송하는 로직 추가 필요
   };
+
+  const renderFormView = () => (
+    <div className="mx-4 pad:m-0 flex flex-col items-center gap-y-6">
+      <CalendarUI onChane={handleChange} />
+      <TimeTable reservation={reservation} onChane={handleChange} />
+      <RoomNotice />
+      <button
+        onClick={handleNext}
+        disabled={!reservation.startTime}
+        className={`rounded-xl w-[280px] h-[60px] text-[#fff] text-lg
+          ${reservation.reservationDate && reservation.startTime ? 'bg-primary-50 hover:bg-primary-60' : 'bg-gray-10'}`}
+      >
+        다음
+      </button>
+    </div>
+  );
+
+  const renderReservationForm = () => (
+    <div className="mx-4 pad:m-0">
+      <ReservationForm
+        reservation={reservation}
+        onChange={handleChange}
+        onSubmit={handleReservationSubmit}
+      />
+    </div>
+  );
 
   return (
     <div className="font-pretendard pb-48 mx-auto w-full pad:w-[786px] dt:w-[1200px] flex flex-col justify-center">
       <Banner />
-      {isFormVisible ? (
-        <div className="mx-4 pad:m-0 flex flex-col items-center gap-y-6">
-          <CalendarUI onSelectDate={handleDateSelect} />
-          <TimeTable date={selectedDate} onSelectTime={handleTimeSelect} />
-          <RoomNotice />
-          <button
-            onClick={handleNext}
-            disabled={!selectedTime}
-            className={`rounded-xl w-[280px] h-[60px] text-[#fff] text-lg
-                  ${selectedDate && selectedTime ? 'bg-primary-50 hover:bg-primary-60' : 'bg-gray-10'}`}
-          >
-            다음
-          </button>
-        </div>
-      ) : (
-        <div className="mx-4 pad:m-0">
-          <ReservationForm
-            selectedDate={selectedDate}
-            selectedTime={selectedTime}
-            onSubmit={handleReservationSubmit}
-          />
-        </div>
-      )}
+      {isFormVisible ? renderFormView() : renderReservationForm()}
     </div>
   );
 };

@@ -1,10 +1,10 @@
 const Banner = () => {
   return (
-    <section className="pad:h-[320px] ph:h-[258px] text-center bg-gray-90 mt-20 pad:rounded-3xl ph:rounded-none">
-      <h1 className="pad:pt-16 ph:pt-8 font-semibold leading-[130%] text-gray-0 pad:text-[64px] ph:text-[36px]">
+    <section className="h-[240px] pad:h-[320px] text-center bg-gray-90 mt-20 pad:rounded-3xl ph:rounded-none">
+      <h1 className="pt-10 pad:pt-16 font-semibold leading-[130%] text-gray-0 text-2xl pad:text-[64px]">
         ClubRoom Reservation
       </h1>
-      <div className="pt-8 leading-6 pad:text-xl ph:text-base mx-4">
+      <div className="pt-8 leading-7 text-base pad:text-xl mx-4">
         <p className="text-gray-20">
           깔루아 멤버들은 당일 기준 2주 내의 동아리 사용 예약을 신청할 수
           있습니다.

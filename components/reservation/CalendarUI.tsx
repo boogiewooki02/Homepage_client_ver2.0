@@ -2,30 +2,32 @@ import React, { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // 기본 스타일
 import './CalendarUI.css';
+import { Reservation } from '@/app/(kahlua)/reservation/page';
 
 // react-calnedar에서 요구하는 타입 형식 (변경 x)
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface CalendarProps {
-  onSelectDate: (date: Date) => void;
+  onChane: (key: keyof Reservation, value: string) => void;
 }
 
-const CalendarUI = ({ onSelectDate }: CalendarProps) => {
+
+const CalendarUI = ({ onChane }: CalendarProps) => {
   const [value, setValue] = useState<Value>(null);
 
   const handleDateChange = (newValue: Value) => {
     setValue(newValue);
-    // 상위 컴포넌트에 전달
     if (newValue instanceof Date) {
-      onSelectDate(newValue);
-      // console.log(newValue);
+      const dateString = newValue.toLocaleDateString("en-CA"); // Date -> string 변환
+      onChane("reservationDate", dateString);
     }
   };
 
-  const isSelectable = (date: Date): boolean => {
+  const isSelectable = (date: Date) => {
     const today = new Date();
-    const day = date.getDay();
+    const day = date.getDay(); // number 타입
+
     const twoWeeksFromToday = new Date(today);
     twoWeeksFromToday.setDate(today.getDate() + 14);
 
@@ -35,7 +37,7 @@ const CalendarUI = ({ onSelectDate }: CalendarProps) => {
     // 오늘 기준 2주 이후 날짜는 비활성화
     if (date > twoWeeksFromToday) return false;
 
-    // 화(2), 수(3), 토(6)만 활성화
+    // 화(=2), 수(=3), 토(=6)만 활성화
     return day === 2 || day === 3 || day === 6;
   };
 
