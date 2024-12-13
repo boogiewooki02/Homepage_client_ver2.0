@@ -142,6 +142,7 @@ const Page = () => {
 
       {showDeletePopup && (
         <DeletePopup
+          isOpen={showDeletePopup}
           onConfirm={() => handleDeleteConfirm(setShowDeletePopup)}
           onClose={() => handleDeleteCancel(setShowDeletePopup)}
         />

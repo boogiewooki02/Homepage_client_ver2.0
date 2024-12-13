@@ -148,6 +148,7 @@ const Comment: React.FC<CommentProps> = ({
               </div>
               {showDeleteReplyPopup === reply.id && (
                 <DeletePopup
+                  isOpen={showDeleteReplyPopup === reply.id}
                   onConfirm={() => handleDeleteReplyConfirm(reply.id)} // 답글 삭제 확인
                   onClose={handleDeleteCancel} // 취소 버튼
                 />
@@ -185,6 +186,7 @@ const Comment: React.FC<CommentProps> = ({
       )}
       {showDeletePopup && (
         <DeletePopup
+          isOpen={showDeletePopup}
           onConfirm={handleDeleteCommentConfirm} // 댓글 삭제 확인
           onClose={handleDeleteCancel} // 취소 버튼
         />
