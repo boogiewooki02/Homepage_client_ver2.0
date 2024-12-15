@@ -3,11 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Toggle } from '@/components/announcement/list/Toggle';
 import { AnnouncementList } from '@/components/announcement/list/AnnouncementList';
 import { CommunityList } from '@/components/announcement/list/CommunityList';
-import {
-  AnnouncementProps,
-  CommunityProps,
-  toggleList,
-} from '@/components/announcement/list/dto';
+import { toggleList } from '@/components/announcement/list/dto';
 import {
   dummyAnnouncement,
   dummyCommunity,
@@ -102,11 +98,13 @@ const List = () => {
       {/* 리스트 */}
       <section className="flex flex-col border-t-[1px] border-t-black border-b-[1px] border-b-black">
         {toggle === toggleList[0].toggle && (
-           <AnnouncementList currentPage={currentPage} itemsPerPage={itemsPerPage} />
+          <AnnouncementList
+            currentPage={currentPage}
+            itemsPerPage={itemsPerPage}
+          />
         )}
         {toggle === toggleList[1].toggle && (
           <CommunityList
-            items={filteredItems() as CommunityProps[]}
             currentPage={currentPage}
             itemsPerPage={itemsPerPage}
           />

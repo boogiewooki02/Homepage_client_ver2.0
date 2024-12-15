@@ -7,11 +7,12 @@ export interface AnnouncementProps {
 }
 
 export interface CommunityProps {
+  id: number;
   title: string;
-  like: number;
-  comment: number;
+  likes: number;
+  comments_count: number;
+  created_at: string;
   writer: string;
-  date: string;
 }
 
 export interface ToggleProps {

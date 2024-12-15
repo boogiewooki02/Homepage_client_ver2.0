@@ -22,7 +22,7 @@ export const AnnouncementList = ({
         const response = await axiosInstance.get('/v1/post/list', {
           params: {
             post_type: 'NOTICE',
-            page: currentPage,
+            page: currentPage - 1,
             size: itemsPerPage,
           },
         });
@@ -40,7 +40,10 @@ export const AnnouncementList = ({
                 comments_count: commentResponse.data.result.comments_count,
               };
             } catch (error) {
-              console.error(`댓글 개수 로드 실패 (postId: ${post.id}):`, error);
+              console.error(
+                `공지사항 댓글 개수 로드 실패 (postId: ${post.id}):`,
+                error
+              );
               return { ...post, comments_count: 0 }; // 댓글 로드 실패 시 기본값: 0
             }
           })
