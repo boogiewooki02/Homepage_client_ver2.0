@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { formatDate } from '@/components/util/formatDate';
-import { dummyCommunity } from '@/components/announcement/list/dummy';
 import likeIcon from '@/public/image/grayHeart.svg';
 import chatIcon from '@/public/image/grayChat.svg';
 import { CommunityProps } from '@/components/announcement/list/dto';

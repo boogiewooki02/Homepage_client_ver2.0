@@ -1,28 +1,66 @@
+'use client';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { axiosInstance } from '@/api/auth/axios';
 import { formatDate } from '@/components/util/formatDate';
-import { dummyAnnouncement } from '@/components/announcement/list/dummy';
+import { AnnouncementProps } from '@/components/announcement/list/dto';
 import likeIcon from '@/public/image/grayHeart.svg';
 import chatIcon from '@/public/image/grayChat.svg';
-import { AnnouncementProps } from '@/components/announcement/list/dto';
 
 export const AnnouncementList = ({
-  items,
   currentPage,
   itemsPerPage,
 }: {
-  items: AnnouncementProps[];
   currentPage: number;
   itemsPerPage: number;
 }) => {
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = items.slice(startIndex, startIndex + itemsPerPage);
+  const [announcements, setAnnouncements] = useState<AnnouncementProps[]>([]);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await axiosInstance.get('/v1/post/list', {
+          params: {
+            post_type: 'NOTICE',
+            page: currentPage,
+            size: itemsPerPage,
+          },
+        });
+        const { content } = response.data.result;
+
+        // 각 공지사항의 댓글 개수까지 업데이트된 content
+        const updatedContent = await Promise.all(
+          content.map(async (post: AnnouncementProps) => {
+            try {
+              const commentResponse = await axiosInstance.get(
+                `/v1/comment/${post.id}/list`
+              );
+              return {
+                ...post,
+                comments_count: commentResponse.data.result.comments_count,
+              };
+            } catch (error) {
+              console.error(`댓글 개수 로드 실패 (postId: ${post.id}):`, error);
+              return { ...post, comments_count: 0 }; // 댓글 로드 실패 시 기본값: 0
+            }
+          })
+        );
+
+        setAnnouncements(updatedContent);
+      } catch (error) {
+        console.error('공지사항 리스트 로드 실패:', error);
+      }
+    };
+
+    fetchAnnouncements();
+  }, [currentPage, itemsPerPage]);
 
   return (
     <div>
       <ul>
-        {currentItems.map((post, index) => (
+        {announcements.map((post) => (
           <li
-            key={index}
+            key={post.id}
             className="flex flex-col pad:flex-row py-6 items-start gap-4 self-stretch relative border-y-[1px] border-y-solid border-y-gray-10 justify-between"
           >
             <p className="text-[20px] leading-6 cursor-pointer">{post.title}</p>
@@ -30,14 +68,14 @@ export const AnnouncementList = ({
               <div className="flex gap-3 pad:gap-6">
                 <div className="flex gap-[10px]">
                   <Image src={likeIcon} alt="like" width={14} height={14} />
-                  <p>{post.like}</p>
+                  <p>{post.likes}</p>
                 </div>
                 <div className="flex gap-[10px]">
                   <Image src={chatIcon} alt="chat" width={18} height={18} />
-                  <p>{post.comment}</p>
+                  <p>{post.comments_count}</p>
                 </div>
               </div>
-              <p>{formatDate(post.date)}</p>
+              <p>{formatDate(post.created_at)}</p>
             </div>
           </li>
         ))}
