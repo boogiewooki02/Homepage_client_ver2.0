@@ -2,9 +2,10 @@
 import likeIcon from '@/public/image/mypage/grayHeart.svg';
 import chatIcon from '@/public/image/mypage/grayChat.svg';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonModal from '../ui/ButtonModal';
 import { useRouter } from 'next/navigation';
+import { authInstance } from '@/api/auth/axios';
 
 interface reservationProps {
   date: string;
@@ -41,6 +42,7 @@ const dummyReservation: reservationProps[] = [
     status: '팀 : OB1팀',
   },
 ];
+
 // dummy data
 const dummyMyPost: myPostProps[] = [
   {
@@ -95,20 +97,38 @@ export const CategoryToggle = (props: {
   );
 };
 
+interface ReservationProps {
+  reservationId: number;
+  email: string;
+  type: string;
+  clubroomUsername: string;
+  reservationDate: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+}
+
 // 동방 예약 내역 리스트
 export const ReservationList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [reservations, setReservations] = useState<ReservationProps[]>([]);
+
+  const getReservationList = async () => {
+    try {
+      const response = await authInstance.get('/my-page/reservation');
+      setReservations(response.data.result.reservationResponseList);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // 개별 취소를 위한 선택한 예약 정보 state
   const [selectedReservation, setSelectedReservation] = useState<{
-    date: string;
-    time: string;
+    reservationId: number;
   } | null>(null);
 
-  const handleCancleReservation = (reservation: {
-    date: string;
-    time: string;
-  }) => {
-    setSelectedReservation(reservation);
+  const handleCancleReservation = (reservationId: number) => {
+    setSelectedReservation({ reservationId });
     setIsModalOpen(true);
   };
 
@@ -118,17 +138,34 @@ export const ReservationList = () => {
   };
 
   const handleSubmitCancellation = () => {
-    console.log(
-      `예약 취소: ${selectedReservation?.date} ${selectedReservation?.time}`
-    );
+    console.log(`예약 취소: ${selectedReservation?.reservationId}`);
+
+    const deleteReservation = async (id: number) => {
+      try {
+        const response = await authInstance.delete(
+          `/my-page/reservation/${id}`
+        );
+        setReservations(
+          reservations.filter((reservation) => reservation.reservationId !== id)
+        );
+        console.log(`예약 ID ${id} 삭제 성공`);
+      } catch (error) {
+        console.error('예약 취소 실패:', error);
+      }
+    };
+
     // 예약 취소 로직 작성 필요
     handleCloseModal();
   };
 
+  useEffect(() => {
+    getReservationList();
+  }, []);
+
   return (
     <div>
       <ul>
-        {dummyReservation.map((reservation) => {
+        {/* {dummyReservation.map((reservation) => {
           return (
             // li 태그 스타일 코드는 그대로 쓰셔도 됩니다.
             <li
@@ -151,6 +188,38 @@ export const ReservationList = () => {
               <p
                 className="flex items-center text-danger-40 text-base font-normal absolute right-0 bottom-6 pad:top-6 cursor-pointer"
                 onClick={() => handleCancleReservation(reservation)}
+              >
+                예약 취소하기
+              </p>
+            </li>
+          );
+        })} */}
+        {reservations.map((reservation) => {
+          return (
+            <li
+              key={reservation.reservationId}
+              className="flex flex-col pad:flex-row py-6 pad:items-center ph:items-start gap-4 self-stretch relative border-y-[1px] border-y-solid border-y-gray-10"
+            >
+              <div className="flex gap-4">
+                <p className="text-black text-xl font-semibold">
+                  {reservation.reservationDate}
+                </p>
+                <p className="text-black text-xl font-semibold">
+                  {reservation.startTime} - {reservation.endTime}
+                </p>
+              </div>
+              <div className="flex py-1 px-2 justify-center items-center gap-[10px] rounded-full border-[1px] border-solid border-primary-50">
+                <p className="flex items-center text-primary-50 text-base font-normal">
+                  {reservation.type === 'TEAM'
+                    ? `팀 : ${reservation.clubroomUsername}`
+                    : `${reservation.clubroomUsername}`}
+                </p>
+              </div>
+              <p
+                className="flex items-center text-danger-40 text-base font-normal absolute right-0 bottom-6 pad:top-6 cursor-pointer"
+                onClick={() =>
+                  handleCancleReservation(reservation.reservationId)
+                }
               >
                 예약 취소하기
               </p>
