@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import Modal from '../ui/Modal';
 import ButtonModal from '../ui/ButtonModal';
 
 interface ModalProps {

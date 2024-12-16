@@ -25,7 +25,7 @@ interface DateType extends BasicInputType {
 }
 
 interface ImageType extends BasicInputType {
-  type: 'string';
+  type: 'image';
 }
 
 export type InputFieldType =
