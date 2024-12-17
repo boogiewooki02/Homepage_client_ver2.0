@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import Comment from './Comment';
+import { axiosInstance } from '@/api/auth/axios';
 
 interface Comment {
   id: string;
@@ -11,32 +13,40 @@ interface Comment {
 }
 
 interface CommentListProps {
-  comments: Comment[];
+  postId: string;
   onAddReply: (id: string, replyText: string) => void;
   onDeleteComment: (id: string) => void;
   onDeleteReply: (commentId: string, replyId: string) => void;
 }
 
 const CommentList: React.FC<CommentListProps> = ({
-  comments,
+  postId,
   onAddReply,
   onDeleteComment,
   onDeleteReply,
 }) => {
-  const [commentList, setCommentList] = useState<Comment[]>(comments);
+  const [commentList, setCommentList] = useState<Comment[]>([]);
   const [replyingId, setReplyingId] = useState<string | null>(null);
 
   useEffect(() => {
-    setCommentList(comments);
-  }, [comments]);
+    const fetchComments = async () => {
+      try {
+        const response = await axiosInstance.get(`/comment/1/list`);
+        setCommentList(response.data);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
 
-  // 답글 입력창 토글 함수
+    fetchComments();
+  }, [postId]);
+
   const handleToggleReplying = (id: string) => {
-    setReplyingId((prevId) => (prevId === id ? null : id)); // 현재 id와 동일하면 닫고, 아니면 해당 id를 열기
+    setReplyingId((prevId) => (prevId === id ? null : id));
   };
 
   return (
-    <div className="w-full ">
+    <div className="w-full">
       {commentList.length > 0 && (
         <div className="flex flex-col">
           {commentList.map((comment) => (

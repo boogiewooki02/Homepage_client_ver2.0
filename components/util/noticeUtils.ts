@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+import { axiosInstance } from '@/api/auth/axios';
 
+// 댓글 및 답글 데이터 타입 정의
 export interface Reply {
   id: string;
   name: string;
@@ -19,66 +21,65 @@ export interface Comment {
   deleted?: boolean;
 }
 
-export const addComment = (
-  commentText: string,
-  comments: any[],
-  setComments: React.Dispatch<React.SetStateAction<any[]>>,
-  setChatCount: React.Dispatch<React.SetStateAction<number>>,
-  setCommentText: React.Dispatch<React.SetStateAction<string>>
+// 댓글/답글 작성 API 함수
+export const createCommentOrReply = (
+  postId: string,
+  text: string,
+  parentCommentId?: string
 ) => {
-  if (commentText.trim() === '') return;
-  const newComment = {
-    id: uuidv4(),
-    name: '원마루',
-    date: new Date().toLocaleString(),
-    text: commentText,
-    replying: false,
-    deleted: false,
-    replies: [],
-  };
-  setComments((prevComments) => {
-    const updatedComments = [...prevComments, newComment];
-    return updatedComments;
+  return axiosInstance.post(`/comment/${postId}/create`, {
+    text,
+    ...(parentCommentId && { parentCommentId }),
   });
-  setCommentText('');
-  setChatCount((prev) => prev + 1);
 };
 
-export const addReply = (
-  id: string,
-  replyText: string,
-  comments: any[],
-  setComments: React.Dispatch<React.SetStateAction<any[]>>,
-  setReplyingToId: React.Dispatch<React.SetStateAction<string | null>>,
-  setReplyText: React.Dispatch<React.SetStateAction<string>>,
-  setChatCount: React.Dispatch<React.SetStateAction<number>>
+// 댓글 추가 함수
+export const addCommentOrReply = async (
+  postId: string,
+  text: string,
+  setComments: React.Dispatch<React.SetStateAction<Comment[]>>,
+  setChatCount: React.Dispatch<React.SetStateAction<number>>,
+  setText: React.Dispatch<React.SetStateAction<string>>,
+  parentCommentId?: string,
+  setReplyingToId?: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
-  const newReply = {
-    id: uuidv4(),
-    name: '원채영',
-    date: new Date().toLocaleString(),
-    text: replyText,
-    replying: false,
-  };
-  setComments((prevComments) =>
-    prevComments.map((comment) =>
-      comment.id === id
-        ? {
-            ...comment,
-            replies: [...(comment.replies || []), newReply],
-          }
-        : comment
-    )
-  );
-  setReplyText('');
-  setReplyingToId(null);
-  setChatCount((prev) => prev + 1);
+  if (text.trim() === '') return;
+
+  try {
+    // 댓글/답글 작성 API 호출
+    const response = await createCommentOrReply(postId, text, parentCommentId);
+    const newCommentOrReply = response.data;
+
+    setComments((prevComments) => {
+      if (parentCommentId) {
+        // 답글 추가
+        return prevComments.map((comment) =>
+          comment.id === parentCommentId
+            ? {
+                ...comment,
+                replies: [...(comment.replies || []), newCommentOrReply],
+              }
+            : comment
+        );
+      } else {
+        // 댓글 추가
+        return [...prevComments, newCommentOrReply];
+      }
+    });
+
+    setText(''); // 입력 필드 초기화
+    setChatCount((prev) => prev + 1); // 댓글 수 증가
+    if (setReplyingToId) setReplyingToId(null); // 답글 상태 초기화
+  } catch (error) {
+    console.error('댓글/답글 작성 실패:', error);
+  }
 };
 
+// 댓글 삭제 함수
 export const handleDeleteComment = (
   id: string,
-  comments: any[],
-  setComments: React.Dispatch<React.SetStateAction<any[]>>,
+  comments: Comment[],
+  setComments: React.Dispatch<React.SetStateAction<Comment[]>>,
   setChatCount: React.Dispatch<React.SetStateAction<number>>
 ) => {
   setComments((prevComments) =>
@@ -91,6 +92,7 @@ export const handleDeleteComment = (
   setChatCount((prev) => Math.max(0, prev - 1));
 };
 
+// 답글 삭제 함수
 export const handleDeleteReply = (
   commentId: string,
   replyId: string,
@@ -108,7 +110,7 @@ export const handleDeleteReply = (
                   .map((reply) =>
                     reply.id === replyId ? { ...reply, deleted: true } : reply
                   )
-                  .filter((reply) => !reply.deleted) // Filter out deleted replies
+                  .filter((reply) => !reply.deleted) // 삭제된 답글 필터링
               : [],
           }
         : comment
@@ -117,6 +119,7 @@ export const handleDeleteReply = (
   setChatCount((prev) => Math.max(0, prev - 1));
 };
 
+// 삭제 확인 및 취소 함수
 export const handleDeleteConfirm = (
   setShowDeletePopup: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
