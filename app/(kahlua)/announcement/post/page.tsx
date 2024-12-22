@@ -66,7 +66,9 @@ const Page = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await axiosInstance.get('/post/notice/1/detail');
+        const response = await axiosInstance.get('/post/notice/44/detail', {
+          withCredentials: true,
+        });
         const data = response.data;
 
         console.log(data);

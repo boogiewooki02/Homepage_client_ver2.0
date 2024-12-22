@@ -31,7 +31,9 @@ const CommentList: React.FC<CommentListProps> = ({
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axiosInstance.get(`/comment/1/list`);
+        const response = await axiosInstance.get(`/comment/1/list`, {
+          withCredentials: true,
+        });
         setCommentList(response.data);
       } catch (error) {
         console.error('Error fetching comments:', error);
