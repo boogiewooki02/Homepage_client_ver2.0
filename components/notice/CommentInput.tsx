@@ -5,12 +5,14 @@ interface CommentInputProps {
   commentText: string;
   setCommentText: (text: string) => void;
   onAddComment: () => void;
+  user: string;
 }
 
 const CommentInput: React.FC<CommentInputProps> = ({
   commentText,
   setCommentText,
   onAddComment,
+  user,
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;

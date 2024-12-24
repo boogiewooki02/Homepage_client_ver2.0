@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Comment from './Comment';
 import { axiosInstance } from '@/api/auth/axios';
 
@@ -13,8 +12,9 @@ interface Comment {
 }
 
 interface CommentListProps {
-  postId: string;
-  onAddReply: (id: string, replyText: string) => void;
+  postId: number;
+  comments: Comment[];
+  onAddReply: (parentCommentId: string, replyText: string) => void;
   onDeleteComment: (id: string) => void;
   onDeleteReply: (commentId: string, replyId: string) => void;
 }
@@ -31,8 +31,11 @@ const CommentList: React.FC<CommentListProps> = ({
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const response = await axiosInstance.get(`/comment/1/list`, {
-          withCredentials: true,
+        const token = localStorage.getItem('access_token');
+        const response = await axiosInstance.get(`/comment/${postId}/list`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         setCommentList(response.data);
       } catch (error) {
@@ -55,7 +58,9 @@ const CommentList: React.FC<CommentListProps> = ({
             <Comment
               key={comment.id}
               comment={comment}
-              onAddReply={onAddReply}
+              onAddReply={
+                (replyText) => onAddReply(comment.id, replyText) // Pass the comment ID as the parentCommentId
+              }
               onToggleReplying={handleToggleReplying}
               onDeleteComment={onDeleteComment}
               onDeleteReply={onDeleteReply}

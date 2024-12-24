@@ -1,6 +1,5 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import CommentList from '@/components/notice/CommentList';
 import Image from 'next/image';
@@ -23,6 +22,8 @@ interface PostData {
   user: string;
   date: string;
   imageUrls: string[];
+  likes: number;
+  id: number;
 }
 
 interface Comment {
@@ -37,22 +38,24 @@ interface Comment {
 
 const Page = () => {
   const router = useRouter();
-  const postId = '1';
+  const postId = 1; // 게시글 ID
   const [postData, setPostData] = useState<PostData>({
     title: '',
     content: '',
     user: '',
     date: '',
     imageUrls: [],
+    likes: 0,
+    id: 0,
   });
 
-  const [chatCount, setChatCount] = useState(0);
-  const [replyingToId, setReplyingToId] = useState<string | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [commentText, setCommentText] = useState('');
-  const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [replyText, setReplyText] = useState('');
-
+  const [chatCount, setChatCount] = useState(0); // 댓글 수
+  const [replyingToId, setReplyingToId] = useState<string | null>(null); // 답글 달기
+  const [comments, setComments] = useState<Comment[]>([]); // 댓글 목록
+  const [commentText, setCommentText] = useState(''); // 댓글 텍스트
+  const [showDeletePopup, setShowDeletePopup] = useState(false); // 삭제 팝업
+  const [replyText, setReplyText] = useState(''); // 답글 텍스트
+  const user = '깔루아 홍길동';
   const commentCount = comments.filter((comment) => !comment.deleted).length;
   const replyCount = comments.reduce(
     (total, comment) =>
@@ -66,12 +69,17 @@ const Page = () => {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await axiosInstance.get('/post/notice/44/detail', {
-          withCredentials: true,
-        });
-        const data = response.data;
+        const token = localStorage.getItem('access_token');
+        const response = await axiosInstance.get(
+          `/post/notice/${postId}/detail`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const data = response.data.result;
 
-        console.log(data);
         const imageUrls = data.imageUrls
           ? Array.isArray(data.imageUrls)
             ? data.imageUrls
@@ -100,6 +108,7 @@ const Page = () => {
       <div className="flex flex-col items-center justify-center pt-16 w-full max-w-[500px] pad:max-w-[786px] dt:max-w-[1200px] max-pad:px-[16px]">
         <Post
           noticeData={postData}
+          postId={postId}
           commentCount={commentCount}
           replyCount={replyCount}
         />
@@ -107,10 +116,12 @@ const Page = () => {
         {/* 댓글 리스트 */}
         <CommentList
           postId={postId}
+          comments={comments}
           onAddReply={(parentCommentId, text) =>
             addCommentOrReply(
               postId,
-              replyText,
+              user,
+              text,
               setComments,
               setChatCount,
               setReplyText,
@@ -132,6 +143,7 @@ const Page = () => {
           }
         />
 
+        {/* 댓글 입력 폼 */}
         <CommentInput
           commentText={commentText}
           setCommentText={setCommentText}
@@ -139,11 +151,13 @@ const Page = () => {
             addCommentOrReply(
               postId,
               commentText,
+              user, // Ensure user is passed correctly here
               setComments,
               setChatCount,
               setCommentText
             )
           }
+          user={user}
         />
 
         <div className="w-full">

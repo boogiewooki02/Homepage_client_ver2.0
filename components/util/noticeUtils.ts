@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { axiosInstance } from '@/api/auth/axios';
+import { log } from 'console';
 
 // 댓글 및 답글 데이터 타입 정의
 export interface Reply {
@@ -22,36 +23,71 @@ export interface Comment {
 }
 
 // 댓글/답글 작성 API 함수
-export const createCommentOrReply = (
-  postId: string,
+export const createCommentOrReply = async (
+  postId: number,
   text: string,
-  parentCommentId?: string
-) => {
-  return axiosInstance.post(`/comment/${postId}/create`, {
-    text,
-    ...(parentCommentId && { parentCommentId }),
-  });
+  user: string,
+  parentCommentId?: string | number
+): Promise<{ data: Comment }> => {
+  const token = localStorage.getItem('access_token');
+
+  try {
+    const response = await axiosInstance.post(
+      `/comment/${postId}/create`,
+      {
+        user, // 유저 정보
+        content: text, // 댓글 내용
+        ...(parentCommentId !== undefined && { parentCommentId }), // 부모 댓글 ID가 있으면 추가
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // response.data를 Comment 타입으로 반환
+    const newCommentOrReply: Comment = {
+      id: response.data.id,
+      text: response.data.content,
+      name: response.data.user,
+      replies: response.data.replies || [],
+      date: response.data.date || new Date().toISOString(),
+      replying: response.data.replyingts || false,
+    };
+
+    return { data: newCommentOrReply };
+  } catch (error) {
+    console.error('댓글/답글 작성 API 요청 실패:', error);
+    throw error; // 실패 시 에러를 throw하여 상위 함수에서 처리하도록 합니다.
+  }
 };
 
 // 댓글 추가 함수
 export const addCommentOrReply = async (
-  postId: string,
+  postId: number,
   text: string,
+  user: string, // 유저 정보 추가
   setComments: React.Dispatch<React.SetStateAction<Comment[]>>,
   setChatCount: React.Dispatch<React.SetStateAction<number>>,
   setText: React.Dispatch<React.SetStateAction<string>>,
-  parentCommentId?: string,
+  parentCommentId: string | number = 0, // 기본값 0 설정
   setReplyingToId?: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
   if (text.trim() === '') return;
 
   try {
     // 댓글/답글 작성 API 호출
-    const response = await createCommentOrReply(postId, text, parentCommentId);
+    const response = await createCommentOrReply(
+      postId,
+      text,
+      user,
+      parentCommentId
+    );
     const newCommentOrReply = response.data;
 
     setComments((prevComments) => {
-      if (parentCommentId) {
+      if (parentCommentId !== 0) {
         // 답글 추가
         return prevComments.map((comment) =>
           comment.id === parentCommentId
