@@ -64,7 +64,7 @@ export const CategoryToggle = (props: {
   toggle: string;
 }) => {
   return (
-    <section className="flex mb-6 text-2xl font-semibold">
+    <section className="flex flex-col gap-6 pad:flex-row pad:gap-0 mb-6 text-2xl font-semibold justify-between">
       <ul className="flex gap-6">
         {toggleList.map((category) => {
           return (
