@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import ButtonModal from '../ui/ButtonModal';
 import { useRouter } from 'next/navigation';
 import { authInstance } from '@/api/auth/axios';
+import Pagination from '@/components/announcement/list/Pagination';
 
 interface reservationProps {
   date: string;
@@ -27,20 +28,6 @@ interface toggleProps {
 const toggleList: Array<toggleProps> = [
   { toggle: '동방 예약 확인' },
   { toggle: '내가 쓴 글' },
-];
-
-// dummy data
-const dummyReservation: reservationProps[] = [
-  {
-    date: '2024.10.30 (수)',
-    time: '20:00 - 21:30',
-    status: '개인 : 홍길동',
-  },
-  {
-    date: '2024.10.31 (목)',
-    time: '20:00 - 22:00',
-    status: '팀 : OB1팀',
-  },
 ];
 
 // dummy data
@@ -148,6 +135,7 @@ export const ReservationList = () => {
         setReservations(
           reservations.filter((reservation) => reservation.reservationId !== id)
         );
+
         console.log(`예약 ID ${id} 삭제 성공`);
       } catch (error) {
         console.error('예약 취소 실패:', error);
@@ -165,35 +153,6 @@ export const ReservationList = () => {
   return (
     <div>
       <ul>
-        {/* {dummyReservation.map((reservation) => {
-          return (
-            // li 태그 스타일 코드는 그대로 쓰셔도 됩니다.
-            <li
-              key={reservation.date + reservation.time}
-              className="flex flex-col pad:flex-row py-6 pad:items-center ph:items-start gap-4 self-stretch relative border-y-[1px] border-y-solid border-y-gray-10"
-            >
-              <div className="flex gap-4">
-                <p className="text-black text-xl font-semibold">
-                  {reservation.date}
-                </p>
-                <p className="text-black text-xl font-semibold">
-                  {reservation.time}
-                </p>
-              </div>
-              <div className="flex py-1 px-2 justify-center items-center gap-[10px] rounded-full border-[1px] border-solid border-primary-50">
-                <p className="flex items-center text-primary-50 text-base font-normal">
-                  {reservation.status}
-                </p>
-              </div>
-              <p
-                className="flex items-center text-danger-40 text-base font-normal absolute right-0 bottom-6 pad:top-6 cursor-pointer"
-                onClick={() => handleCancleReservation(reservation)}
-              >
-                예약 취소하기
-              </p>
-            </li>
-          );
-        })} */}
         {reservations.map((reservation) => {
           return (
             <li
@@ -241,10 +200,62 @@ export const ReservationList = () => {
 
 // 내가 쓴 글 리스트
 export const MyPostList = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [pageGroup, setPageGroup] = useState(0);
+
+  const totalItems = dummyMyPost.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const pagesPerGroup = 5;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePrevGroup = () => {
+    if (pageGroup > 0) {
+      setPageGroup(pageGroup - 1);
+      setCurrentPage((pageGroup - 1) * pagesPerGroup + 1); // 이전 그룹의 첫 페이지로 이동
+    }
+  };
+
+  const handleNextGroup = () => {
+    if ((pageGroup + 1) * pagesPerGroup < totalPages) {
+      setPageGroup(pageGroup + 1);
+      setCurrentPage((pageGroup + 1) * pagesPerGroup + 1); // 다음 그룹의 첫 페이지로 이동
+    }
+  };
+
+  // 현재 페이지에 해당하는 데이터 계산
+  const paginatedItems = dummyMyPost.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  useEffect(() => {
+    // 반응형 - 페이지 내에서 보이는 게시글 개수 조절
+    const handleResize = () => {
+      const newItemsPerPage = window.innerWidth >= 768 ? 10 : 5;
+
+      // 현재 페이지에 표시되는 첫 아이템의 인덱스를 기반으로 새로운 페이지 번호 계산
+      const currentItemIndex = (currentPage - 1) * itemsPerPage;
+      const newPage = Math.floor(currentItemIndex / newItemsPerPage) + 1;
+
+      setItemsPerPage(newItemsPerPage);
+      setCurrentPage(newPage);
+      setPageGroup(Math.floor((newPage - 1) / pagesPerGroup)); // 페이지 그룹 재설정
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [currentPage, itemsPerPage]);
+
   return (
     <div>
       <ul>
-        {dummyMyPost.map((post) => {
+        {paginatedItems.map((post) => {
           return (
             // li 태그 스타일 코드는 그대로 쓰셔도 됩니다.
             <li
@@ -270,6 +281,16 @@ export const MyPostList = () => {
           );
         })}
       </ul>
+      {/* 페이지네이션 */}
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        pageGroup={pageGroup}
+        pagesPerGroup={pagesPerGroup}
+        onPageChange={handlePageChange}
+        onPrevGroup={handlePrevGroup}
+        onNextGroup={handleNextGroup}
+      />
     </div>
   );
 };

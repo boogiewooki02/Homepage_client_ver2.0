@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { toggleList } from '@/components/announcement/list/dto';
 import blackSearch from '@/public/image/announcement/blackSearch.svg';
 import blackPen from '@/public/image/announcement/blackPen.svg';
+import { usePathname } from 'next/navigation';
 
 export const Toggle = ({
   toggle,
@@ -16,6 +17,9 @@ export const Toggle = ({
   onSearchChange: (query: string) => void;
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const isAnnouncementPage = pathname.includes('announcement');
+
   return (
     <section className="flex flex-col gap-6 pad:flex-row pad:gap-0 mb-6 text-2xl font-semibold justify-between">
       <ul className="flex gap-6">
@@ -29,7 +33,7 @@ export const Toggle = ({
           </li>
         ))}
       </ul>
-      <div className="flex justify-between gap-5">
+      {isAnnouncementPage && <div className="flex justify-between gap-5">
         <div className="relative flex-1">
           <input
             placeholder="게시글 검색"
@@ -56,7 +60,7 @@ export const Toggle = ({
             <Image src={blackPen} alt="pen" width={24} height={24} />
           </div>
         )}
-      </div>
+      </div>}
     </section>
   );
 };
