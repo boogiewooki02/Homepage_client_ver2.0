@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import profileImg from '@/public/image/mypage/profile.png';
 import { authInstance } from '@/api/auth/axios';

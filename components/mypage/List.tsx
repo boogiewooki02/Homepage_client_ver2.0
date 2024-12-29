@@ -315,10 +315,17 @@ const List = () => {
       <ButtonModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        handleSubmit={() => {
-          console.log('회원 탈퇴');
-          router.push('/');
-          // 탈퇴 로직 작성 필요
+        handleSubmit={async () => {
+          try {
+            const response = await authInstance.delete('/auth/withdraw');
+
+            if (response.data.isSuccess) {
+              alert('회원 탈퇴가 완료되었습니다.');
+              router.push('/');
+            }
+          } catch (error) {
+            console.error(error);
+          }
         }}
         mainContent="회원을 탈퇴하시겠습니까?"
         buttonContent="탈퇴하기"
