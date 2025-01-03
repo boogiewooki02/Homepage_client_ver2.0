@@ -20,10 +20,11 @@ const ImageBox: React.FC<ImageProps> = ({ data, field, onChange }) => {
     }
   };
 
+  // [todo] width, height 체크 필요.. role ADMIN으로 설정한 후에 수정
   return (
     <label
       key={label}
-      className="flex h-[438px] pad:h-[400px] w-[328px] pad:w-[300px] rounded-[12px] justify-center items-center border-gray-40 border cursor-pointer"
+      className="flex h-[438px] pad:h-[400px] w-[328px] pad:w-[300px] pad:min-h-[400px] pad:min-w-[300px] rounded-[12px] justify-center items-center border-gray-40 border cursor-pointer"
     >
       <input
         type="file"
