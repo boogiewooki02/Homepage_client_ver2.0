@@ -38,7 +38,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
             strokeLinejoin="round"
           />
         </svg>
-        <div className="w-full">{children}</div>
+        <div className="flex flex-col w-full justify-center items-center h-full">
+          {children}
+        </div>
       </div>
     </div>
   );

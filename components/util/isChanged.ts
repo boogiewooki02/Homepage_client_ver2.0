@@ -1,8 +1,6 @@
-export default function isChanged(dataA: any, dataB: any) {
-  for (const key in dataA) {
-    if (dataA[key] !== dataB[key]) {
-      return true;
-    }
-  }
-  return false;
-}
+export const isChanged = (
+  original: { [key: string]: any },
+  current: { [key: string]: any }
+): boolean => {
+  return Object.keys(original).some((key) => original[key] !== current[key]);
+};

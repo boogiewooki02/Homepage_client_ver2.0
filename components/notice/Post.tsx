@@ -68,6 +68,7 @@ const Post: React.FC<PostProps> = ({
 
       {showDeletePopup && (
         <DeletePopup
+          isOpen={showDeletePopup}
           onConfirm={handleDeleteConfirm}
           onClose={handleDeleteCancel}
         />
