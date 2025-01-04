@@ -19,6 +19,7 @@
     "@nextui-org/accordion": "^2.0.35",
     "@nextui-org/system": "^2.2.2",
     "@nextui-org/theme": "^2.2.6",
+    "@stomp/stompjs": "^7.0.0",
     "@vercel/speed-insights": "^1.0.12",
     "axios": "^1.7.4",
     "dayjs": "^1.11.13",

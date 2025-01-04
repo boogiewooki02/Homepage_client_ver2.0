@@ -4,9 +4,11 @@ import CalendarUI from '@/components/reservation/CalendarUI';
 import ReservationForm from '@/components/reservation/ReservationForm';
 import RoomNotice from '@/components/reservation/RoomNotice';
 import TimeTable from '@/components/reservation/TimeTable';
-import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Client } from '@stomp/stompjs';
+import { authInstance } from '@/api/auth/axios';
 
+// 예약 요청 정보 타입
 export type Reservation = {
   type: string; // ex) TEAM
   clubroomUsername: string;
@@ -15,6 +17,7 @@ export type Reservation = {
   endTime: string; //'12:00:00'
 };
 
+// 예약 정보 응답 타입
 export type ReservationResponse = {
   reservationId: number;
   email: string;
@@ -27,6 +30,7 @@ export type ReservationResponse = {
 };
 
 const page = () => {
+  // 예약 폼 표시 여부
   const [isFormVisible, setIsFormVisible] = useState(true);
 
   const [reservation, setReservation] = useState<Reservation>({
@@ -40,6 +44,33 @@ const page = () => {
     ReservationResponse[]
   >([]);
 
+  // 웹소켓 연결을 위한 accessToken 추출
+  const accessToken =
+    document.cookie
+      .split(';')
+      .find((c) => c.trim().startsWith('access_token='))
+      ?.split('=')[1] || '';
+
+  // const [stompClient, setStompClient] = useState<Client | null>(null);
+
+  // const client = new Client({
+  //   brokerURL: 'wss://api.kahluaband.com/v1/ws',
+  //   connectHeaders: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  //   debug: (str) => {
+  //     console.log('websocket debug: ', str);
+  //   },
+  //   onConnect: () => {
+  //     console.log('websocket connected');
+  //   },
+  //   onDisconnect: () => {
+  //     console.log('websocket disconnected');
+  //   },
+  // });
+
+  // client.activate();
+
   const handleChange = (key: keyof Reservation, value: string) => {
     setReservation((prev) => ({
       ...prev,
@@ -49,10 +80,7 @@ const page = () => {
 
   const fetchReservationsForDate = async (date: string) => {
     try {
-      // todo: header 설정 및 axios 인스턴스화
-      const response = await axios.get(
-        `https://api.kahluaband.com/v1/reservation?date=${date}`
-      );
+      const response = await authInstance.get(`/reservation?date=${date}`);
       if (response.data.isSuccess) {
         const reservationData =
           response.data.result.reservationResponseList || [];
