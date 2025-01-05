@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 interface ImageUploadProps {
   image: string[];
-  setImage: (value: string[]) => void;
+  setImage: React.Dispatch<React.SetStateAction<string[]>>;
   isEditMode: boolean;
 }
 
@@ -22,8 +22,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const { data } = await authInstance.post('/image/presigned-url', {
         imageName: file.name,
       });
-      const imageUrl = data;
-      return imageUrl;
+      const presignedUrl = data;
+      const uploadResponse = await fetch(presignedUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type, // 파일의 MIME 타입
+        },
+        body: file, // 업로드할 파일
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error(`S3 업로드 실패: ${uploadResponse.statusText}`);
+      }
+
+      // 성공적으로 업로드된 URL 반환
+      return presignedUrl.split('?')[0]; // URL에서 쿼리 문자열 제거
     } catch (error) {
       console.error('이미지 업로드 실패:', error);
       alert('이미지 업로드 중 문제가 발생했습니다.');
@@ -42,22 +55,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           return uploadedUrl;
         })
       );
-      const validUrls = uploadedUrls.filter((url) => url !== null);
-
-      console.log('Uploaded URLs:', validUrls);
+      const validUrls = uploadedUrls.filter(
+        (url): url is string => url !== null
+      );
 
       // 자식 컴포넌트 상태 업데이트
       setImages((prevImages: string[]) => {
         const updatedImages = [...prevImages, ...validUrls];
-        console.log('Updated child images:', updatedImages);
         return updatedImages;
       });
 
-      // setImage((prevImages: string[]) => {
-      //   const updatedImages = [...prevImages, ...validUrls];
-      //   console.log('Updated parent images:', updatedImages);
-      //   return updatedImages;
-      // });
+      // 부모 상태 업데이트
+      setImage((prevImages: string[]): string[] => {
+        const updatedImages = [...prevImages, ...validUrls];
+        return updatedImages;
+      });
 
       setTimeout(checkScrollbar, 20);
     }
