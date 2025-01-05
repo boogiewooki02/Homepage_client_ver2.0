@@ -35,7 +35,6 @@ const PageContent = () => {
 
     router.push('/announcement/post');
 
-    // 글 수정 api 추가
     setTitle('');
     setContent('');
     setCurrentImages([]);

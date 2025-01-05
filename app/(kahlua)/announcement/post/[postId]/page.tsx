@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import CommentList from '@/components/notice/CommentList';
 import Image from 'next/image';
 import arrow from '@/public/image/notice/Left.svg';
@@ -29,7 +29,8 @@ interface PostData {
 
 const Page = () => {
   const router = useRouter();
-  const postId = 1;
+  const { postId } = useParams();
+  const numPostId = Number(postId);
   const [postData, setPostData] = useState<PostData>({
     title: '',
     content: '',
@@ -110,7 +111,7 @@ const Page = () => {
 
   const handleAddReply = async (parentCommentId: string, text: string) => {
     await addCommentOrReply(
-      postId,
+      numPostId,
       text,
       user,
       setComments,
@@ -123,7 +124,7 @@ const Page = () => {
 
   const handleAddComment = async () => {
     await addCommentOrReply(
-      postId,
+      numPostId,
       commentText,
       user,
       setComments,
@@ -142,7 +143,7 @@ const Page = () => {
       <div className="flex flex-col items-center justify-center pt-16 w-full max-w-[500px] pad:max-w-[786px] dt:max-w-[1200px] max-pad:px-[16px]">
         <Post
           noticeData={postData}
-          postId={postId}
+          postId={numPostId}
           commentCount={comments.length}
           replyCount={comments.reduce(
             (acc, comment) =>
@@ -153,18 +154,17 @@ const Page = () => {
         />
 
         <CommentList
-          postId={postId}
+          postId={numPostId}
           user={user}
           comments={comments}
           onAddReply={handleAddReply}
-          onDeleteComment={
-            (id) =>
-              handleDeleteCommentOrReply(id, postId, setComments, setChatCount) // ✅ setComments 직접 전달
+          onDeleteComment={(id) =>
+            handleDeleteCommentOrReply(id, numPostId, setComments, setChatCount)
           }
           onDeleteReply={(replyId) =>
             handleDeleteCommentOrReply(
               replyId,
-              postId,
+              numPostId,
               setComments,
               setChatCount
             )
