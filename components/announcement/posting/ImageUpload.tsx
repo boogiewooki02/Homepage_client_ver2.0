@@ -16,6 +16,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const [hasScrollbar, setHasScrollbar] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const scrollToRight = () => {
+    if (containerRef.current) {
+      containerRef.current.scrollLeft = containerRef.current.scrollWidth;
+    }
+  };
+
   const uploadImageToS3 = async (file: File) => {
     try {
       // Presigned URL 요청
@@ -70,9 +76,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         const updatedImages = [...prevImages, ...validUrls];
         return updatedImages;
       });
-
-      setTimeout(checkScrollbar, 20);
     }
+    setTimeout(() => {
+      scrollToRight();
+    }, 100);
   };
 
   // 이미지 삭제
@@ -82,15 +89,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       setImage(updatedImages);
       return updatedImages;
     });
-  };
 
-  // 스크롤바 유무 감지 함수
-  const checkScrollbar = () => {
-    if (containerRef.current) {
-      const hasScroll =
-        containerRef.current.scrollWidth > containerRef.current.clientWidth;
-      setHasScrollbar(hasScroll);
-    }
+    setTimeout(() => {
+      scrollToRight();
+    }, 100);
   };
 
   // 이미지가 추가되거나 삭제될 때마다 부모 컴포넌트에 전달
@@ -99,15 +101,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       setImages(image); // 수정 모드일 때 부모로부터 전달받은 이미지를 사용
     }
   }, [isEditMode, image]);
-
-  // 이미지가 추가될 때마다 오른쪽으로 스크롤 이동
-  useEffect(() => {
-    if (hasScrollbar && containerRef.current) {
-      setTimeout(() => {
-        containerRef.current!.scrollLeft = containerRef.current!.scrollWidth;
-      }, 20);
-    }
-  }, [images, hasScrollbar]);
 
   return (
     <div className="mb-10">
