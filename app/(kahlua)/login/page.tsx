@@ -21,7 +21,7 @@ const page = () => {
         </div>
         <div className="flex flex-col gap-[24px] w-full max-pad:max-w-[500px] pad:w-[400px] justify-center items-center">
           <div
-            className="flex flex-row w-full h-[78px] px-[20px] py-[10px] justify-center items-center gap-[42px] rounded-[20px] bg-black"
+            className="flex flex-row w-full h-[78px] px-[20px] py-[10px] justify-center items-center gap-[42px] rounded-[20px] bg-black cursor-pointer"
             onClick={() => {
               window.location.href = kakao_link;
             }}
@@ -32,7 +32,7 @@ const page = () => {
             </p>
           </div>
           <div
-            className="flex flex-row w-full h-[78px] px-[20px] py-[10px] justify-center items-center gap-[42px] rounded-[20px] bg-black"
+            className="flex flex-row w-full h-[78px] px-[20px] py-[10px] justify-center items-center gap-[42px] rounded-[20px] bg-black cursor-pointer"
             onClick={() => {
               window.location.href = google_link;
             }}
