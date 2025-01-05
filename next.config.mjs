@@ -3,6 +3,8 @@ const nextConfig = {
   images: {
     formats: ['image/avif'],
   },
+
+  reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,
   },

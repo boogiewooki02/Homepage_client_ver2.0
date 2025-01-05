@@ -9,11 +9,10 @@ import { useRouter } from 'next/navigation';
 import { authInstance } from '@/api/auth/axios';
 import { totalApplicant } from '@/atoms';
 import { useRecoilState } from 'recoil';
-import {
-  DynamicRecruitingInfo,
-  recruitingInfo,
-} from '@/components/data/RecruitingInfo';
+import { DynamicRecruitingInfo } from '@/components/data/RecruitingInfo';
 import PublishIcon from '@mui/icons-material/Publish';
+import Link from 'next/link';
+import WestIcon from '@mui/icons-material/West';
 
 interface ApplicantProps {
   id: number;
@@ -201,6 +200,17 @@ const page = () => {
             <Image src={chevron_down_blue} alt="more" width={16} />
           )}
         </div>
+      </div>
+      {/* admin 홈으로 Button */}
+      <div className="flex h-auto mx-auto w-full pad:w-[786px] dt:w-[1200px] max-pad:mx-[16px]">
+        <Link
+          href={'/admin'}
+          key="admin"
+          className="flex flex-row gap-[8px] items-center"
+        >
+          <WestIcon />
+          <span className="text-[16px] font-medium">Admin 홈으로</span>
+        </Link>
       </div>
     </div>
   );

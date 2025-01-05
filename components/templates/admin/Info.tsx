@@ -1,11 +1,10 @@
 import Date from '@/components/ui/admin/Date';
 import DateTime from '@/components/ui/admin/DateTime';
-import Integer from '@/components/ui/admin/IntBox';
 import Text from '@/components/ui/admin/TextBox';
 import { InputFieldType } from '@/components/ui/admin/type';
 
 interface AdminInfoProps {
-  data: any;
+  data: Record<string, any>;
   fieldList: InputFieldType[];
   onChange: (newValue: any, title: string) => void;
 }
@@ -13,12 +12,12 @@ interface AdminInfoProps {
 // title, inputBox 형식의 information list
 const InfoList: React.FC<AdminInfoProps> = ({ data, fieldList, onChange }) => {
   return (
-    <div className="flex flex-col gap-[16px]">
+    <div className="flex flex-col gap-[16px] w-full">
       {fieldList.map((field: InputFieldType) => {
         const { label, title } = field;
         return (
           <div key={label}>
-            <div className="flex flex-col pad:flex-row gap-2">
+            <div className="flex flex-col pad:flex-row gap-2 w-full">
               <div className="flex items-center w-[160px] h-[30px] pad:h-12">
                 {title}
               </div>
@@ -41,7 +40,6 @@ function renderInput(
     text: Text,
     datetime: DateTime,
     date: Date,
-    integer: Integer,
   };
 
   const Component = components[field.type];
