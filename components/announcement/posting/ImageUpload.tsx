@@ -1,3 +1,4 @@
+import { authInstance } from '@/api/auth/axios';
 import React, { useEffect, useRef, useState } from 'react';
 
 interface ImageUploadProps {
@@ -15,18 +16,49 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const [hasScrollbar, setHasScrollbar] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 이미지 추가
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadImageToS3 = async (file: File) => {
+    try {
+      // Presigned URL 요청
+      const { data } = await authInstance.post('/image/presigned-url', {
+        imageName: file.name,
+      });
+      const imageUrl = data;
+      return imageUrl;
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+      alert('이미지 업로드 중 문제가 발생했습니다.');
+      return null;
+    }
+  };
+
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
     if (files) {
-      const newImages = Array.from(files).map(
-        (file) => URL.createObjectURL(file) // 이미지 미리 볼 수 있게
+      const uploadedUrls = await Promise.all(
+        Array.from(files).map(async (file) => {
+          const uploadedUrl = await uploadImageToS3(file);
+          return uploadedUrl;
+        })
       );
-      setImages((prevImages) => {
-        const updatedImages = [...prevImages, ...newImages];
-        setImage(updatedImages); // Passing updated images to parent component
+      const validUrls = uploadedUrls.filter((url) => url !== null);
+
+      console.log('Uploaded URLs:', validUrls);
+
+      // 자식 컴포넌트 상태 업데이트
+      setImages((prevImages: string[]) => {
+        const updatedImages = [...prevImages, ...validUrls];
+        console.log('Updated child images:', updatedImages);
         return updatedImages;
       });
+
+      // setImage((prevImages: string[]) => {
+      //   const updatedImages = [...prevImages, ...validUrls];
+      //   console.log('Updated parent images:', updatedImages);
+      //   return updatedImages;
+      // });
+
       setTimeout(checkScrollbar, 20);
     }
   };
@@ -34,8 +66,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   // 이미지 삭제
   const handleImageDelete = (index: number) => {
     setImages((prevImages) => {
-      const updatedImages = prevImages.filter((_, i) => i !== index); // Remove image at index
-      setImage(updatedImages); // Pass updated images to parent
+      const updatedImages = prevImages.filter((_, i) => i !== index);
+      setImage(updatedImages);
       return updatedImages;
     });
   };

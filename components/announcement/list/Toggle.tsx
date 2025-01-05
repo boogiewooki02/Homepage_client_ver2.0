@@ -18,7 +18,7 @@ export const Toggle = ({
   onSearchChange: (query: string) => void;
 }) => {
   const router = useRouter();
-  const [userRole, setUserRole] = useState<string | null>(null); // 사용자 role 상태
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserRole = async () => {
@@ -65,7 +65,9 @@ export const Toggle = ({
         {(toggle === toggleList[1].toggle ||
           (toggle === toggleList[0].toggle && userRole === 'ADMIN')) && (
           <div
-            onClick={() => router.push('/announcement/posting')}
+            onClick={() =>
+              router.push(`/announcement/posting?toggle=${toggle}`)
+            }
             className="h-[38px] border-[1px] border-black rounded-[8px] px-3 py-1 flex gap-5 items-center cursor-pointer"
           >
             <span className="hidden pad:block text-gray-40 text-[20px] font-[500]">

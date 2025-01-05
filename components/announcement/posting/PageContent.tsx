@@ -7,14 +7,15 @@ import ContentInput from '@/components/announcement/posting/ContentInput';
 import ImageUpload from '@/components/announcement/posting/ImageUpload';
 import TitleInput from '@/components/announcement/posting/TitleInput';
 import TopButtons from '@/components/announcement/posting/TopButtons';
+import { authInstance } from '@/api/auth/axios';
 
 const PageContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   const title = searchParams?.get('title') || '';
   const content = searchParams?.get('content') || '';
   const imageUrls = searchParams?.getAll('imageUrls') || [];
+  const toggle = searchParams.get('toggle');
 
   const [currentTitle, setTitle] = useState(title || '');
   const [currentContent, setContent] = useState(content || '');
@@ -26,16 +27,33 @@ const PageContent = () => {
   const isPostActive =
     currentTitle.trim() !== '' && currentContent.trim() !== '';
 
-  const onPublish = () => {
+  // 글 수정 API 추가
+  const onPublish = async () => {
+    const POST_TYPES = {
+      NOTICE: 'NOTICE',
+      KAHLUA_TIME: 'KAHLUA_TIME',
+    };
+
+    const postType =
+      toggle === '공지사항' ? POST_TYPES.NOTICE : POST_TYPES.KAHLUA_TIME;
+
     const postData = {
       title: currentTitle,
       content: currentContent,
-      images: currentImages,
+      imageUrls: currentImages,
+      postType,
     };
 
-    router.push('/announcement/post');
+    try {
+      await authInstance.post('/post/notice/create', postData);
+      alert('게시물이 성공적으로 등록되었습니다.');
+      router.push('/announcement/post');
+    } catch (error) {
+      console.error('게시물 업로드 실패:', error);
+      alert('게시물 업로드 중 문제가 발생했습니다.');
+    }
 
-    // 글 수정 api 추가
+    // 초기화
     setTitle('');
     setContent('');
     setCurrentImages([]);
