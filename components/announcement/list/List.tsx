@@ -54,11 +54,8 @@ const List = () => {
           }
         })
       );
-
-      // 최신순 정렬 (id를 기준으로 내림차순 정렬)
-      const sortedContent = updatedContent.sort((a, b) => b.id - a.id);
-
-      setFilteredData(sortedContent);
+      
+      setFilteredData(updatedContent);
       setTotalPages(totalPages);
 
     } catch (error) {
