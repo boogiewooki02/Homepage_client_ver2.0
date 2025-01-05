@@ -1,26 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
 import { authInstance } from '@/api/auth/axios';
-
-export interface Reply {
-  id: string;
-  user: string;
-  date: string;
-  content: string;
-  replying: boolean;
-  deleted?: boolean;
-}
-
-interface Comment {
-  id: string;
-  postId: number;
-  user: string;
-  date: string;
-  content: string;
-  parentCommentId?: string | null;
-  deletedAt?: string | null;
-  replies?: Comment[];
-  created_at: string;
-}
+import { Comment } from '../notice/dto';
 
 export const createCommentOrReply = async (
   postId: number,
@@ -84,7 +63,8 @@ export const addCommentOrReply = async (
     console.error('댓글/답글 작성 실패:', error);
   }
 };
-export const handleDeleteComment = async (
+
+export const handleDeleteCommentOrReply = async (
   id: string,
   postId: number,
   setComments: React.Dispatch<React.SetStateAction<Comment[]>>,
@@ -94,17 +74,22 @@ export const handleDeleteComment = async (
     const response = await authInstance.delete(
       `/comment/${postId}/${id}/delete`
     );
-    console.log('✅ 댓글 삭제 성공:', response);
+    console.log('✅ 삭제 성공:', response);
 
     setComments((prevComments) => {
-      console.log('📌 기존 댓글 목록:', prevComments);
+      let updatedComments = [...prevComments];
 
-      return prevComments
+      updatedComments = updatedComments
         .map((comment) => {
+          // ✅ 삭제하려는 댓글 찾기
           if (comment.id === id) {
-            if (comment.replies && comment.replies.length > 0) {
+            const hasReplies =
+              (comment.replies ? comment.replies.length : 0) > 0 ||
+              prevComments.some((c) => c.parentCommentId === id);
+
+            if (hasReplies) {
               console.log(
-                `✅ 답글 있는 댓글 (${comment.id}) → "삭제된 댓글입니다."로 변경`
+                `🔗 부모 댓글 (${comment.id}) 삭제 → "삭제된 댓글입니다."`
               );
               return {
                 ...comment,
@@ -113,67 +98,38 @@ export const handleDeleteComment = async (
                 user: '',
               };
             } else {
-              console.log(`❌ 답글 없는 댓글 (${comment.id}) → 완전히 삭제`);
-              return null; // 댓글이 완전히 삭제됨
+              console.log(`❌ 답글 없는 댓글 (${comment.id}) → 완전 삭제`);
+              return null;
             }
           }
 
-          // ✅ 부모 댓글이 삭제된 경우에도 답글의 `parentCommentId`를 유지해야 함.
+          // ✅ 부모 댓글이 삭제되더라도 답글의 `parentCommentId`를 유지해야 함
           if (comment.replies) {
-            comment.replies = comment.replies.map((reply) => {
-              if (reply.id === id) {
-                console.log(
-                  `✅ 답글 ${reply.id}의 부모 삭제 → "삭제된 댓글입니다."로 변경`
-                );
-                return {
-                  ...reply,
-                  deletedAt: new Date().toISOString(),
-                  content: '삭제된 댓글입니다.',
-                  user: '',
-                };
-              }
-              return reply; // ✅ 나머지 답글은 그대로 유지
-            });
+            comment.replies = comment.replies
+              .map((reply) => {
+                if (reply.id === id) {
+                  return {
+                    ...reply,
+                    deletedAt: new Date().toISOString(),
+                    content: '삭제된 댓글입니다.',
+                    user: '',
+                  };
+                }
+                return reply;
+              })
+              .filter((reply): reply is Comment => reply !== null);
           }
 
           return comment;
         })
         .filter((comment): comment is Comment => comment !== null);
+
+      return updatedComments;
     });
 
     setChatCount((prev) => Math.max(0, prev - 1));
   } catch (error) {
-    console.error('❌ 댓글 삭제 실패:', error);
-  }
-};
-
-export const handleDeleteReply = async (
-  commentId: string,
-  postId: number,
-  replyId: string,
-  comments: Comment[],
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>,
-  setChatCount: React.Dispatch<React.SetStateAction<number>>
-) => {
-  try {
-    await authInstance.delete(`/comment/${postId}/${replyId}/delete`);
-
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
-        comment.id === commentId
-          ? {
-              ...comment,
-              replies: comment.replies
-                ? comment.replies.filter((reply) => reply.id !== replyId)
-                : [],
-            }
-          : comment
-      )
-    );
-
-    setChatCount((prev) => Math.max(0, prev - 1));
-  } catch (error) {
-    console.error('답글 삭제 실패:', error);
+    console.error('❌ 삭제 실패:', error);
   }
 };
 

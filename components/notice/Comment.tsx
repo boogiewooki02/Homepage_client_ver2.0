@@ -2,20 +2,11 @@ import Image from 'next/image';
 import { useState, useCallback } from 'react';
 import defaultImg from '@/public/image/notice/defaultProfile.svg';
 import Send from '@mui/icons-material/Send';
-
+import { Comment as CommentType } from './dto';
 import DeletePopup from '@/components/notice/DeleteCommentPopup';
 
 interface CommentProps {
-  comment: {
-    id: string;
-    user: string;
-    date: string;
-    content: string;
-    parentCommentId?: string | null;
-    deletedAt?: string | null;
-    replies?: CommentProps['comment'][];
-    created_at: string;
-  };
+  comment: CommentType;
   currentUser: string;
   onAddReply: (parentCommentId: string, replyText: string) => void;
   onDeleteComment: (id: string) => void;
@@ -64,7 +55,7 @@ const Comment: React.FC<CommentProps> = ({
   return (
     <div
       className={`flex flex-col gap-8 ${
-        comment.deletedAt || comment.parentCommentId ? '' : 'mb-10'
+        comment.parentCommentId ? '' : 'mb-10'
       }`}
     >
       {comment.deletedAt && comment.replies && comment.replies.length > 0 ? (

@@ -9,24 +9,12 @@ import CommentInput from '@/components/notice/CommentInput';
 import Post from '@/components/notice/Post';
 import {
   addCommentOrReply,
-  handleDeleteComment,
-  handleDeleteReply,
+  handleDeleteCommentOrReply,
   handleDeleteCancel,
   handleDeleteConfirm,
 } from '@/components/util/noticeUtils';
 import { authInstance } from '@/api/auth/axios';
-
-interface Comment {
-  id: string;
-  postId: number;
-  user: string;
-  date: string;
-  content: string;
-  parentCommentId?: string | null;
-  deletedAt?: string | null;
-  replies?: Comment[];
-  created_at: string;
-}
+import { Comment as CommentType } from '@/components/notice/dto';
 
 interface PostData {
   title: string;
@@ -53,7 +41,7 @@ const Page = () => {
     liked: false,
   });
 
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<CommentType[]>([]);
   const [chatCount, setChatCount] = useState<number>(0);
   const [commentText, setCommentText] = useState('');
   const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -170,14 +158,13 @@ const Page = () => {
           comments={comments}
           onAddReply={handleAddReply}
           onDeleteComment={
-            (id) => handleDeleteComment(id, postId, setComments, setChatCount) // ✅ setComments 직접 전달
+            (id) =>
+              handleDeleteCommentOrReply(id, postId, setComments, setChatCount) // ✅ setComments 직접 전달
           }
-          onDeleteReply={(commentId, replyId) =>
-            handleDeleteReply(
-              commentId,
-              postId,
+          onDeleteReply={(replyId) =>
+            handleDeleteCommentOrReply(
               replyId,
-              comments,
+              postId,
               setComments,
               setChatCount
             )
