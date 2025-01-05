@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { axiosInstance } from '@/api/auth/axios';
+import { authInstance } from '@/api/auth/axios';
 import { formatDate } from '@/components/util/formatDate';
 import { AnnouncementProps } from '@/components/announcement/list/dto';
 import likeIcon from '@/public/image/grayHeart.svg';
@@ -19,7 +19,7 @@ export const AnnouncementList = ({
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await axiosInstance.get('/v1/post/list', {
+        const response = await authInstance.get('/post/list', {
           params: {
             post_type: 'NOTICE',
             page: currentPage - 1,
@@ -32,8 +32,8 @@ export const AnnouncementList = ({
         const updatedContent = await Promise.all(
           content.map(async (post: AnnouncementProps) => {
             try {
-              const commentResponse = await axiosInstance.get(
-                `/v1/comment/${post.id}/list`
+              const commentResponse = await authInstance.get(
+                `/comment/${post.id}/list`
               );
               return {
                 ...post,
