@@ -17,6 +17,7 @@ interface CommentListProps {
   postId: number;
   user: string;
   comments: Comment[];
+  currentUser: string;
   onAddReply: (parentCommentId: string, replyText: string) => void;
   onDeleteComment: (id: string) => void;
   onDeleteReply: (commentId: string, replyId: string) => void;
@@ -29,6 +30,7 @@ const CommentList: React.FC<CommentListProps> = ({
   onAddReply,
   onDeleteComment,
   onDeleteReply,
+  currentUser,
 }) => {
   const structuredComments = buildCommentTree(comments);
 
@@ -44,6 +46,7 @@ const CommentList: React.FC<CommentListProps> = ({
               onDeleteComment={onDeleteComment}
               onDeleteReply={onDeleteReply}
               replying={false}
+              currentUser={currentUser}
             />
           ))}
         </div>
@@ -53,6 +56,7 @@ const CommentList: React.FC<CommentListProps> = ({
 };
 
 export default CommentList;
+
 const buildCommentTree = (comments: Comment[]): Comment[] => {
   const commentMap: { [key: string]: Comment } = {};
   const rootComments: Comment[] = [];

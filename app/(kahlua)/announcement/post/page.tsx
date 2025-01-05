@@ -36,6 +36,7 @@ interface PostData {
   imageUrls: string[];
   likes: number;
   id: number;
+  liked: boolean;
 }
 
 const Page = () => {
@@ -49,6 +50,7 @@ const Page = () => {
     imageUrls: [],
     likes: 0,
     id: 0,
+    liked: false,
   });
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -159,6 +161,7 @@ const Page = () => {
               acc + (comment.replies ? comment.replies.length : 0),
             0
           )}
+          currentUser={user}
         />
 
         <CommentList
@@ -179,6 +182,7 @@ const Page = () => {
               setChatCount
             )
           }
+          currentUser={user}
         />
 
         <CommentInput

@@ -22,6 +22,7 @@ interface PostProps {
   commentCount?: number;
   replyCount?: number;
   postId: number;
+  currentUser: string;
 }
 
 const formatDate = (dateString?: string) => {
@@ -34,6 +35,7 @@ const Post: React.FC<PostProps> = ({
   noticeData,
   commentCount = 0,
   replyCount = 0,
+  currentUser,
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
@@ -43,10 +45,10 @@ const Post: React.FC<PostProps> = ({
 
   const handleDeleteConfirm = async () => {
     try {
-      await authInstance.delete(`/post/notice/${noticeData.id}/delete`); // ✅ 게시글 삭제 API 호출
+      await authInstance.delete(`/post/notice/${noticeData.id}/delete`);
       alert('게시글이 삭제되었습니다.');
       setShowDeletePopup(false);
-      window.location.href = '/announcement'; // ✅ 삭제 후 목록으로 이동
+      window.location.href = '/announcement';
     } catch (error) {
       console.error('게시글 삭제 실패:', error);
       alert('게시글 삭제에 실패했습니다.');
@@ -57,7 +59,6 @@ const Post: React.FC<PostProps> = ({
     setShowDeletePopup(false);
   };
 
-  // ✅ imageUrls 변환 로직 최적화
   const imageUrls =
     typeof noticeData.imageUrls === 'string'
       ? noticeData.imageUrls.split(',').map((img) => img.trim())
@@ -78,6 +79,7 @@ const Post: React.FC<PostProps> = ({
             content={noticeData?.content || ''}
             imageUrls={imageUrls}
             onDeleteClick={handleDeleteClick}
+            currentUser={currentUser}
           />
           <div className="w-full border-b border-gray-15" />
           <ContentSection

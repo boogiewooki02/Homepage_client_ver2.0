@@ -16,6 +16,7 @@ interface CommentProps {
     replies?: CommentProps['comment'][];
     created_at: string;
   };
+  currentUser: string;
   onAddReply: (parentCommentId: string, replyText: string) => void;
   onDeleteComment: (id: string) => void;
   onDeleteReply: (commentId: string, replyId: string) => void;
@@ -27,6 +28,7 @@ const Comment: React.FC<CommentProps> = ({
   onAddReply,
   onDeleteComment,
   onDeleteReply,
+  currentUser,
 }) => {
   const [replyText, setReplyText] = useState('');
   const [showDeletePopup, setShowDeletePopup] = useState(false);
@@ -57,6 +59,8 @@ const Comment: React.FC<CommentProps> = ({
 
     return `${year}. ${month}. ${day} ${hours}:${minutes}`;
   };
+  const isAuthor = currentUser === comment.user;
+
   return (
     <div
       className={`flex flex-col gap-8 ${
@@ -86,12 +90,14 @@ const Comment: React.FC<CommentProps> = ({
                   {formatDate(comment.created_at)}
                 </span>
               </div>
-              <span
-                className="font-pretendard text-base text-danger-50 font-normal cursor-pointer"
-                onClick={() => setShowDeletePopup(true)}
-              >
-                삭제
-              </span>
+              {isAuthor && (
+                <span
+                  className="font-pretendard text-base text-danger-50 font-normal cursor-pointer"
+                  onClick={() => setShowDeletePopup(true)}
+                >
+                  삭제
+                </span>
+              )}
             </div>
             <p className="font-pretendard text-base break-words">
               {comment.content}
@@ -118,6 +124,7 @@ const Comment: React.FC<CommentProps> = ({
               onDeleteComment={onDeleteComment}
               onDeleteReply={onDeleteReply}
               replying={replyingId === reply.id}
+              currentUser={currentUser}
             />
           ))}
         </div>
