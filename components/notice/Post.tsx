@@ -14,6 +14,7 @@ interface NoticeData {
   imageUrls?: string[] | string | null;
   likes: number;
   id: number;
+  liked: boolean;
 }
 
 interface PostProps {
@@ -87,6 +88,7 @@ const Post: React.FC<PostProps> = ({
         <InfoSection
           postId={noticeData.id}
           likes={noticeData.likes}
+          liked={noticeData.liked}
           commentCount={commentCount}
           replyCount={replyCount}
         />

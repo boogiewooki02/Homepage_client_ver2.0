@@ -10,13 +10,18 @@ interface LikeButtonProps {
   initialIsLiked?: boolean;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({ postId, initialCount }) => {
-  const [isFilled, setIsFilled] = useState(false);
+const LikeButton: React.FC<LikeButtonProps> = ({
+  postId,
+  initialCount,
+  initialIsLiked = false,
+}) => {
+  const [isFilled, setIsFilled] = useState(initialIsLiked);
   const [heartCount, setHeartCount] = useState(initialCount);
 
   useEffect(() => {
     setHeartCount(initialCount);
-  }, [initialCount]);
+    setIsFilled(initialIsLiked);
+  }, [initialCount, initialIsLiked]);
 
   const handleToggle = async () => {
     try {
@@ -25,8 +30,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, initialCount }) => {
       });
 
       if (response.status === 200) {
-        setIsFilled((prev) => !prev);
-        setHeartCount((prev) => (isFilled ? prev - 1 : prev + 1));
+        setIsFilled(!isFilled); // ✅ 먼저 업데이트
+        setHeartCount((prev) => (!isFilled ? prev + 1 : prev - 1)); // ✅ 현재 상태 기준으로 좋아요 수 변경
       } else {
         console.error('Unexpected response:', response);
       }
