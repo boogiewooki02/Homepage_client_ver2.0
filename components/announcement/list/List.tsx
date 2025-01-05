@@ -93,15 +93,26 @@ const List = () => {
   // 반응형 처리
   useEffect(() => {
     const handleResize = () => {
-      const newItemsPerPage = window.innerWidth >= 768 ? 10 : 5;
+      const newItemsPerPage = window.innerWidth >= 834 ? 10 : 5;
+      const newPagesPerGroup = window.innerWidth >= 834 ? 10 : 5;
+
+      // 현재 페이지에 표시되는 첫 아이템의 인덱스를 기반으로 새로운 페이지 번호 계산
+      const currentItemIndex = (currentPage - 1) * itemsPerPage;
+      const newPage = Math.floor(currentItemIndex / newItemsPerPage) + 1;
+
+      // 총 페이지 그룹 재계산
+      const newPageGroup = Math.floor((newPage - 1) / newPagesPerGroup);
+
       setItemsPerPage(newItemsPerPage);
+      setPageGroup(newPageGroup);
+      setCurrentPage(newPage);
     };
 
     window.addEventListener('resize', handleResize);
     handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
   // 토글이나 검색 쿼리가 바뀔 때 데이터 초기화
   useEffect(() => {
