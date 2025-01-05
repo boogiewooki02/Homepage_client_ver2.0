@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Comment from './Comment';
-import { axiosInstance } from '@/api/auth/axios';
 
 interface Comment {
   id: string;
-  name: string;
+  postId: number;
+  user: string;
   date: string;
-  text: string;
-  replying: boolean;
+  content: string;
+  parentCommentId?: string | null;
+  deletedAt?: string | null;
   replies?: Comment[];
+  created_at: string;
 }
 
 interface CommentListProps {
   postId: number;
+  user: string;
   comments: Comment[];
   onAddReply: (parentCommentId: string, replyText: string) => void;
   onDeleteComment: (id: string) => void;
@@ -21,50 +24,26 @@ interface CommentListProps {
 
 const CommentList: React.FC<CommentListProps> = ({
   postId,
+  user,
+  comments,
   onAddReply,
   onDeleteComment,
   onDeleteReply,
 }) => {
-  const [commentList, setCommentList] = useState<Comment[]>([]);
-  const [replyingId, setReplyingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const token = localStorage.getItem('access_token');
-        const response = await axiosInstance.get(`/comment/${postId}/list`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setCommentList(response.data);
-      } catch (error) {
-        console.error('Error fetching comments:', error);
-      }
-    };
-
-    fetchComments();
-  }, [postId]);
-
-  const handleToggleReplying = (id: string) => {
-    setReplyingId((prevId) => (prevId === id ? null : id));
-  };
+  const structuredComments = buildCommentTree(comments);
 
   return (
     <div className="w-full">
-      {commentList.length > 0 && (
+      {structuredComments.length > 0 && (
         <div className="flex flex-col">
-          {commentList.map((comment) => (
+          {structuredComments.map((comment) => (
             <Comment
               key={comment.id}
               comment={comment}
-              onAddReply={
-                (replyText) => onAddReply(comment.id, replyText) // Pass the comment ID as the parentCommentId
-              }
-              onToggleReplying={handleToggleReplying}
+              onAddReply={onAddReply}
               onDeleteComment={onDeleteComment}
               onDeleteReply={onDeleteReply}
-              replying={comment.id === replyingId}
+              replying={false}
             />
           ))}
         </div>
@@ -74,3 +53,32 @@ const CommentList: React.FC<CommentListProps> = ({
 };
 
 export default CommentList;
+const buildCommentTree = (comments: Comment[]): Comment[] => {
+  const commentMap: { [key: string]: Comment } = {};
+  const rootComments: Comment[] = [];
+  comments.forEach((comment) => {
+    if (!comment.id) {
+      return;
+    }
+
+    const commentId = comment.id.toString();
+    commentMap[commentId] = { ...comment, replies: [] };
+  });
+
+  comments.forEach((comment) => {
+    if (!comment.id) return;
+    if (
+      comment.parentCommentId !== null &&
+      comment.parentCommentId !== undefined
+    ) {
+      const parentId = comment.parentCommentId.toString();
+      if (commentMap[parentId]) {
+        commentMap[parentId].replies?.push(commentMap[comment.id.toString()]);
+      }
+    } else {
+      rootComments.push(commentMap[comment.id.toString()]);
+    }
+  });
+
+  return rootComments;
+};

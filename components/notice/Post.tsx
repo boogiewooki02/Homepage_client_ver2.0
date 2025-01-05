@@ -4,6 +4,7 @@ import DeletePopup from './DeletePostPopup';
 import TitleSection from '@/components/notice/post/TitleSection';
 import InfoSection from '@/components/notice/post/InfoSection';
 import ContentSection from '@/components/notice/post/ContentSection';
+import { authInstance } from '@/api/auth/axios';
 
 interface NoticeData {
   title?: string;
@@ -14,26 +15,24 @@ interface NoticeData {
   likes: number;
   id: number;
 }
+
 interface PostProps {
   noticeData: NoticeData;
-  commentCount: number;
-  replyCount: number;
+  commentCount?: number;
+  replyCount?: number;
   postId: number;
 }
 
 const formatDate = (dateString?: string) => {
   if (!dateString) return '';
   const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}. ${month}. ${day}`;
+  return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}. ${String(date.getDate()).padStart(2, '0')}`;
 };
 
 const Post: React.FC<PostProps> = ({
   noticeData,
-  commentCount,
-  replyCount,
+  commentCount = 0,
+  replyCount = 0,
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
@@ -41,23 +40,29 @@ const Post: React.FC<PostProps> = ({
     setShowDeletePopup(true);
   };
 
-  const handleDeleteConfirm = () => {
-    // 글 삭제
-    setShowDeletePopup(false);
+  const handleDeleteConfirm = async () => {
+    try {
+      await authInstance.delete(`/post/notice/${noticeData.id}/delete`); // ✅ 게시글 삭제 API 호출
+      alert('게시글이 삭제되었습니다.');
+      setShowDeletePopup(false);
+      window.location.href = '/announcement'; // ✅ 삭제 후 목록으로 이동
+    } catch (error) {
+      console.error('게시글 삭제 실패:', error);
+      alert('게시글 삭제에 실패했습니다.');
+    }
   };
 
   const handleDeleteCancel = () => {
-    // 글 삭제 취소
     setShowDeletePopup(false);
   };
 
-  const imageUrls = noticeData?.imageUrls
-    ? Array.isArray(noticeData?.imageUrls)
-      ? noticeData?.imageUrls // 배열이면 그대로
-      : typeof noticeData?.imageUrls === 'string'
-        ? noticeData?.imageUrls.split(',').map((img) => img.trim()) // 문자열일 경우 , 기준으로 나누어 배열로 변환
-        : [] // null이나 undefined일 경우 빈 배열
-    : [];
+  // ✅ imageUrls 변환 로직 최적화
+  const imageUrls =
+    typeof noticeData.imageUrls === 'string'
+      ? noticeData.imageUrls.split(',').map((img) => img.trim())
+      : Array.isArray(noticeData.imageUrls)
+        ? noticeData.imageUrls
+        : [];
 
   const formattedDate = formatDate(noticeData.created_at);
 
@@ -90,7 +95,7 @@ const Post: React.FC<PostProps> = ({
       {showDeletePopup && (
         <DeletePopup
           isOpen={showDeletePopup}
-          onConfirm={handleDeleteConfirm}
+          onConfirm={handleDeleteConfirm} // ✅ API 요청 포함
           onClose={handleDeleteCancel}
         />
       )}

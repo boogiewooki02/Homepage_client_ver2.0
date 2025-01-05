@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import FullHeart from '@/public/image/notice/FullHeart.svg';
 import EmptyHeart from '@/public/image/notice/EmptyHeart.svg';
-import { axiosInstance } from '@/api/auth/axios';
+import { authInstance, axiosInstance } from '@/api/auth/axios';
 
 interface LikeButtonProps {
   postId: number;
@@ -15,23 +15,14 @@ const LikeButton: React.FC<LikeButtonProps> = ({ postId, initialCount }) => {
   const [heartCount, setHeartCount] = useState(initialCount);
 
   useEffect(() => {
-    setHeartCount(initialCount); // 좋아요 수가 변경될 때마다 초기화
+    setHeartCount(initialCount);
   }, [initialCount]);
 
   const handleToggle = async () => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await axiosInstance.post(
-        `/post/${postId}/create_like`,
-        {
-          isLiked: !isFilled,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await authInstance.post(`/post/${postId}/create_like`, {
+        isLiked: !isFilled,
+      });
 
       if (response.status === 200) {
         setIsFilled((prev) => !prev);

@@ -14,7 +14,19 @@ import {
   handleDeleteCancel,
   handleDeleteConfirm,
 } from '@/components/util/noticeUtils';
-import { axiosInstance } from '@/api/auth/axios';
+import { authInstance } from '@/api/auth/axios';
+
+interface Comment {
+  id: string;
+  postId: number;
+  user: string;
+  date: string;
+  content: string;
+  parentCommentId?: string | null;
+  deletedAt?: string | null;
+  replies?: Comment[];
+  created_at: string;
+}
 
 interface PostData {
   title: string;
@@ -26,19 +38,9 @@ interface PostData {
   id: number;
 }
 
-interface Comment {
-  id: string;
-  name: string;
-  date: string;
-  text: string;
-  replying: boolean;
-  replies?: Comment[];
-  deleted?: boolean;
-}
-
 const Page = () => {
   const router = useRouter();
-  const postId = 1; // 게시글 ID
+  const postId = 1;
   const [postData, setPostData] = useState<PostData>({
     title: '',
     content: '',
@@ -49,55 +51,97 @@ const Page = () => {
     id: 0,
   });
 
-  const [chatCount, setChatCount] = useState(0); // 댓글 수
-  const [replyingToId, setReplyingToId] = useState<string | null>(null); // 답글 달기
-  const [comments, setComments] = useState<Comment[]>([]); // 댓글 목록
-  const [commentText, setCommentText] = useState(''); // 댓글 텍스트
-  const [showDeletePopup, setShowDeletePopup] = useState(false); // 삭제 팝업
-  const [replyText, setReplyText] = useState(''); // 답글 텍스트
-  const user = '깔루아 홍길동';
-  const commentCount = comments.filter((comment) => !comment.deleted).length;
-  const replyCount = comments.reduce(
-    (total, comment) =>
-      total +
-      (comment.replies
-        ? comment.replies.filter((reply) => !reply.deleted).length
-        : 0),
-    0
-  );
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [chatCount, setChatCount] = useState<number>(0);
+  const [commentText, setCommentText] = useState('');
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [replyText, setReplyText] = useState('');
+  const [user, setUser] = useState<string>('');
+  const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const token = localStorage.getItem('access_token');
-        const response = await axiosInstance.get(
-          `/post/notice/${postId}/detail`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+        const response = await authInstance.get(
+          `/post/notice/${postId}/detail`
         );
         const data = response.data.result;
-
-        const imageUrls = data.imageUrls
-          ? Array.isArray(data.imageUrls)
-            ? data.imageUrls
-            : typeof data.imageUrls === 'string'
-              ? (data.imageUrls.split(',') as string[])
-              : []
-          : [];
-        setPostData({
-          ...data,
-          imageUrls,
-        });
+        const imageUrls = Array.isArray(data.imageUrls)
+          ? data.imageUrls.map((img: { id: number; url: string }) => img.url)
+          : typeof data.imageUrls === 'string'
+            ? data.imageUrls.split(',')
+            : [];
+        setPostData({ ...data, imageUrls });
       } catch (error) {
         console.error('Error fetching post data', error);
       }
     };
 
+    const fetchUserData = async () => {
+      try {
+        const response = await authInstance.get(`/user`);
+        setUser(response.data.result.name);
+      } catch (error) {
+        console.error('Error fetching user data', error);
+      }
+    };
+
+    const fetchComments = async () => {
+      try {
+        const response = await authInstance.get(`/comment/${postId}/list`);
+        setComments(response.data.result.comments);
+        setChatCount(response.data.result.comments_count);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      }
+    };
+
     fetchPostData();
+    fetchUserData();
+    fetchComments();
   }, []);
+
+  useEffect(() => {
+    if (shouldFetch) {
+      const fetchLatestComments = async () => {
+        try {
+          const response = await authInstance.get(`/comment/${postId}/list`);
+          setComments(response.data.result.comments);
+          setChatCount(response.data.result.comments_count);
+        } catch (error) {
+          console.error('Error fetching latest comments:', error);
+        }
+      };
+
+      fetchLatestComments();
+      setShouldFetch(false);
+    }
+  }, [shouldFetch, postId]);
+
+  const handleAddReply = async (parentCommentId: string, text: string) => {
+    await addCommentOrReply(
+      postId,
+      text,
+      user,
+      setComments,
+      setChatCount,
+      setReplyText,
+      parentCommentId
+    );
+    setShouldFetch(true);
+  };
+
+  const handleAddComment = async () => {
+    await addCommentOrReply(
+      postId,
+      commentText,
+      user,
+      setComments,
+      setChatCount,
+      setCommentText
+    );
+    setShouldFetch(true);
+  };
 
   const handleGoBack = () => {
     router.push('/announcement');
@@ -109,32 +153,26 @@ const Page = () => {
         <Post
           noticeData={postData}
           postId={postId}
-          commentCount={commentCount}
-          replyCount={replyCount}
+          commentCount={comments.length}
+          replyCount={comments.reduce(
+            (acc, comment) =>
+              acc + (comment.replies ? comment.replies.length : 0),
+            0
+          )}
         />
 
-        {/* 댓글 리스트 */}
         <CommentList
           postId={postId}
+          user={user}
           comments={comments}
-          onAddReply={(parentCommentId, text) =>
-            addCommentOrReply(
-              postId,
-              user,
-              text,
-              setComments,
-              setChatCount,
-              setReplyText,
-              parentCommentId,
-              setReplyingToId
-            )
-          }
-          onDeleteComment={(id) =>
-            handleDeleteComment(id, comments, setComments, setChatCount)
+          onAddReply={handleAddReply}
+          onDeleteComment={
+            (id) => handleDeleteComment(id, postId, setComments, setChatCount) // ✅ setComments 직접 전달
           }
           onDeleteReply={(commentId, replyId) =>
             handleDeleteReply(
               commentId,
+              postId,
               replyId,
               comments,
               setComments,
@@ -143,20 +181,10 @@ const Page = () => {
           }
         />
 
-        {/* 댓글 입력 폼 */}
         <CommentInput
           commentText={commentText}
           setCommentText={setCommentText}
-          onAddComment={() =>
-            addCommentOrReply(
-              postId,
-              commentText,
-              user, // Ensure user is passed correctly here
-              setComments,
-              setChatCount,
-              setCommentText
-            )
-          }
+          onAddComment={handleAddComment}
           user={user}
         />
 
@@ -176,7 +204,6 @@ const Page = () => {
           </div>
         </div>
       </div>
-
       {showDeletePopup && (
         <DeletePopup
           onConfirm={() => handleDeleteConfirm(setShowDeletePopup)}

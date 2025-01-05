@@ -16,7 +16,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
 }) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
-    if (e.key === 'Enter') onAddComment();
+    if (e.key === 'Enter' && user) onAddComment();
   };
 
   return (
@@ -28,10 +28,12 @@ const CommentInput: React.FC<CommentInputProps> = ({
         onKeyDown={handleKeyDown}
         placeholder=" 댓글을 입력하세요"
         className="w-full min-h-[60px] border font-pretendard text-base font-semibold border-black rounded-lg px-3 py-2 placeholder:text-gray-40 focus:outline-none"
+        disabled={!user}
       />
       <button
         className="border rounded-lg border-black min-w-[60px] min-h-[60px] cursor-pointer flex items-center justify-center"
         onClick={onAddComment}
+        disabled={!user}
       >
         <Send
           width={20}
