@@ -31,6 +31,7 @@ const List = () => {
           post_type: postType,
           page: currentPage - 1, // 0부터 시작
           size: itemsPerPage,
+          search_word: searchQuery,
         },
       });
 
@@ -60,13 +61,6 @@ const List = () => {
       setFilteredData(sortedContent);
       setTotalPages(totalPages);
 
-      // 검색 필터 적용
-      const filtered = sortedContent.filter((post: any) =>
-        post.title.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-      setFilteredData(filtered);
-      setTotalPages(totalPages);
     } catch (error) {
       console.error('게시글 리스트 로드 실패:', error);
     }
