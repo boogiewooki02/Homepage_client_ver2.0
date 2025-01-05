@@ -18,7 +18,6 @@ interface DecodedToken {
 const getUserRole = (token: string | undefined) => {
   try {
     const decodedToken = jwtDecode<DecodedToken>(token!); // JWT 디코딩
-    console.log(decodedToken); // 추후 삭제
     return decodedToken.role; // role 추출
   } catch (error) {
     console.error('Invalid token', error);
@@ -36,9 +35,6 @@ export function middleware(request: NextRequest) {
 
   // role 확인
   const userRole = getUserRole(token);
-
-  console.log(token);
-  console.log(userRole);
 
   // 사용자 역할에 따라 접근 제한이 있는 페이지를 확인
   for (const [role, pages] of Object.entries(restrictedPages)) {
