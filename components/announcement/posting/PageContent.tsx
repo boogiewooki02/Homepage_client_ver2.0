@@ -45,12 +45,11 @@ const PageContent = () => {
     };
 
     try {
-      await authInstance.post('/post/notice/create', postData);
-      alert('게시물이 성공적으로 등록되었습니다.');
-      router.push('/announcement/post');
+      const response = await authInstance.post('/post/notice/create', postData);
+      const postId = response.data.result.id;
+      router.push(`/announcement/post/${postId}`);
     } catch (error) {
       console.error('게시물 업로드 실패:', error);
-      alert('게시물 업로드 중 문제가 발생했습니다.');
     }
 
     // 초기화

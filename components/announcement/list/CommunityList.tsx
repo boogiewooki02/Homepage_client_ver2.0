@@ -6,6 +6,7 @@ import { formatDate } from '@/components/util/formatDate';
 import { CommunityProps } from '@/components/announcement/list/dto';
 import likeIcon from '@/public/image/grayHeart.svg';
 import chatIcon from '@/public/image/grayChat.svg';
+import { useRouter } from 'next/navigation';
 
 export const CommunityList = ({
   currentPage,
@@ -15,6 +16,7 @@ export const CommunityList = ({
   itemsPerPage: number;
 }) => {
   const [communityPosts, setCommunityPosts] = useState<CommunityProps[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCommunityPosts = async () => {
@@ -59,12 +61,17 @@ export const CommunityList = ({
     fetchCommunityPosts();
   }, [currentPage, itemsPerPage]);
 
+  const handlePostClick = (postId: number) => {
+    router.push(`/announcement/post/${postId}`); // 라우팅 처리
+  };
+
   return (
     <div>
       <ul>
         {communityPosts.map((post) => (
           <li
             key={post.id}
+            onClick={() => handlePostClick(post.id)}
             className="flex flex-col pad:flex-row py-6 items-start gap-4 self-stretch relative border-y-[1px] border-y-solid border-y-gray-10 justify-between"
           >
             <p className="text-[20px] leading-6 cursor-pointer">{post.title}</p>

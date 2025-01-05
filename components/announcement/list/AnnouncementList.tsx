@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { authInstance } from '@/api/auth/axios';
@@ -6,6 +7,7 @@ import { formatDate } from '@/components/util/formatDate';
 import { AnnouncementProps } from '@/components/announcement/list/dto';
 import likeIcon from '@/public/image/grayHeart.svg';
 import chatIcon from '@/public/image/grayChat.svg';
+import { useRouter } from 'next/navigation';
 
 export const AnnouncementList = ({
   currentPage,
@@ -15,6 +17,7 @@ export const AnnouncementList = ({
   itemsPerPage: number;
 }) => {
   const [announcements, setAnnouncements] = useState<AnnouncementProps[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
@@ -58,12 +61,17 @@ export const AnnouncementList = ({
     fetchAnnouncements();
   }, [currentPage, itemsPerPage]);
 
+  const handlePostClick = (postId: number) => {
+    router.push(`/announcement/post/${postId}`); // 라우팅 처리
+  };
+
   return (
     <div>
       <ul>
         {announcements.map((post) => (
           <li
             key={post.id}
+            onClick={() => handlePostClick(post.id)}
             className="flex flex-col pad:flex-row py-6 items-start gap-4 self-stretch relative border-y-[1px] border-y-solid border-y-gray-10 justify-between"
           >
             <p className="text-[20px] leading-6 cursor-pointer">{post.title}</p>
