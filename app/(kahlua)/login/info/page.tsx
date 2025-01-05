@@ -1,11 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import LoginModal from '@/components/login/loginModal';
 import LoginSelectBox from '@/components/login/LoginSelectBox';
 import NameInput from '@/components/login/nameInput';
+import { authInstance } from '@/api/auth/axios';
+import { useSetRecoilState } from 'recoil';
+import { isLoggedInState } from '@/atoms/authAtom';
 
 // 기수 23 ~ 1기
 const generations: string[] = Array.from(
@@ -15,6 +18,13 @@ const generations: string[] = Array.from(
 
 // 세션
 const sessions: string[] = ['보컬', '드럼', '기타', '베이스', '신디사이저'];
+const sessionMap: { [key: string]: string } = {
+  보컬: 'VOCAL',
+  드럼: 'DRUM',
+  기타: 'GUITAR',
+  베이스: 'BASS',
+  신디사이저: 'SYNTHESIZER',
+};
 
 const Page = () => {
   const [name, setName] = useState<string>('');
@@ -23,9 +33,32 @@ const Page = () => {
   const [isComplete, setIsComplete] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const setIsLoggedIn = useSetRecoilState(isLoggedInState);
+
   useEffect(() => {
     setIsComplete(name !== '' && generation !== '' && session !== '');
   }, [name, generation, session]);
+
+  const handleSubmit = async () => {
+    const termData: number = parseInt(generation.replace('기', ''), 10); // term : integer type으로 변환
+    const sessionData: string = sessionMap[session]; // session : enum type으로 변환
+
+    console.log(sessionData, name, termData);
+    try {
+      const response = await authInstance.post('/user', {
+        name: name,
+        term: termData,
+        session: sessionData,
+      });
+
+      if (response.data.isSuccess) {
+        setIsModalOpen(true); // login modal open
+        setIsLoggedIn(true); // recoil login 상태 업데이트
+      }
+    } catch (error) {
+      console.error('회원가입 실패:', error);
+    }
+  };
 
   return (
     <div className="font-pretendard w-full min-h-[calc(100vh-320px)] h-full flex justify-center items-center mt-16 text-gray-0 text-center max-pad:-mb-40 max-pad:bg-gray-90">
@@ -61,7 +94,7 @@ const Page = () => {
         <button
           className={`w-full pad:w-[384px] h-[60px] flex items-center justify-center rounded-[12px] text-[22px] ${isComplete ? 'bg-primary-50 text-gray-0' : 'bg-gray-10 text-gray-40 cursor-not-allowed'}`}
           disabled={!isComplete}
-          onClick={() => setIsModalOpen(true)}
+          onClick={handleSubmit}
         >
           KAHLUA 가입 신청하러 가기
         </button>

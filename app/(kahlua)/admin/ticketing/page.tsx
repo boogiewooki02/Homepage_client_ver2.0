@@ -1,12 +1,13 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { useRecoilValue } from 'recoil';
 import { totalTicket } from '@/atoms';
 import TicketLists from '@/components/admin/ticketing/TicketLists';
 import PublishIcon from '@mui/icons-material/Publish';
 import { authInstance } from '@/api/auth/axios';
 import { information } from '@/components/data/Information';
+import Link from 'next/link';
+import WestIcon from '@mui/icons-material/West';
 
 const page = () => {
   const typeArr = ['All', '신입생', '일반'];
@@ -101,6 +102,18 @@ const page = () => {
             <TicketLists type={type} />
           </div>
         </section>
+      </div>
+
+      {/* admin 홈으로 Button */}
+      <div className="flex h-auto mx-auto w-full pad:w-[786px] dt:w-[1200px] max-pad:mx-[16px]">
+        <Link
+          href={'/admin'}
+          key="admin"
+          className="flex flex-row gap-[8px] items-center"
+        >
+          <WestIcon />
+          <span className="text-[16px] font-medium">Admin 홈으로</span>
+        </Link>
       </div>
     </div>
   );

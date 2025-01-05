@@ -6,7 +6,6 @@ import Banner from '@/components/ui/Banner';
 import InfoList from '@/components/templates/admin/Info'; // Use only this import
 import { defaultData, recruitingInfoList } from './recruitingData';
 import AdminButton from '@/components/ui/admin/Button';
-import Link from 'next/link';
 import WestIcon from '@mui/icons-material/West';
 import CancelModal from '@/components/admin/CancelModal';
 import EditModal from '@/components/admin/EditModal';
