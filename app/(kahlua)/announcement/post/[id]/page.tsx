@@ -30,7 +30,8 @@ interface PostData {
 const Page = () => {
   const router = useRouter();
   const { id } = useParams();
-  const numPostId = Number(id);
+  const postId = Number(id);
+
   const [postData, setPostData] = useState<PostData>({
     title: '',
     content: '',
@@ -48,7 +49,6 @@ const Page = () => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [replyText, setReplyText] = useState('');
   const [user, setUser] = useState<string>('');
-  const [shouldFetch, setShouldFetch] = useState(false);
 
   const fetchComments = async () => {
     try {
@@ -75,9 +75,8 @@ const Page = () => {
   };
 
   useEffect(() => {
-    const fetchPostData = async () => {
-      try {
-        const response = await authInstance.get(`/post/notice/${id}/detail`);
+    const fetchPostData = () =>
+      authInstance.get(`/post/notice/${id}/detail`).then((response) => {
         const data = response.data.result;
         const imageUrls = Array.isArray(data.imageUrls)
           ? data.imageUrls.map((img: { id: number; url: string }) => img.url)
@@ -85,41 +84,21 @@ const Page = () => {
             ? data.imageUrls.split(',')
             : [];
         setPostData({ ...data, imageUrls });
-      } catch (error) {
-        console.error('Error fetching post data', error);
-      }
-    };
+      });
 
-    const fetchUserData = async () => {
-      try {
-        const response = await authInstance.get(`/user`);
+    const fetchUserData = () =>
+      authInstance.get('/user').then((response) => {
         setUser(response.data.result.name);
-      } catch (error) {
-        console.error('Error fetching user data', error);
-      }
-    };
+      });
 
-    fetchPostData();
-    fetchUserData();
-    fetchComments();
-  }, []);
-
-  useEffect(() => {
-    if (shouldFetch) {
-      fetchComments();
-      setShouldFetch(false);
-    }
-  }, [shouldFetch, id]);
-
-  useEffect(() => {
-    setValidCommentCount(
-      comments.filter((c) => c.content !== '삭제된 댓글입니다.').length
+    Promise.all([fetchPostData(), fetchUserData(), fetchComments()]).catch(
+      (error) => console.error('Error fetching data:', error)
     );
-  }, [comments]);
+  }, []);
 
   const handleAddReply = async (parentCommentId: string, text: string) => {
     await addCommentOrReply(
-      numPostId,
+      postId,
       text,
       user,
       setComments,
@@ -127,19 +106,19 @@ const Page = () => {
       setReplyText,
       parentCommentId
     );
-    setShouldFetch(true);
+    fetchComments();
   };
 
   const handleAddComment = async () => {
     await addCommentOrReply(
-      numPostId,
+      postId,
       commentText,
       user,
       setComments,
       setValidCommentCount,
       setCommentText
     );
-    setShouldFetch(true);
+    fetchComments();
   };
 
   const handleGoBack = () => {
@@ -158,32 +137,32 @@ const Page = () => {
       <div className="flex flex-col items-center justify-center pt-16 w-full max-w-[500px] pad:max-w-[786px] dt:max-w-[1200px] max-pad:px-[16px]">
         <Post
           noticeData={postData}
-          postId={numPostId}
+          postId={postId}
           commentCount={validCommentCount}
           replyCount={getReplyCount(comments)}
           currentUser={user}
         />
 
         <CommentList
-          postId={numPostId}
+          postId={postId}
           user={user}
           comments={comments}
           onAddReply={handleAddReply}
           onDeleteComment={(id) =>
             handleDeleteCommentOrReply(
               id,
-              numPostId,
+              postId,
               setComments,
               setValidCommentCount
-            )
+            ).then(fetchComments)
           }
           onDeleteReply={(replyId) =>
             handleDeleteCommentOrReply(
               replyId,
-              numPostId,
+              postId,
               setComments,
               setValidCommentCount
-            )
+            ).then(fetchComments)
           }
           currentUser={user}
         />

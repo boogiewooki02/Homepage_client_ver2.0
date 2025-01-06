@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import defaultImg from '@/public/image/notice/defaultProfile.svg';
 import Send from '@mui/icons-material/Send';
 import { Comment as CommentType } from './dto';
@@ -25,51 +25,51 @@ const Comment: React.FC<CommentProps> = ({
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [replyingId, setReplyingId] = useState<string | null>(null);
 
-  const handleAddReply = useCallback(() => {
-    if (replyText.trim() === '') return;
+  const handleAddReply = () => {
+    if (!replyText.trim()) return;
     onAddReply(comment.id, replyText);
     setReplyText('');
-  }, [replyText, comment.id, onAddReply]);
+  };
 
-  const handleDeleteCommentConfirm = useCallback(() => {
+  const handleDeleteCommentConfirm = () => {
     onDeleteComment(comment.id);
     setShowDeletePopup(false);
-  }, [onDeleteComment, comment.id]);
+  };
 
-  const handleToggleReplying = useCallback(() => {
+  const handleToggleReplying = () => {
     setReplyingId((prevId) => (prevId === comment.id ? null : comment.id));
-  }, [comment.id]);
+  };
 
   const formatDate = (isoString: string): string => {
-    const date = new Date(isoString);
-    date.setHours(date.getHours() + 9);
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월 (0부터 시작하므로 +1)
-    const day = date.getDate().toString().padStart(2, '0');
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-
-    return `${year}. ${month}. ${day} ${hours}:${minutes}`;
+    return new Intl.DateTimeFormat('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(new Date(isoString));
   };
 
   const isAuthor = currentUser === comment.user;
+  const filteredReplies =
+    comment.replies?.filter((reply) => !reply.deletedAt) || [];
+  const hasReplies = filteredReplies.length > 0;
 
   return (
     <div
       className={`flex flex-col gap-8 ${
-        comment.parentCommentId ||
-        (comment.deletedAt &&
-          (!comment.replies || comment.replies.length === 0))
+        comment.parentCommentId || (comment.deletedAt && !hasReplies)
           ? ''
           : 'mb-10'
       }`}
     >
       {comment.deletedAt ? (
-        comment.replies && comment.replies.length > 0 ? (
+        hasReplies && (
           <p className="font-pretendard text-base break-words">
             삭제된 댓글입니다.
           </p>
-        ) : null
+        )
       ) : (
         <div className="flex items-start gap-3">
           <Image
@@ -113,21 +113,19 @@ const Comment: React.FC<CommentProps> = ({
         </div>
       )}
 
-      {comment.replies && comment.replies.length > 0 && (
+      {hasReplies && (
         <div className="flex flex-col gap-8 ml-6">
-          {comment.replies
-            .filter((reply) => !reply.deletedAt) // ✅ 삭제된 답글은 숨김
-            .map((reply) => (
-              <Comment
-                key={reply.id} // ✅ reply.id가 고유한 값인지 확인
-                comment={reply}
-                onAddReply={onAddReply}
-                onDeleteComment={onDeleteComment}
-                onDeleteReply={onDeleteReply}
-                replying={replyingId === reply.id}
-                currentUser={currentUser}
-              />
-            ))}
+          {filteredReplies.map((reply) => (
+            <Comment
+              key={reply.id}
+              comment={reply}
+              onAddReply={onAddReply}
+              onDeleteComment={onDeleteComment}
+              onDeleteReply={onDeleteReply}
+              replying={replyingId === reply.id}
+              currentUser={currentUser}
+            />
+          ))}
         </div>
       )}
 
@@ -163,9 +161,7 @@ const Comment: React.FC<CommentProps> = ({
         <DeletePopup
           isOpen={showDeletePopup}
           onConfirm={handleDeleteCommentConfirm}
-          onClose={() => {
-            setShowDeletePopup(false);
-          }}
+          onClose={() => setShowDeletePopup(false)}
         />
       )}
     </div>

@@ -13,8 +13,6 @@ interface CommentListProps {
 }
 
 const CommentList: React.FC<CommentListProps> = ({
-  postId,
-  user,
   comments,
   onAddReply,
   onDeleteComment,
@@ -55,7 +53,7 @@ const buildCommentTree = (comments: CommentType[]): CommentType[] => {
 
     commentMap[commentId] = {
       ...comment,
-      content: comment.deletedAt ? '삭제된 댓글입니다.' : comment.content, // 삭제된 댓글이면 메시지 변경
+      content: comment.deletedAt ? '삭제된 댓글입니다.' : comment.content,
       replies: [],
     };
   });

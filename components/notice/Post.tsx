@@ -27,8 +27,13 @@ interface PostProps {
 
 const formatDate = (dateString?: string) => {
   if (!dateString) return '';
-  const date = new Date(dateString);
-  return `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}. ${String(date.getDate()).padStart(2, '0')}`;
+  return new Intl.DateTimeFormat('ko-KR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+    .format(new Date(dateString))
+    .replace(/\.$/, '');
 };
 
 const Post: React.FC<PostProps> = ({
@@ -39,14 +44,12 @@ const Post: React.FC<PostProps> = ({
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
-  const handleDeleteClick = () => {
-    setShowDeletePopup(true);
-  };
+  const handleDeleteClick = () => setShowDeletePopup(true);
+  const handleDeleteCancel = () => setShowDeletePopup(false);
 
   const handleDeleteConfirm = async () => {
     try {
       await authInstance.delete(`/post/notice/${noticeData.id}/delete`);
-      alert('게시글이 삭제되었습니다.');
       setShowDeletePopup(false);
       window.location.href = '/announcement';
     } catch (error) {
@@ -55,35 +58,26 @@ const Post: React.FC<PostProps> = ({
     }
   };
 
-  const handleDeleteCancel = () => {
-    setShowDeletePopup(false);
-  };
-
-  const imageUrls =
-    typeof noticeData.imageUrls === 'string'
-      ? noticeData.imageUrls.split(',').map((img) => img.trim())
-      : Array.isArray(noticeData.imageUrls)
-        ? noticeData.imageUrls
-        : [];
-
-  const formattedDate = formatDate(noticeData.created_at);
+  const imageUrls = Array.isArray(noticeData.imageUrls)
+    ? noticeData.imageUrls
+    : noticeData.imageUrls?.split(',').map((img) => img.trim()) || [];
 
   return (
     <div className="w-full">
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-16">
           <TitleSection
-            title={noticeData?.title || ''}
-            user={noticeData?.writer || ''}
-            date={formattedDate}
-            content={noticeData?.content || ''}
+            title={noticeData.title || ''}
+            user={noticeData.writer || ''}
+            date={formatDate(noticeData.created_at)}
+            content={noticeData.content || ''}
             imageUrls={imageUrls}
             onDeleteClick={handleDeleteClick}
             currentUser={currentUser}
           />
           <div className="w-full border-b border-gray-15" />
           <ContentSection
-            text={noticeData?.content || ''}
+            text={noticeData.content || ''}
             imageUrls={imageUrls}
           />
         </div>
@@ -99,7 +93,7 @@ const Post: React.FC<PostProps> = ({
       {showDeletePopup && (
         <DeletePopup
           isOpen={showDeletePopup}
-          onConfirm={handleDeleteConfirm} // ✅ API 요청 포함
+          onConfirm={handleDeleteConfirm}
           onClose={handleDeleteCancel}
         />
       )}

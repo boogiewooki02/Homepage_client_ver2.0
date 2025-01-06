@@ -41,6 +41,7 @@ export const addCommentOrReply = async (
       parentCommentId
     );
     const newCommentOrReply = response.data;
+
     setComments((prevComments) => {
       if (parentCommentId) {
         return prevComments.map((comment) =>
@@ -56,8 +57,8 @@ export const addCommentOrReply = async (
       }
     });
 
-    setText('');
     setChatCount((prev) => prev + 1);
+    setText('');
     if (setReplyingToId) setReplyingToId(null);
   } catch (error) {
     console.error('댓글/답글 작성 실패:', error);
@@ -71,15 +72,12 @@ export const handleDeleteCommentOrReply = async (
   setChatCount: React.Dispatch<React.SetStateAction<number>>
 ) => {
   try {
-    const response = await authInstance.patch(
-      `/comment/${postId}/${id}/delete`
-    );
+    await authInstance.patch(`/comment/${postId}/${id}/delete`);
 
     setComments((prevComments) => {
-      let updatedComments = [...prevComments];
       let deletedCommentCount = 0;
 
-      updatedComments = updatedComments
+      const updatedComments = prevComments
         .map((comment) => {
           if (comment.id === id) {
             const hasReplies =
@@ -87,8 +85,7 @@ export const handleDeleteCommentOrReply = async (
               prevComments.some((c) => c.parentCommentId === id);
 
             if (hasReplies) {
-              setChatCount((prev) => Math.max(0, prev - 1));
-
+              deletedCommentCount++;
               return {
                 ...comment,
                 deletedAt: new Date().toISOString(),
@@ -101,9 +98,26 @@ export const handleDeleteCommentOrReply = async (
             }
           }
 
+          if (comment.replies) {
+            const originalReplyCount = comment.replies.length;
+            comment.replies = comment.replies.filter(
+              (reply) => reply.id !== id
+            );
+
+            if (
+              originalReplyCount > 0 &&
+              comment.replies.length === 0 &&
+              comment.deletedAt
+            ) {
+              deletedCommentCount++;
+            }
+          }
+
           return comment;
         })
         .filter((comment): comment is Comment => comment !== null);
+
+      setChatCount((prev) => Math.max(0, prev - deletedCommentCount));
 
       return updatedComments;
     });

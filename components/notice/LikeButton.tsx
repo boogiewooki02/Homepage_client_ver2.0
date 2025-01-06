@@ -30,8 +30,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({
       });
 
       if (response.status === 200) {
-        setIsFilled(!isFilled); // ✅ 먼저 업데이트
-        setHeartCount((prev) => (!isFilled ? prev + 1 : prev - 1)); // ✅ 현재 상태 기준으로 좋아요 수 변경
+        setIsFilled(!isFilled);
+        setHeartCount((prev) => (!isFilled ? prev + 1 : prev - 1));
       } else {
         console.error('Unexpected response:', response);
       }
