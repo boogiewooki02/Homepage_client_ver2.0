@@ -71,26 +71,24 @@ export const handleDeleteCommentOrReply = async (
   setChatCount: React.Dispatch<React.SetStateAction<number>>
 ) => {
   try {
-    const response = await authInstance.delete(
+    const response = await authInstance.patch(
       `/comment/${postId}/${id}/delete`
     );
-    console.log('✅ 삭제 성공:', response);
 
     setComments((prevComments) => {
       let updatedComments = [...prevComments];
+      let deletedCommentCount = 0;
 
       updatedComments = updatedComments
         .map((comment) => {
-          // ✅ 삭제하려는 댓글 찾기
           if (comment.id === id) {
             const hasReplies =
               (comment.replies ? comment.replies.length : 0) > 0 ||
               prevComments.some((c) => c.parentCommentId === id);
 
             if (hasReplies) {
-              console.log(
-                `🔗 부모 댓글 (${comment.id}) 삭제 → "삭제된 댓글입니다."`
-              );
+              setChatCount((prev) => Math.max(0, prev - 1));
+
               return {
                 ...comment,
                 deletedAt: new Date().toISOString(),
@@ -98,26 +96,9 @@ export const handleDeleteCommentOrReply = async (
                 user: '',
               };
             } else {
-              console.log(`❌ 답글 없는 댓글 (${comment.id}) → 완전 삭제`);
+              deletedCommentCount++;
               return null;
             }
-          }
-
-          // ✅ 부모 댓글이 삭제되더라도 답글의 `parentCommentId`를 유지해야 함
-          if (comment.replies) {
-            comment.replies = comment.replies
-              .map((reply) => {
-                if (reply.id === id) {
-                  return {
-                    ...reply,
-                    deletedAt: new Date().toISOString(),
-                    content: '삭제된 댓글입니다.',
-                    user: '',
-                  };
-                }
-                return reply;
-              })
-              .filter((reply): reply is Comment => reply !== null);
           }
 
           return comment;
@@ -126,8 +107,6 @@ export const handleDeleteCommentOrReply = async (
 
       return updatedComments;
     });
-
-    setChatCount((prev) => Math.max(0, prev - 1));
   } catch (error) {
     console.error('❌ 삭제 실패:', error);
   }

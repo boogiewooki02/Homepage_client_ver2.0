@@ -49,15 +49,17 @@ export default CommentList;
 const buildCommentTree = (comments: CommentType[]): CommentType[] => {
   const commentMap: { [key: string]: CommentType } = {};
   const rootComments: CommentType[] = [];
-
-  // 1️⃣ 모든 댓글을 Map에 저장 (삭제된 댓글 포함)
   comments.forEach((comment) => {
     if (!comment.id) return;
     const commentId = comment.id.toString();
-    commentMap[commentId] = { ...comment, replies: [] };
+
+    commentMap[commentId] = {
+      ...comment,
+      content: comment.deletedAt ? '삭제된 댓글입니다.' : comment.content, // 삭제된 댓글이면 메시지 변경
+      replies: [],
+    };
   });
 
-  // 2️⃣ 부모-자식 관계 설정
   comments.forEach((comment) => {
     if (!comment.id) return;
     const commentId = comment.id.toString();
@@ -67,11 +69,24 @@ const buildCommentTree = (comments: CommentType[]): CommentType[] => {
       comment.parentCommentId !== undefined
     ) {
       const parentId = comment.parentCommentId.toString();
-      if (commentMap[parentId]) {
-        console.log(`🔗 답글 ${commentId} → 부모 ${parentId} 유지`);
+
+      if (!commentMap[parentId]) {
+        commentMap[parentId] = {
+          id: parentId,
+          postId: comment.postId,
+          date: '',
+          content: '삭제된 댓글입니다.',
+          user: '',
+          deletedAt: new Date().toISOString(),
+          replies: [],
+          parentCommentId: null,
+          created_at: new Date().toISOString(),
+        };
+        rootComments.push(commentMap[parentId]);
+      }
+
+      if (!comment.deletedAt) {
         commentMap[parentId].replies?.push(commentMap[commentId]);
-      } else {
-        console.warn(`⚠️ 부모 댓글(${parentId}) 없음 → root로 이동 방지`);
       }
     } else {
       rootComments.push(commentMap[commentId]);

@@ -39,6 +39,7 @@ const Comment: React.FC<CommentProps> = ({
   const handleToggleReplying = useCallback(() => {
     setReplyingId((prevId) => (prevId === comment.id ? null : comment.id));
   }, [comment.id]);
+
   const formatDate = (isoString: string): string => {
     const date = new Date(isoString);
     date.setHours(date.getHours() + 9);
@@ -50,18 +51,25 @@ const Comment: React.FC<CommentProps> = ({
 
     return `${year}. ${month}. ${day} ${hours}:${minutes}`;
   };
+
   const isAuthor = currentUser === comment.user;
 
   return (
     <div
       className={`flex flex-col gap-8 ${
-        comment.parentCommentId ? '' : 'mb-10'
+        comment.parentCommentId ||
+        (comment.deletedAt &&
+          (!comment.replies || comment.replies.length === 0))
+          ? ''
+          : 'mb-10'
       }`}
     >
-      {comment.deletedAt && comment.replies && comment.replies.length > 0 ? (
-        <p className="font-pretendard text-base break-words">
-          삭제된 댓글입니다.
-        </p>
+      {comment.deletedAt ? (
+        comment.replies && comment.replies.length > 0 ? (
+          <p className="font-pretendard text-base break-words">
+            삭제된 댓글입니다.
+          </p>
+        ) : null
       ) : (
         <div className="flex items-start gap-3">
           <Image
@@ -107,17 +115,19 @@ const Comment: React.FC<CommentProps> = ({
 
       {comment.replies && comment.replies.length > 0 && (
         <div className="flex flex-col gap-8 ml-6">
-          {comment.replies.map((reply) => (
-            <Comment
-              key={reply.id} // ✅ reply.id가 고유한 값인지 확인
-              comment={reply}
-              onAddReply={onAddReply}
-              onDeleteComment={onDeleteComment}
-              onDeleteReply={onDeleteReply}
-              replying={replyingId === reply.id}
-              currentUser={currentUser}
-            />
-          ))}
+          {comment.replies
+            .filter((reply) => !reply.deletedAt) // ✅ 삭제된 답글은 숨김
+            .map((reply) => (
+              <Comment
+                key={reply.id} // ✅ reply.id가 고유한 값인지 확인
+                comment={reply}
+                onAddReply={onAddReply}
+                onDeleteComment={onDeleteComment}
+                onDeleteReply={onDeleteReply}
+                replying={replyingId === reply.id}
+                currentUser={currentUser}
+              />
+            ))}
         </div>
       )}
 
