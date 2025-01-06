@@ -10,6 +10,7 @@ interface TitleSectionProps {
   content?: string;
   imageUrls?: string[] | string | null;
   currentUser?: string;
+  postId?: number;
   onDeleteClick: () => void;
 }
 
@@ -21,6 +22,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({
   imageUrls = '',
   currentUser,
   onDeleteClick,
+  postId,
 }) => {
   const isAuthor = currentUser === user;
 
@@ -53,7 +55,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({
               <Link
                 href={{
                   pathname: '/announcement/posting',
-                  query: { title, content, imageUrls },
+                  query: { postId, title, content, imageUrls },
                 }}
                 passHref
               >

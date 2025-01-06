@@ -41,6 +41,7 @@ const Post: React.FC<PostProps> = ({
   commentCount = 0,
   replyCount = 0,
   currentUser,
+  postId,
 }) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
@@ -74,6 +75,7 @@ const Post: React.FC<PostProps> = ({
             imageUrls={imageUrls}
             onDeleteClick={handleDeleteClick}
             currentUser={currentUser}
+            postId={postId}
           />
           <div className="w-full border-b border-gray-15" />
           <ContentSection

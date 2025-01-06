@@ -16,6 +16,7 @@ const PageContent = () => {
   const content = searchParams?.get('content') || '';
   const imageUrls = searchParams?.getAll('imageUrls') || [];
   const toggle = searchParams.get('toggle');
+  const postId = searchParams.get('postId');
 
   const [currentTitle, setTitle] = useState(title || '');
   const [currentContent, setContent] = useState(content || '');
@@ -23,11 +24,10 @@ const PageContent = () => {
     imageUrls.length > 0 ? imageUrls : []
   );
 
-  const isEditMode = title !== null;
+  const isEditMode = postId !== null;
   const isPostActive =
     currentTitle.trim() !== '' && currentContent.trim() !== '';
 
-  // 글 수정 API 추가
   const onPublish = async () => {
     const POST_TYPES = {
       NOTICE: 'NOTICE',
@@ -45,14 +45,22 @@ const PageContent = () => {
     };
 
     try {
-      const response = await authInstance.post('/post/notice/create', postData);
-      const postId = response.data.result.id;
-      router.push(`/announcement/post/${postId}`);
+      let response;
+      if (isEditMode) {
+        response = await authInstance.patch(
+          `post/notice/${postId}/update`,
+          postData
+        );
+      } else {
+        response = await authInstance.post('/post/notice/create', postData);
+      }
+
+      const updatedPostId = response.data.result.id;
+      router.push(`/announcement/post/${updatedPostId}`);
     } catch (error) {
       console.error('게시물 업로드 실패:', error);
     }
 
-    // 초기화
     setTitle('');
     setContent('');
     setCurrentImages([]);
