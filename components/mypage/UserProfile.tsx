@@ -22,9 +22,9 @@ const sessionMapping: { [key: string]: string } = {
 
 const UserProfile = () => {
   const [userInfo, setUserInfo] = useState<userProps>({
-    name: '',
-    term: 0,
-    session: '',
+    name: '홍길동',
+    term: 20,
+    session: '보컬',
   });
 
   const getUserInfo = async () => {
