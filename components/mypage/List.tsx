@@ -2,10 +2,11 @@
 import likeIcon from '@/public/image/mypage/grayHeart.svg';
 import chatIcon from '@/public/image/mypage/grayChat.svg';
 import Image from 'next/image';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonModal from '../ui/ButtonModal';
 import { useRouter } from 'next/navigation';
 import { authInstance } from '@/api/auth/axios';
+import { CategoryToggle } from './CategoryToggle';
 
 interface myPostProps {
   title: string;
@@ -13,20 +14,16 @@ interface myPostProps {
   comment: number;
   date: string;
 }
-
-interface reservationProps {
-  date: string;
-  time: string;
+interface ReservationProps {
+  reservationId: number;
+  email: string;
+  type: string;
+  clubroomUsername: string;
+  reservationDate: string;
+  startTime: string;
+  endTime: string;
   status: string;
 }
-
-interface myPostProps {
-  title: string;
-  like: number;
-  comment: number;
-  date: string;
-}
-
 interface toggleProps {
   toggle: string;
 }
@@ -64,43 +61,6 @@ const dummyMyPost: myPostProps[] = [
   },
 ];
 
-// 카테고리 토글
-export const CategoryToggle = (props: {
-  toggleHandler: (arg0: string) => void;
-  toggle: string;
-}) => {
-  return (
-    <section className="flex flex-col gap-6 pad:flex-row pad:gap-0 mb-6 text-2xl font-semibold justify-between">
-      <ul className="flex gap-6">
-        {toggleList.map((category) => {
-          return (
-            <li
-              key={category.toggle}
-              onClick={() => {
-                props.toggleHandler(category.toggle);
-              }}
-              className={`cursor-pointer text-xl pad:text-2xl ${props.toggle === category.toggle ? 'text-black' : 'text-gray-40'}`}
-            >
-              {category.toggle}
-            </li>
-          );
-        })}
-      </ul>
-    </section>
-  );
-};
-
-interface ReservationProps {
-  reservationId: number;
-  email: string;
-  type: string;
-  clubroomUsername: string;
-  reservationDate: string;
-  startTime: string;
-  endTime: string;
-  status: string;
-}
-
 // 동방 예약 내역 리스트
 export const ReservationList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -130,26 +90,18 @@ export const ReservationList = () => {
     setSelectedReservation(null); // 선택된 예약 초기화
   };
 
-  const handleSubmitCancellation = () => {
-    console.log(`예약 취소: ${selectedReservation?.reservationId}`);
-
-    const deleteReservation = async (id: number) => {
-      try {
-        const response = await authInstance.delete(
-          `/my-page/reservation/${id}`
-        );
-        setReservations(
-          reservations.filter((reservation) => reservation.reservationId !== id)
-        );
-
-        console.log(`예약 ID ${id} 삭제 성공`);
-      } catch (error) {
-        console.error('예약 취소 실패:', error);
-      }
-    };
-
-    // 예약 취소 로직 작성 필요
-    handleCloseModal();
+  // 예약 취소 함수
+  const deleteReservation = async (id: number) => {
+    try {
+      const response = await authInstance.delete(`/my-page/reservation/${id}`);
+      setReservations(
+        reservations.filter((reservation) => reservation.reservationId !== id)
+      );
+    } catch (error) {
+      console.error('예약 취소 실패:', error);
+    } finally {
+      handleCloseModal();
+    }
   };
 
   useEffect(() => {
@@ -182,9 +134,9 @@ export const ReservationList = () => {
               </div>
               <p
                 className="flex items-center text-danger-40 text-base font-normal absolute right-0 bottom-6 pad:top-6 cursor-pointer"
-                onClick={() =>
-                  handleCancleReservation(reservation.reservationId)
-                }
+                onClick={() => {
+                  handleCancleReservation(reservation.reservationId);
+                }}
               >
                 예약 취소하기
               </p>
@@ -196,7 +148,14 @@ export const ReservationList = () => {
       <ButtonModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        handleSubmit={handleSubmitCancellation}
+        handleSubmit={() => {
+          // 에러 처리
+          if (selectedReservation?.reservationId) {
+            deleteReservation(selectedReservation.reservationId);
+          } else {
+            console.error('선택된 예약이 없습니다.');
+          }
+        }}
         mainContent="예약을 취소하시겠습니까?"
         buttonContent="취소하기"
       />
@@ -206,10 +165,27 @@ export const ReservationList = () => {
 
 // 내가 쓴 글 리스트
 export const MyPostList = () => {
+  const [posts, setPosts] = useState<myPostProps[]>([]);
+
+  const getPostList = async () => {
+    try {
+      const response = await authInstance.get(
+        '/my-page/post/list?page=0&size=1&sort=string'
+      );
+      setPosts(response.data.result.content);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getPostList();
+  }, []);
+
   return (
     <div>
       <ul>
-        {dummyMyPost.map((post) => {
+        {posts.map((post) => {
           return (
             // li 태그 스타일 코드는 그대로 쓰셔도 됩니다.
             <li
@@ -241,10 +217,6 @@ export const MyPostList = () => {
 
 const List = () => {
   const [toggle, setToggle] = useState(toggleList[0].toggle);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [pageGroup, setPageGroup] = useState(0);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
@@ -262,13 +234,13 @@ const List = () => {
   };
 
   return (
-    <div className="flex flex-col w-full px-4 pad:px-0 pad:mx-auto pad:w-[786px] dt:w-[1200px] mt-6 pad:mt-10">
+    <div className="flex flex-col w-full min-h-screen px-4 pad:px-0 pad:mx-auto pad:w-[786px] dt:w-[1200px] mt-6 pad:mt-10">
       <section className="flex justify-between">
         {/* 카테고리 토글 */}
-        {/* <CategoryToggle toggle={toggle} onToggleChange={toggleHandler} /> */}
+        <CategoryToggle toggle={toggle} onToggleChange={toggleHandler} />
         {/* 탈퇴 버튼 */}
         <button
-          className="flex items-start text-gray-30 text-sm font-medium leading-[30px] cursor-pointer"
+          className="flex items-start text-gray-30 text-xl font-medium leading-[30px] cursor-pointer"
           onClick={handleSignOut}
         >
           회원 탈퇴
