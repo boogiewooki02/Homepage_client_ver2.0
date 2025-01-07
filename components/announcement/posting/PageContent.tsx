@@ -40,7 +40,7 @@ const PageContent = () => {
     const postData = {
       title: currentTitle,
       content: currentContent,
-      imageUrls: currentImages,
+      imageUrls: currentImages.length > 0 ? currentImages : [],
       postType,
     };
 

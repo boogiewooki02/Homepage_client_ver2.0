@@ -41,6 +41,8 @@ const Comment: React.FC<CommentProps> = ({
   };
 
   const formatDate = (isoString: string): string => {
+    const date = new Date(isoString);
+    date.setHours(date.getHours() + 9);
     return new Intl.DateTimeFormat('ko-KR', {
       year: 'numeric',
       month: '2-digit',
@@ -48,7 +50,7 @@ const Comment: React.FC<CommentProps> = ({
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
-    }).format(new Date(isoString));
+    }).format(date);
   };
 
   const isAuthor = currentUser === comment.user;
