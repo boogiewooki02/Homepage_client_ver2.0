@@ -6,15 +6,7 @@ import { authInstance } from '@/api/auth/axios';
 import { CategoryToggle } from './CategoryToggle';
 import ReservationList from './ReservationList';
 import MyPostsList from './MyPostsList';
-
-interface toggleProps {
-  toggle: string;
-}
-
-const toggleList: Array<toggleProps> = [
-  { toggle: '동방 예약 확인' },
-  { toggle: '내가 쓴 글' },
-];
+import { toggleList } from './categoryDto';
 
 const List = () => {
   const [toggle, setToggle] = useState(toggleList[0].toggle);
