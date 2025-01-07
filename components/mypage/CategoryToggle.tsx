@@ -1,4 +1,4 @@
-import { toggleList } from './category';
+import { toggleList } from './categoryDto';
 
 // 카테고리 토글
 export const CategoryToggle = ({
