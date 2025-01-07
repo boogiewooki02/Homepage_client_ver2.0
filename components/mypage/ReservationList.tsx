@@ -61,7 +61,7 @@ const ReservationList = () => {
   }, []);
 
   return (
-    <div>
+    <div className="border-t-[1px] border-t-black border-b-[1px] border-b-black">
       <ul>
         {reservations.map((reservation) => {
           return (

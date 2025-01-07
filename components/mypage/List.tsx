@@ -49,7 +49,7 @@ const List = () => {
       </section>
 
       {/* 리스트 */}
-      <section className="flex flex-col border-t-[1px] border-t-black border-b-[1px] border-b-black">
+      <section className="flex flex-col">
         {toggle === toggleList[0].toggle && <ReservationList />}
         {toggle === toggleList[1].toggle && <MyPostsList />}
       </section>
