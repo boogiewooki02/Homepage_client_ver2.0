@@ -5,48 +5,26 @@ import chatIcon from '@/public/image/mypage/grayChat.svg';
 import Image from 'next/image';
 
 interface myPostProps {
+  id: number;
   title: string;
-  like: number;
-  comment: number;
-  date: string;
+  content: string;
+  writer: string;
+  likes: number;
+  commentsCount: number;
+  imageUrls: string;
+  created_at: string;
+  updated_at: string;
+  liked: boolean;
 }
 
-// dummy data
-const dummyMyPost: myPostProps[] = [
-  {
-    title: '제목1제목1제목1제목1제목1제목1제목1',
-    like: 10,
-    comment: 5,
-    date: '2024.10.30',
-  },
-  {
-    title: '제목2',
-    like: 20,
-    comment: 3,
-    date: '2024.10.31',
-  },
-  {
-    title: '제목3',
-    like: 30,
-    comment: 2,
-    date: '2024.11.01',
-  },
-  {
-    title: '제목4',
-    like: 40,
-    comment: 1,
-    date: '2024.11.02',
-  },
-];
-
 // 내가 쓴 글 리스트
-const MyPostList = () => {
+const MyPostsList = () => {
   const [posts, setPosts] = useState<myPostProps[]>([]);
 
   const getPostList = async () => {
     try {
       const response = await authInstance.get(
-        '/my-page/post/list?page=0&size=1&sort=string'
+        '/my-page/post/list?page=0&size=10&sort=string'
       );
       setPosts(response.data.result.content);
     } catch (error) {
@@ -65,7 +43,7 @@ const MyPostList = () => {
           return (
             // li 태그 스타일 코드는 그대로 쓰셔도 됩니다.
             <li
-              key={post.title + post.date}
+              key={post.id}
               className="flex flex-col pad:flex-row py-6 items-start gap-4 self-stretch relative border-y-[1px] border-y-solid border-y-gray-10 justify-between"
             >
               <p className="text-[20px] leading-6">{post.title}</p>
@@ -74,14 +52,14 @@ const MyPostList = () => {
                 <div className="flex gap-6">
                   <div className="flex gap-[10px]">
                     <Image src={likeIcon} alt="like" width={14} height={14} />
-                    <p>{post.like}</p>
+                    <p>{post.likes}</p>
                   </div>
                   <div className="flex gap-[10px]">
                     <Image src={chatIcon} alt="chat" width={18} height={18} />
-                    <p>{post.comment}</p>
+                    <p>{post.commentsCount}</p>
                   </div>
                 </div>
-                <p>{post.date}</p>
+                <p>{post.created_at}</p>
               </div>
             </li>
           );
@@ -91,4 +69,4 @@ const MyPostList = () => {
   );
 };
 
-export default MyPostList;
+export default MyPostsList;

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authInstance } from '@/api/auth/axios';
 import { CategoryToggle } from './CategoryToggle';
 import ReservationList from './ReservationList';
-import { MyPostList } from './MyPostList';
+import MyPostsList from './MyPostsList';
 
 interface toggleProps {
   toggle: string;
@@ -51,7 +51,7 @@ const List = () => {
       {/* 리스트 */}
       <section className="flex flex-col border-t-[1px] border-t-black border-b-[1px] border-b-black">
         {toggle === toggleList[0].toggle && <ReservationList />}
-        {toggle === toggleList[1].toggle && <MyPostList />}
+        {toggle === toggleList[1].toggle && <MyPostsList />}
       </section>
 
       {/* 탈퇴 모달 */}
