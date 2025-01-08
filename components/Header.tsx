@@ -124,7 +124,6 @@ const Header = () => {
   const [isKahluaClicked, setIsKahluaClicked] = useState(false); // Drawer 내부 KAHLUA 클릭 여부
   const [kahluaRightOffset, setKahluaRightOffset] = useState(0); // 추가 요소 위치
   const kahluaRef = useRef<HTMLDivElement>(null); // 데스크탑 KAHLUA 요소 참조
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const toggleDrawer = (newOpen: boolean) => () => {
     setIsDrawerOpen(newOpen);
@@ -219,6 +218,27 @@ const Header = () => {
 
       {/* 하단 로고 및 SNS 버튼 */}
       <div className="fixed bottom-14 left-8">
+        <div className="mb-3">
+          <button className="text-gray-50 font-medium leading-6 text-md pad:text-lg">
+            {isLoggedIn ? (
+              <p
+                onClick={() => {
+                  handleLogout();
+                }}
+              >
+                로그아웃
+              </p>
+            ) : (
+              <p
+                onClick={() => {
+                  window.location.href = '/login';
+                }}
+              >
+                로그인 | 회원가입
+              </p>
+            )}
+          </button>
+        </div>
         {width <= 834 ? (
           <Image
             src={kahlua_logo}
