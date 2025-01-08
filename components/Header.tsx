@@ -50,7 +50,7 @@ const theme = createTheme({
     MuiListItemButton: {
       styleOverrides: {
         root: {
-          padding: '8px 12px',
+          padding: '8px 12px 0 12px',
         },
       },
     },
@@ -176,7 +176,7 @@ const Header = () => {
             <ListItem key={section} disablePadding>
               <ListItemButton>
                 <div
-                  className={`w-[610px] rounded-[20px] flex items-center ${width <= 834 ? 'pl-5 h-[40px]' : 'pl-5 h-[43px]'} ${section === currentLink ? 'bg-primary-50' : ''}`}
+                  className={`w-[610px] rounded-[20px] flex items-center ${width <= 834 ? 'pl-5 h-[40px]' : 'pl-5 h-[43px]'} ${section === currentLink ? 'bg-primary-50' : ''} ${section === 'KAHLUA' && isKahluaClicked ? 'bg-primary-50 rounded-b-none' : ''}`}
                   onClick={() => {
                     if (section === 'KAHLUA') {
                       setIsKahluaClicked(!isKahluaClicked);
@@ -187,7 +187,7 @@ const Header = () => {
                 >
                   <ListItemText
                     primary={section}
-                    className={`font-pretendard font-medium ${section === currentLink ? 'text-gray-0' : 'text-gray-70'} ${width <= 834 ? 'text-base' : 'text-lg'}`}
+                    className={`font-pretendard font-medium ${section === currentLink || (section === 'KAHLUA' && isKahluaClicked) ? 'text-gray-0' : 'text-gray-70'} ${width <= 834 ? 'text-base' : 'text-lg'}`}
                   />
                 </div>
               </ListItemButton>
@@ -195,12 +195,14 @@ const Header = () => {
           )
         )}
         {isKahluaClicked && (
-          <ul className="pl-11">
+          <ul
+            className={`pl-11 mx-3 rounded-b-[20px] ${isKahluaClicked ? 'bg-primary-50' : ''}`}
+          >
             {KahluaUrl.map((url) => (
               <li key={url.name}>
                 <Link href={url.url} passHref>
                   <div
-                    className={`py-2 cursor-pointer font-pretendard font-normal text-gray-60 ${width <= 834 ? 'text-sm' : 'text-base'}`}
+                    className={`py-2 cursor-pointer font-pretendard font-normal text-gray-60 ${isKahluaClicked ? 'text-primary-10' : ''} ${width <= 834 ? 'text-sm' : 'text-base'}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleLinkClick(url.name);
