@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { toggleList } from '@/components/announcement/list/dto';
 import blackSearch from '@/public/image/announcement/blackSearch.svg';
 import blackPen from '@/public/image/announcement/blackPen.svg';
+import { useEffect, useState } from 'react';
+import { authInstance } from '@/api/auth/axios';
 
 export const Toggle = ({
   toggle,
@@ -16,6 +18,21 @@ export const Toggle = ({
   onSearchChange: (query: string) => void;
 }) => {
   const router = useRouter();
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await authInstance.get('/user');
+        const { role } = response.data.result;
+        setUserRole(role); // role 저장
+      } catch (error) {
+        console.error('유저 role 가져오기 실패:', error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
   return (
     <section className="flex flex-col gap-6 pad:flex-row pad:gap-0 mb-6 text-2xl font-semibold justify-between">
       <ul className="flex gap-6">
@@ -45,9 +62,12 @@ export const Toggle = ({
             className="absolute top-[6px] right-[12px] cursor-pointer"
           />
         </div>
-        {toggle === toggleList[1].toggle && (
+        {(toggle === toggleList[1].toggle ||
+          (toggle === toggleList[0].toggle && userRole === 'ADMIN')) && (
           <div
-            onClick={() => router.push('/announcement/posting')}
+            onClick={() =>
+              router.push(`/announcement/posting?toggle=${toggle}`)
+            }
             className="h-[38px] border-[1px] border-black rounded-[8px] px-3 py-1 flex gap-5 items-center cursor-pointer"
           >
             <span className="hidden pad:block text-gray-40 text-[20px] font-[500]">
