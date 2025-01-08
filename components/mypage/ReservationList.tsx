@@ -45,7 +45,7 @@ const ReservationList = () => {
   // 예약 취소 함수
   const deleteReservation = async (id: number) => {
     try {
-      const response = await authInstance.delete(`/my-page/reservation/${id}`);
+      await authInstance.delete(`/my-page/reservation/${id}`);
       setReservations(
         reservations.filter((reservation) => reservation.reservationId !== id)
       );
@@ -96,6 +96,7 @@ const ReservationList = () => {
           );
         })}
       </ul>
+
       {/* 취소 모달 */}
       <ButtonModal
         isOpen={isModalOpen}

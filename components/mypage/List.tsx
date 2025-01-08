@@ -31,6 +31,7 @@ const List = () => {
       <section className="flex justify-between">
         {/* 카테고리 토글 */}
         <CategoryToggle toggle={toggle} onToggleChange={toggleHandler} />
+
         {/* 탈퇴 버튼 */}
         <button
           className="flex items-start text-gray-30 text-xl font-medium leading-[30px] cursor-pointer"

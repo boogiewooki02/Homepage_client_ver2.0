@@ -22,9 +22,9 @@ const sessionMapping: { [key: string]: string } = {
 
 const UserProfile = () => {
   const [userInfo, setUserInfo] = useState<userProps>({
-    name: '홍길동',
-    term: 20,
-    session: '보컬',
+    name: '',
+    term: 0,
+    session: '',
   });
 
   const getUserInfo = async () => {
@@ -34,7 +34,7 @@ const UserProfile = () => {
       if (response.data.isSuccess) {
         setUserInfo({
           name: response.data.result.name,
-          term: response.data.result.term.toString(),
+          term: response.data.result.term.toString(), // string으로 변환
           session: sessionMapping[response.data.result.session],
         });
       }
