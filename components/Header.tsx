@@ -169,52 +169,57 @@ const Header = () => {
       </div>
 
       {/* 페이지 부분 */}
-      <List>
-        {['ABOUT', 'PERFORMANCE', 'TICKET', 'RECRUIT', 'KAHLUA'].map(
-          (section) => (
-            <ListItem key={section} disablePadding>
-              <ListItemButton>
-                <div
-                  className={`w-[610px] rounded-[20px] flex items-center ${width <= 834 ? 'pl-5 h-[40px]' : 'pl-5 h-[43px]'} ${section === currentLink ? 'bg-primary-50' : ''} ${section === 'KAHLUA' && isKahluaClicked ? 'bg-primary-50 rounded-b-none' : ''}`}
-                  onClick={() => {
-                    if (section === 'KAHLUA') {
-                      setIsKahluaClicked(!isKahluaClicked);
-                    } else {
-                      handleLinkClick(section);
-                    }
-                  }}
-                >
-                  <ListItemText
-                    primary={section}
-                    className={`font-pretendard font-medium ${section === currentLink || (section === 'KAHLUA' && isKahluaClicked) ? 'text-gray-0' : 'text-gray-70'} ${width <= 834 ? 'text-base' : 'text-lg'}`}
-                  />
-                </div>
-              </ListItemButton>
-            </ListItem>
-          )
-        )}
-        {isKahluaClicked && (
-          <ul
-            className={`pl-11 mx-3 rounded-b-[20px] ${isKahluaClicked ? 'bg-primary-50' : ''}`}
-          >
-            {KahluaUrl.map((url) => (
-              <li key={url.name}>
-                <Link href={url.url} passHref>
+      <section
+        className="flex-1 overflow-y-scroll px-4 pb-10"
+        style={{ maxHeight: 'calc(100vh - 300px)' }}
+      >
+        <List>
+          {['ABOUT', 'PERFORMANCE', 'TICKET', 'RECRUIT', 'KAHLUA'].map(
+            (section) => (
+              <ListItem key={section} disablePadding>
+                <ListItemButton>
                   <div
-                    className={`py-2 cursor-pointer font-pretendard font-normal text-gray-60 ${isKahluaClicked ? 'text-primary-10' : ''} ${width <= 834 ? 'text-sm' : 'text-base'}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleLinkClick(url.name);
+                    className={`w-[610px] rounded-[20px] flex items-center ${width <= 834 ? 'pl-5 h-[40px]' : 'pl-5 h-[43px]'} ${section === currentLink ? 'bg-primary-50' : ''} ${section === 'KAHLUA' && isKahluaClicked ? 'bg-primary-50 rounded-b-none' : ''}`}
+                    onClick={() => {
+                      if (section === 'KAHLUA') {
+                        setIsKahluaClicked(!isKahluaClicked);
+                      } else {
+                        handleLinkClick(section);
+                      }
                     }}
                   >
-                    {url.name}
+                    <ListItemText
+                      primary={section}
+                      className={`font-pretendard font-medium ${section === currentLink || (section === 'KAHLUA' && isKahluaClicked) ? 'text-gray-0' : 'text-gray-70'} ${width <= 834 ? 'text-base' : 'text-lg'}`}
+                    />
                   </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </List>
+                </ListItemButton>
+              </ListItem>
+            )
+          )}
+          {isKahluaClicked && (
+            <ul
+              className={`pl-11 mx-3 rounded-b-[20px] ${isKahluaClicked ? 'bg-primary-50' : ''}`}
+            >
+              {KahluaUrl.map((url) => (
+                <li key={url.name}>
+                  <Link href={url.url} passHref>
+                    <div
+                      className={`py-2 cursor-pointer font-pretendard font-normal text-gray-60 ${isKahluaClicked ? 'text-primary-10' : ''} ${width <= 834 ? 'text-sm' : 'text-base'}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLinkClick(url.name);
+                      }}
+                    >
+                      {url.name}
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </List>
+      </section>
 
       {/* 하단 로고 및 SNS 버튼 */}
       <div className="fixed bottom-14 left-8">
