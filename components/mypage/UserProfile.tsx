@@ -34,7 +34,7 @@ const UserProfile = () => {
       if (response.data.isSuccess) {
         setUserInfo({
           name: response.data.result.name,
-          term: response.data.result.term.toString(), // string으로 변환
+          term: response.data.result.term.toString(),
           session: sessionMapping[response.data.result.session],
         });
       }
