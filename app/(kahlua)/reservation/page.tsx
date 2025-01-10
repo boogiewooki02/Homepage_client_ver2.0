@@ -111,20 +111,21 @@ const page = () => {
     }));
   };
 
-  // const fetchReservationsForDate = async (date: string) => {
-  //   try {
-  //     const response = await authInstance.get(`/reservation?date=${date}`);
-  //     if (response.data.isSuccess) {
-  //       const reservationData =
-  //         response.data.result.reservationResponseList || [];
-  //       setReservationsForDate(reservationData);
-  //     } else {
-  //       console.log(response.data.message);
-  //     }
-  //   } catch (error) {
-  //     console.log('Error fetching reservations:', error);
-  //   }
-  // };
+  // 날짜별 예약 내역 조회 (http 요청)
+  const fetchReservationsForDate = async (date: string) => {
+    try {
+      const response = await authInstance.get(`/reservation?date=${date}`);
+      if (response.data.isSuccess) {
+        const reservationData =
+          response.data.result.reservationResponseList || [];
+        setReservationsForDate(reservationData);
+      } else {
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      console.log('Error fetching reservations:', error);
+    }
+  };
 
   // 컴포넌트 전환 (4. 발행1)
   const handleNext = () => {
@@ -181,9 +182,9 @@ const page = () => {
       <CalendarUI
         onChange={(key, value) => {
           handleChange(key, value);
-          // if (key === 'reservationDate') {
-          //   fetchReservationsForDate(value);
-          // }
+          if (key === 'reservationDate') {
+            fetchReservationsForDate(value);
+          }
         }}
       />
       <TimeTable
