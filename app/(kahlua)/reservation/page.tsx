@@ -88,6 +88,8 @@ const page = () => {
         'Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]'
       ) {
         router.push('/login');
+      } else {
+        router.push('/reservation');
       }
     };
 
