@@ -55,7 +55,7 @@ const AboutSmallBox = () => {
       <p className="text-[16px] pad:text-[20px] font-medium text-primary-10 mt-[16px] pad:mt-[24px]">
         KAHLUA는 2003년부터 지금까지
         <br />
-        21년의 전통을 이어오고 있는
+        23년의 전통을 이어오고 있는
         <br />
         홍익대학교 컴퓨터공학과
         <br />
