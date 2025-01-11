@@ -1,120 +1,129 @@
-import { v4 as uuidv4 } from 'uuid';
+import { authInstance } from '@/api/auth/axios';
+import { Comment } from '../notice/dto';
 
-export interface Reply {
-  id: string;
-  name: string;
-  date: string;
-  text: string;
-  replying: boolean;
-  deleted?: boolean;
-}
+export const createCommentOrReply = async (
+  postId: number,
+  text: string,
+  user: string,
+  parentCommentId?: string | number
+): Promise<{ data: Comment }> => {
+  try {
+    const response = await authInstance.post(`/comment/${postId}/create`, {
+      user,
+      content: text,
+      ...(parentCommentId !== undefined && { parentCommentId }),
+    });
 
-export interface Comment {
-  id: string;
-  name: string;
-  date: string;
-  text: string;
-  replying: boolean;
-  replies?: Reply[];
-  deleted?: boolean;
-}
+    return { data: response.data };
+  } catch (error) {
+    console.error('댓글/답글 작성 API 요청 실패:', error);
+    throw error;
+  }
+};
 
-export const addComment = (
-  commentText: string,
-  comments: any[],
-  setComments: React.Dispatch<React.SetStateAction<any[]>>,
+export const addCommentOrReply = async (
+  postId: number,
+  text: string,
+  user: string,
+  setComments: React.Dispatch<React.SetStateAction<Comment[]>>,
   setChatCount: React.Dispatch<React.SetStateAction<number>>,
-  setCommentText: React.Dispatch<React.SetStateAction<string>>
+  setText: React.Dispatch<React.SetStateAction<string>>,
+  parentCommentId?: string | number,
+  setReplyingToId?: React.Dispatch<React.SetStateAction<string | null>>
 ) => {
-  if (commentText.trim() === '') return;
-  const newComment = {
-    id: uuidv4(),
-    name: '원마루',
-    date: new Date().toLocaleString(),
-    text: commentText,
-    replying: false,
-    deleted: false,
-    replies: [],
-  };
-  setComments((prevComments) => {
-    const updatedComments = [...prevComments, newComment];
-    return updatedComments;
-  });
-  setCommentText('');
-  setChatCount((prev) => prev + 1);
+  if (text.trim() === '') return;
+
+  try {
+    const response = await createCommentOrReply(
+      postId,
+      text,
+      user,
+      parentCommentId
+    );
+    const newCommentOrReply = response.data;
+
+    setComments((prevComments) => {
+      if (parentCommentId) {
+        return prevComments.map((comment) =>
+          comment.id === parentCommentId
+            ? {
+                ...comment,
+                replies: [...(comment.replies || []), newCommentOrReply],
+              }
+            : comment
+        );
+      } else {
+        return [newCommentOrReply, ...prevComments];
+      }
+    });
+
+    setChatCount((prev) => prev + 1);
+    setText('');
+    if (setReplyingToId) setReplyingToId(null);
+  } catch (error) {
+    console.error('댓글/답글 작성 실패:', error);
+  }
 };
 
-export const addReply = (
+export const handleDeleteCommentOrReply = async (
   id: string,
-  replyText: string,
-  comments: any[],
-  setComments: React.Dispatch<React.SetStateAction<any[]>>,
-  setReplyingToId: React.Dispatch<React.SetStateAction<string | null>>,
-  setReplyText: React.Dispatch<React.SetStateAction<string>>,
-  setChatCount: React.Dispatch<React.SetStateAction<number>>
-) => {
-  const newReply = {
-    id: uuidv4(),
-    name: '원채영',
-    date: new Date().toLocaleString(),
-    text: replyText,
-    replying: false,
-  };
-  setComments((prevComments) =>
-    prevComments.map((comment) =>
-      comment.id === id
-        ? {
-            ...comment,
-            replies: [...(comment.replies || []), newReply],
-          }
-        : comment
-    )
-  );
-  setReplyText('');
-  setReplyingToId(null);
-  setChatCount((prev) => prev + 1);
-};
-
-export const handleDeleteComment = (
-  id: string,
-  comments: any[],
-  setComments: React.Dispatch<React.SetStateAction<any[]>>,
-  setChatCount: React.Dispatch<React.SetStateAction<number>>
-) => {
-  setComments((prevComments) =>
-    prevComments.map((comment) =>
-      comment.id === id
-        ? { ...comment, text: '삭제된 댓글입니다.', deleted: true }
-        : comment
-    )
-  );
-  setChatCount((prev) => Math.max(0, prev - 1));
-};
-
-export const handleDeleteReply = (
-  commentId: string,
-  replyId: string,
-  comments: Comment[],
+  postId: number,
   setComments: React.Dispatch<React.SetStateAction<Comment[]>>,
   setChatCount: React.Dispatch<React.SetStateAction<number>>
 ) => {
-  setComments((prevComments) =>
-    prevComments.map((comment) =>
-      comment.id === commentId
-        ? {
-            ...comment,
-            replies: comment.replies
-              ? comment.replies
-                  .map((reply) =>
-                    reply.id === replyId ? { ...reply, deleted: true } : reply
-                  )
-                  .filter((reply) => !reply.deleted) // Filter out deleted replies
-              : [],
+  try {
+    await authInstance.patch(`/comment/${postId}/${id}/delete`);
+
+    setComments((prevComments) => {
+      let deletedCommentCount = 0;
+
+      const updatedComments = prevComments
+        .map((comment) => {
+          if (comment.id === id) {
+            const hasReplies =
+              (comment.replies ? comment.replies.length : 0) > 0 ||
+              prevComments.some((c) => c.parentCommentId === id);
+
+            if (hasReplies) {
+              deletedCommentCount++;
+              return {
+                ...comment,
+                deletedAt: new Date().toISOString(),
+                content: '삭제된 댓글입니다.',
+                user: '',
+              };
+            } else {
+              deletedCommentCount++;
+              return null;
+            }
           }
-        : comment
-    )
-  );
-  setChatCount((prev) => Math.max(0, prev - 1));
+
+          if (comment.replies) {
+            const originalReplyCount = comment.replies.length;
+            comment.replies = comment.replies.filter(
+              (reply) => reply.id !== id
+            );
+
+            if (
+              originalReplyCount > 0 &&
+              comment.replies.length === 0 &&
+              comment.deletedAt
+            ) {
+              deletedCommentCount++;
+            }
+          }
+
+          return comment;
+        })
+        .filter((comment): comment is Comment => comment !== null);
+
+      setChatCount((prev) => Math.max(0, prev - deletedCommentCount));
+
+      return updatedComments;
+    });
+  } catch (error) {
+    console.error('❌ 삭제 실패:', error);
+  }
 };
 
 export const handleDeleteConfirm = (

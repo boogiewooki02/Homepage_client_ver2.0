@@ -1,5 +1,6 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import CommentList from '@/components/notice/CommentList';
 import Image from 'next/image';
 import arrow from '@/public/image/notice/Left.svg';
@@ -7,130 +8,180 @@ import DeletePopup from '@/components/notice/DeletePostPopup';
 import CommentInput from '@/components/notice/CommentInput';
 import Post from '@/components/notice/Post';
 import {
-  addComment,
-  addReply,
-  handleDeleteComment,
-  handleDeleteReply,
+  addCommentOrReply,
+  handleDeleteCommentOrReply,
   handleDeleteCancel,
   handleDeleteConfirm,
 } from '@/components/util/noticeUtils';
+import { authInstance } from '@/api/auth/axios';
+import { Comment as CommentType } from '@/components/notice/dto';
+
+interface PostData {
+  title: string;
+  content: string;
+  user: string;
+  date: string;
+  imageUrls: string[];
+  likes: number;
+  id: number;
+  liked: boolean;
+}
 
 const Page = () => {
-  const [data, setData] = useState({
-    title: '❗️깔루아 9월 정기공연❗️',
-    content: `안녕하세요 깔루아 21기 기장 최승원입니다🤩
-9월 1일 금요일, 깔루아의 9월 정기공연이 있습니다‼️
-재학생이신 선배님들께서는 수업이 끝난 후에, 졸업생이신 선배님들께서는 시간이 되신다면 공연 보러오셔서 함께 즐겨주시면 좋을 것 같습니다 !!
+  const router = useRouter();
+  const { id } = useParams();
+  const postId = Number(id);
 
-> 9월 정기공연 일정 <
-날짜 : 9월 1일 금요일
-시간 : 오후 6시 ~ 9시
-장소 : 플렉스라운지
-티켓가격 : 5000원
-
-뒷풀이 : 오후 9시 ~
-장소: 오맥
-
-공연 이후에 뒷풀이를 진행할 예정입니다. 뒷풀이 장소 예약을 위해서 대략적인 인원을 확인하고 있습니다!
-혹시 공연에 참석하시는 선배님들이나, 뒷풀이에 참석하시는 선배님들께서는 010-4827-2589로 연락주시면 감사하겠습니다🤩
-
-기타 모든 문의사항은 페이스북 메세지나 댓글, 또는 위의 전화번호로 연락주세요 ! 감사합니다🤩🤩`,
-    user: '관리자',
-    date: '2024. 08. 01',
-    imageUrls: [
-      'https://i.ibb.co/hypZvxt/IMG-3791.jpg',
-      'https://i.ibb.co/hypZvxt/IMG-3791.jpg',
-      'https://i.ibb.co/hypZvxt/IMG-3791.jpg',
-      'https://i.ibb.co/hypZvxt/IMG-3791.jpg',
-      'https://i.ibb.co/hypZvxt/IMG-3791.jpg',
-    ],
+  const [postData, setPostData] = useState<PostData>({
+    title: '',
+    content: '',
+    user: '',
+    date: '',
+    imageUrls: [],
+    likes: 0,
+    id: 0,
+    liked: false,
   });
 
-  const [chatCount, setChatCount] = useState(0);
-  const [replyingToId, setReplyingToId] = useState<string | null>(null);
-
-  const [comments, setComments] = useState<
-    {
-      id: string;
-      name: string;
-      date: string;
-      text: string;
-      replying: boolean;
-      replies?: any[];
-      deleted?: boolean;
-    }[]
-  >([]);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [validCommentCount, setValidCommentCount] = useState<number>(0);
   const [commentText, setCommentText] = useState('');
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [replyText, setReplyText] = useState('');
-  const commentCount = comments.filter((comment) => !comment.deleted).length;
-  const replyCount = comments.reduce(
-    (total, comment) =>
-      total +
-      (comment.replies
-        ? comment.replies.filter((reply) => !reply.deleted).length
-        : 0),
-    0
-  );
+  const [user, setUser] = useState<string>('');
+
+  const fetchComments = async () => {
+    try {
+      const response = await authInstance.get(`/comment/${id}/list`);
+      const processedComments = response.data.result.comments.map(
+        (comment: CommentType) => ({
+          ...comment,
+          content: comment.deletedAt ? '삭제된 댓글입니다.' : comment.content,
+          replies: comment.replies
+            ? comment.replies.filter((reply: CommentType) => !reply.deletedAt)
+            : [],
+        })
+      );
+
+      setComments(processedComments);
+      setValidCommentCount(
+        processedComments.filter(
+          (c: CommentType) => c.content !== '삭제된 댓글입니다.'
+        ).length
+      );
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchPostData = () =>
+      authInstance.get(`/post/notice/${id}/detail`).then((response) => {
+        const data = response.data.result;
+        const imageUrls = Array.isArray(data.imageUrls)
+          ? data.imageUrls.map((img: { id: number; url: string }) => img.url)
+          : typeof data.imageUrls === 'string'
+            ? data.imageUrls.split(',')
+            : [];
+        setPostData({ ...data, imageUrls });
+      });
+
+    const fetchUserData = () =>
+      authInstance.get('/user').then((response) => {
+        setUser(response.data.result.name);
+      });
+
+    Promise.all([fetchPostData(), fetchUserData(), fetchComments()]).catch(
+      (error) => console.error('Error fetching data:', error)
+    );
+  }, []);
+
+  const handleAddReply = async (parentCommentId: string, text: string) => {
+    await addCommentOrReply(
+      postId,
+      text,
+      user,
+      setComments,
+      setValidCommentCount,
+      setReplyText,
+      parentCommentId
+    );
+    fetchComments();
+  };
+
+  const handleAddComment = async () => {
+    await addCommentOrReply(
+      postId,
+      commentText,
+      user,
+      setComments,
+      setValidCommentCount,
+      setCommentText
+    );
+    fetchComments();
+  };
+
+  const handleGoBack = () => {
+    router.push('/announcement');
+  };
+
+  const getReplyCount = (comments: CommentType[]): number => {
+    return comments.reduce((count, comment) => {
+      const replyCount = comment.replies ? comment.replies.length : 0;
+      return count + replyCount + getReplyCount(comment.replies || []);
+    }, 0);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
       <div className="flex flex-col items-center justify-center pt-16 w-full max-w-[500px] pad:max-w-[786px] dt:max-w-[1200px] max-pad:px-[16px]">
         <Post
-          noticeData={{
-            ...data,
-            imageUrls: data.imageUrls || [],
-          }}
-          commentCount={commentCount}
-          replyCount={replyCount}
+          noticeData={postData}
+          postId={postId}
+          commentCount={validCommentCount}
+          replyCount={getReplyCount(comments)}
+          currentUser={user}
         />
 
-        {/* 댓글 리스트 */}
         <CommentList
+          postId={postId}
+          user={user}
           comments={comments}
-          onAddReply={(id, text) =>
-            addReply(
-              id,
-              text,
-              comments,
-              setComments,
-              setReplyingToId,
-              setReplyText,
-              setChatCount
-            )
-          }
+          onAddReply={handleAddReply}
           onDeleteComment={(id) =>
-            handleDeleteComment(id, comments, setComments, setChatCount)
-          }
-          onDeleteReply={(commentId, replyId) =>
-            handleDeleteReply(
-              commentId,
-              replyId,
-              comments,
+            handleDeleteCommentOrReply(
+              id,
+              postId,
               setComments,
-              setChatCount
-            )
+              setValidCommentCount
+            ).then(fetchComments)
           }
+          onDeleteReply={(replyId) =>
+            handleDeleteCommentOrReply(
+              replyId,
+              postId,
+              setComments,
+              setValidCommentCount
+            ).then(fetchComments)
+          }
+          currentUser={user}
         />
 
-        {/* 댓글 입력창 */}
         <CommentInput
           commentText={commentText}
           setCommentText={setCommentText}
-          onAddComment={() =>
-            addComment(
-              commentText,
-              comments,
-              setComments,
-              setChatCount,
-              setCommentText
-            )
-          }
+          onAddComment={handleAddComment}
+          user={user}
         />
 
         <div className="w-full">
           <div className="flex items-start w-full">
-            <div className="flex w-[90px] cursor-pointer gap-[10px]">
+            <div
+              className="flex w-[90px] cursor-pointer gap-[10px]"
+              onClick={handleGoBack}
+              role="button"
+              aria-label="목록으로 돌아가기"
+            >
               <Image src={arrow} alt="arrow" width={24} height={24} />
               <span className="font-pretendard text-base font-medium">
                 목록으로
@@ -139,12 +190,11 @@ const Page = () => {
           </div>
         </div>
       </div>
-
       {showDeletePopup && (
         <DeletePopup
-          isOpen={showDeletePopup}
           onConfirm={() => handleDeleteConfirm(setShowDeletePopup)}
           onClose={() => handleDeleteCancel(setShowDeletePopup)}
+          isOpen={showDeletePopup}
         />
       )}
     </div>

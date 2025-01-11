@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Comment from './Comment';
-
-interface Comment {
-  id: string;
-  name: string;
-  date: string;
-  text: string;
-  replying: boolean;
-  replies?: Comment[];
-}
+import { Comment as CommentType } from './dto';
 
 interface CommentListProps {
-  comments: Comment[];
-  onAddReply: (id: string, replyText: string) => void;
+  postId: number;
+  user: string;
+  comments: CommentType[];
+  currentUser: string;
+  onAddReply: (parentCommentId: string, replyText: string) => void;
   onDeleteComment: (id: string) => void;
   onDeleteReply: (commentId: string, replyId: string) => void;
 }
@@ -22,32 +17,23 @@ const CommentList: React.FC<CommentListProps> = ({
   onAddReply,
   onDeleteComment,
   onDeleteReply,
+  currentUser,
 }) => {
-  const [commentList, setCommentList] = useState<Comment[]>(comments);
-  const [replyingId, setReplyingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setCommentList(comments);
-  }, [comments]);
-
-  // 답글 입력창 토글 함수
-  const handleToggleReplying = (id: string) => {
-    setReplyingId((prevId) => (prevId === id ? null : id)); // 현재 id와 동일하면 닫고, 아니면 해당 id를 열기
-  };
+  const structuredComments = buildCommentTree(comments);
 
   return (
-    <div className="w-full ">
-      {commentList.length > 0 && (
+    <div className="w-full">
+      {structuredComments.length > 0 && (
         <div className="flex flex-col">
-          {commentList.map((comment) => (
+          {structuredComments.map((comment) => (
             <Comment
               key={comment.id}
               comment={comment}
               onAddReply={onAddReply}
-              onToggleReplying={handleToggleReplying}
               onDeleteComment={onDeleteComment}
               onDeleteReply={onDeleteReply}
-              replying={comment.id === replyingId}
+              replying={false}
+              currentUser={currentUser}
             />
           ))}
         </div>
@@ -57,3 +43,53 @@ const CommentList: React.FC<CommentListProps> = ({
 };
 
 export default CommentList;
+
+const buildCommentTree = (comments: CommentType[]): CommentType[] => {
+  const commentMap: { [key: string]: CommentType } = {};
+  const rootComments: CommentType[] = [];
+  comments.forEach((comment) => {
+    if (!comment.id) return;
+    const commentId = comment.id.toString();
+
+    commentMap[commentId] = {
+      ...comment,
+      content: comment.deletedAt ? '삭제된 댓글입니다.' : comment.content,
+      replies: [],
+    };
+  });
+
+  comments.forEach((comment) => {
+    if (!comment.id) return;
+    const commentId = comment.id.toString();
+
+    if (
+      comment.parentCommentId !== null &&
+      comment.parentCommentId !== undefined
+    ) {
+      const parentId = comment.parentCommentId.toString();
+
+      if (!commentMap[parentId]) {
+        commentMap[parentId] = {
+          id: parentId,
+          postId: comment.postId,
+          date: '',
+          content: '삭제된 댓글입니다.',
+          user: '',
+          deletedAt: new Date().toISOString(),
+          replies: [],
+          parentCommentId: null,
+          created_at: new Date().toISOString(),
+        };
+        rootComments.push(commentMap[parentId]);
+      }
+
+      if (!comment.deletedAt) {
+        commentMap[parentId].replies?.push(commentMap[commentId]);
+      }
+    } else {
+      rootComments.push(commentMap[commentId]);
+    }
+  });
+
+  return rootComments;
+};
