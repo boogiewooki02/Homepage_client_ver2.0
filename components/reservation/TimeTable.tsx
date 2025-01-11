@@ -2,7 +2,7 @@ import {
   Reservation,
   ReservationResponse,
 } from '@/app/(kahlua)/reservation/page';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export const reservationStatuses = [
   { color: 'bg-gray-15', label: '예약 불가능' },
@@ -23,7 +23,7 @@ const TimeTable = ({
   reservationsForDate,
   onChange,
 }: TimeTableProps) => {
-  const hours = Array.from({ length: 12 }, (_, i) => i + 10); // 10시부터 22시까지
+  const hours = Array.from({ length: 13 }, (_, i) => i + 10); // 10시부터 23시까지
 
   const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
 
