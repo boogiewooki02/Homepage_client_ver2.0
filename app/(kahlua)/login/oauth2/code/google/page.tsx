@@ -20,7 +20,7 @@ const page = () => {
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const code = query.get('code');
-    const redirectUri = `${process.env.NEXT_PUBLIC_GOOGLE_LOCAL_REDIRECT_URI}`;
+    const redirectUri = `${process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI}`;
 
     const handleAuth = async () => {
       try {
