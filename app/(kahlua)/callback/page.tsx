@@ -20,11 +20,12 @@ const page = () => {
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
     const code = query.get('code');
+    const redirectUri = `${process.env.NEXT_PUBLIC_KAKAO_LOCAL_REDIRECT_URI}`;
 
     const handleAuth = async () => {
       try {
         const response = await axiosInstance.post(
-          `/auth/kakao/sign-in?code=${code}`
+          `/auth/kakao/sign-in?code=${code}&redirectUri=${redirectUri}`
         );
 
         const { accessToken, refreshToken } = response.data;
