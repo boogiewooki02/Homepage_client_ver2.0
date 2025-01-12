@@ -1,5 +1,8 @@
-import { Reservation } from '@/app/(kahlua)/reservation/page';
-import React, { useState, useEffect } from 'react';
+import {
+  Reservation,
+  ReservationResponse,
+} from '@/app/(kahlua)/reservation/page';
+import React, { useState } from 'react';
 
 export const reservationStatuses = [
   { color: 'bg-gray-15', label: '예약 불가능' },
@@ -10,13 +13,37 @@ export const reservationStatuses = [
 
 interface TimeTableProps {
   reservation: Reservation;
-  onChane: (key: keyof Reservation, value: string) => void;
+  reservationsForDate: ReservationResponse[];
+  onChange: (key: keyof Reservation, value: string) => void;
 }
 
-const TimeTable = ({ reservation, onChane }: TimeTableProps) => {
-  const hours = Array.from({ length: 12 }, (_, i) => i + 10); // 10시부터 22시까지
+// todo: reservationsForDate 타임 테이블에 반영
+const TimeTable = ({
+  reservation,
+  reservationsForDate,
+  onChange,
+}: TimeTableProps) => {
+  const hours = Array.from({ length: 13 }, (_, i) => i + 10); // 10시부터 23시까지
 
-  const [selectedTimes, setSelectedTimes] = useState<string[]>([]); 
+  const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
+
+  const [countClick, setCountClick] = useState<number>(0);
+
+  // 예약 불가능한 시간 확인
+  const isTimeSlotReserved = (startTime: string, endTime: string) => {
+    return reservationsForDate.some(
+      (reservation) =>
+        reservation.startTime <= startTime && reservation.endTime >= endTime
+    );
+  };
+
+  // 예약자 확인
+  const getReservedBy = (startTime: string, endTime: string) => {
+    const reservation = reservationsForDate.find(
+      (res) => res.startTime <= startTime && res.endTime >= endTime
+    );
+    return reservation ? reservation.clubroomUsername : null;
+  };
 
   // 시간 선택 및 해제
   const handleTimeClick = (startTimeStr: string, endTimeStr: string) => {
@@ -26,24 +53,30 @@ const TimeTable = ({ reservation, onChane }: TimeTableProps) => {
     }
 
     // 이미 시작과 종료 시간이 선택된 상태에서 다시 클릭하면 초기화
-    if (reservation.startTime && reservation.endTime) {
+    if (countClick == 2) {
       setSelectedTimes([]);
-      onChane("startTime", '');
-      onChane("endTime", '');
+      onChange('startTime', '');
+      onChange('endTime', '');
+      setCountClick(0); // 초기화
       return;
     }
 
     // 시작 시간이 없을 때: 시작 시간으로 설정
     if (!reservation.startTime) {
-      onChane("startTime", startTimeStr);
-      onChane("endTime", endTimeStr);
+      onChange('startTime', startTimeStr);
+      onChange('endTime', endTimeStr);
       setSelectedTimes([`${startTimeStr} ~ ${endTimeStr}`]);
+      setCountClick(countClick + 1); // 1
     }
     // 시작 시간이 설정된 상태에서 두 번째 클릭: 종료 시간으로 설정
     else {
-      onChane("endTime", endTimeStr);
-      const newSelectedTimes = generateTimeRange(reservation.startTime, endTimeStr); // 사이 시간 모두 선택
+      onChange('endTime', endTimeStr);
+      const newSelectedTimes = generateTimeRange(
+        reservation.startTime,
+        endTimeStr
+      ); // 사이 시간 모두 선택
       setSelectedTimes(newSelectedTimes);
+      setCountClick(countClick + 1); // 2
     }
   };
 
@@ -97,6 +130,9 @@ const TimeTable = ({ reservation, onChane }: TimeTableProps) => {
   // 타임 테이블 선택 및 해제 적용
   const getTimeSlotStatus = (startTime: string, endTime: string) => {
     const timeRange = `${startTime} ~ ${endTime}`;
+    if (isTimeSlotReserved(startTime, endTime)) {
+      return 'reserved'; // 예약 불가능한 상태
+    }
     return selectedTimes.includes(timeRange) ? 'selected' : 'available';
   };
 
@@ -110,28 +146,55 @@ const TimeTable = ({ reservation, onChane }: TimeTableProps) => {
             <div className="flex flex-row">
               <div
                 key={`${hour}:00`}
-                className={`pad:flex-1 h-[60px] w-[32px] cursor-pointer ${
+                className={`pad:flex-1 h-[60px] w-[32px] cursor-pointer relative ${
                   reservation.reservationDate
                     ? getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
                       'selected'
                       ? 'bg-primary-50 text-white'
-                      : 'bg-gray-5'
+                      : getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
+                          'reserved'
+                        ? 'bg-primary-10 cursor-not-allowed'
+                        : 'bg-gray-5'
                     : 'bg-gray-7 cursor-not-allowed'
                 }`}
-                onClick={() => handleTimeClick(`${hour}:00`, `${hour}:30`)}
-              ></div>
+                onClick={() =>
+                  getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
+                    'available' && handleTimeClick(`${hour}:00`, `${hour}:30`)
+                }
+              >
+                {getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
+                  'reserved' && (
+                  <span className="absolute text-xs text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    {getReservedBy(`${hour}:00`, `${hour}:30`)}
+                  </span>
+                )}
+              </div>
               <div
                 key={`${hour}:30`}
-                className={`pad:flex-1 h-[60px] w-[32px] cursor-pointer mr-[1px] ${
+                className={`pad:flex-1 h-[60px] w-[32px] cursor-pointer mr-[1px] relative ${
                   reservation.reservationDate
                     ? getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
                       'selected'
                       ? 'bg-primary-50 text-white'
-                      : 'bg-gray-5'
+                      : getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
+                          'reserved'
+                        ? 'bg-primary-10 cursor-not-allowed'
+                        : 'bg-gray-5'
                     : 'bg-gray-7 cursor-not-allowed'
                 }`}
-                onClick={() => handleTimeClick(`${hour}:30`, `${hour + 1}:00`)}
-              ></div>
+                onClick={() =>
+                  getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
+                    'available' &&
+                  handleTimeClick(`${hour}:30`, `${hour + 1}:00`)
+                }
+              >
+                {getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
+                  'reserved' && (
+                  <span className="absolute text-xs text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    {getReservedBy(`${hour}:30`, `${hour + 1}:00`)}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         ))}
