@@ -44,20 +44,21 @@ const List = () => {
             const commentResponse = await authInstance.get(
               `/comment/${post.id}/list`
             );
+            const comments = commentResponse.data.result.comments || []; // 댓글 배열
+
             return {
               ...post,
-              comments_count: commentResponse.data.result.comments_count ?? 0,
+              comments,
             };
           } catch (error) {
             console.error(`댓글 개수 로드 실패 (postId: ${post.id}):`, error);
-            return { ...post, comments_count: 0 }; // 기본값
+            return { ...post, comments: [] }; // 기본값
           }
         })
       );
-      
+
       setFilteredData(updatedContent);
       setTotalPages(totalPages);
-
     } catch (error) {
       console.error('게시글 리스트 로드 실패:', error);
     }
