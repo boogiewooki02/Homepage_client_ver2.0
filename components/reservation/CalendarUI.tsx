@@ -9,18 +9,17 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface CalendarProps {
-  onChane: (key: keyof Reservation, value: string) => void;
+  onChange: (key: keyof Reservation, value: string) => void;
 }
 
-
-const CalendarUI = ({ onChane }: CalendarProps) => {
+const CalendarUI = ({ onChange }: CalendarProps) => {
   const [value, setValue] = useState<Value>(null);
 
-  const handleDateChange = (newValue: Value) => {
+  const handleDateChange = async (newValue: Value) => {
     setValue(newValue);
     if (newValue instanceof Date) {
-      const dateString = newValue.toLocaleDateString("en-CA"); // Date -> string 변환
-      onChane("reservationDate", dateString);
+      const dateString = newValue.toLocaleDateString('en-CA'); // Date -> string 변환
+      onChange('reservationDate', dateString);
     }
   };
 
@@ -37,10 +36,9 @@ const CalendarUI = ({ onChane }: CalendarProps) => {
     // 오늘 기준 2주 이후 날짜는 비활성화
     if (date > twoWeeksFromToday) return false;
 
-    // 화(=2), 수(=3), 토(=6)만 활성화
-    return day === 2 || day === 3 || day === 6;
+    // 월(=1), 수(=3), 금(=5)만 활성화
+    return day === 1 || day === 3 || day === 5;
   };
-
 
   return (
     <div className="mt-10">
@@ -53,10 +51,12 @@ const CalendarUI = ({ onChane }: CalendarProps) => {
         locale="ko"
         calendarType="gregory"
         formatDay={(locale, date) => `${date.getDate()}`}
-        navigationLabel={({ date }) => `${date.getFullYear()}.${date.getMonth() + 1}`}
+        navigationLabel={({ date }) =>
+          `${date.getFullYear()}.${date.getMonth() + 1}`
+        }
         prevLabel="<"
         nextLabel=">"
-        tileDisabled={({date}) => !isSelectable(date)}
+        tileDisabled={({ date }) => !isSelectable(date)}
       />
     </div>
   );

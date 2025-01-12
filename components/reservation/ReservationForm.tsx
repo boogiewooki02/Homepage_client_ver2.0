@@ -4,6 +4,7 @@ import ReservationSuccessModal from './ReservationSuccessModal';
 import ReservationFailureModal from './ReservationFailureModal';
 import Modal from '../ui/Modal';
 import { Reservation } from '@/app/(kahlua)/reservation/page';
+import { useRouter } from 'next/navigation';
 
 interface ReservationFormProps {
   reservation: Reservation;
@@ -24,6 +25,8 @@ const ReservationForm = ({
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isFailureModalOpen, setIsFailureModalOpen] = useState(false);
 
+  const router = useRouter();
+
   // submit 제출시
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,12 +37,12 @@ const ReservationForm = ({
       const updatedReservation = {
         ...reservation,
         clubroomUsername: reservationName,
-        type: isPersonal ? 'PERSONAL' : 'TEAM',
+        type: isPersonal ? 'SOLO' : 'TEAM',
       };
 
       onChange('clubroomUsername', reservationName);
-      onChange('type', isPersonal ? 'PERSONAL' : 'TEAM');
-      onSubmit(updatedReservation); // (todo: onSubmit 구현 필요(page.tsx))
+      onChange('type', isPersonal ? 'SOLO' : 'TEAM');
+      onSubmit(updatedReservation);
       setIsSuccessModalOpen(true);
     } else {
       alert('모든 필드를 입력해 주세요.');
@@ -64,6 +67,16 @@ const ReservationForm = ({
     setIsPersonal(isPersonal);
     setName('');
     setTeamName('');
+  };
+
+  const handleSuccessModalClose = () => {
+    setIsSuccessModalOpen(false);
+    router.push('/');
+  };
+
+  const handleFailureModalClose = () => {
+    setIsFailureModalOpen(false);
+    router.push('/reservation');
   };
 
   return (
@@ -128,18 +141,12 @@ const ReservationForm = ({
         </form>
       </div>
       {isSuccessModalOpen && (
-        <Modal
-          isOpen={isSuccessModalOpen}
-          onClose={() => setIsSuccessModalOpen(false)}
-        >
+        <Modal isOpen={isSuccessModalOpen} onClose={handleSuccessModalClose}>
           <ReservationSuccessModal formattedDateTime={formattedDateTime()} />
         </Modal>
       )}
       {isFailureModalOpen && (
-        <Modal
-          isOpen={isFailureModalOpen}
-          onClose={() => setIsFailureModalOpen(false)}
-        >
+        <Modal isOpen={isFailureModalOpen} onClose={handleFailureModalClose}>
           <ReservationFailureModal />
         </Modal>
       )}
