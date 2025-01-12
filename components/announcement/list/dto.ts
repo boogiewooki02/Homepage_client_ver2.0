@@ -1,8 +1,14 @@
+export interface Comment {
+  id: number;
+  postId: number;
+  deletedAt: string | null;
+}
+
 export interface AnnouncementProps {
   id: number;
   title: string;
   likes: number;
-  comments_count: number;
+  comments: Comment[];
   created_at: string;
 }
 
@@ -10,7 +16,7 @@ export interface CommunityProps {
   id: number;
   title: string;
   likes: number;
-  comments_count: number;
+  comments: Comment[];
   created_at: string;
   writer: string;
 }
