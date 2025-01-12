@@ -43,7 +43,6 @@ const Page = () => {
     const termData: number = parseInt(generation.replace('기', ''), 10); // term : integer type으로 변환
     const sessionData: string = sessionMap[session]; // session : enum type으로 변환
 
-    console.log(sessionData, name, termData);
     try {
       const response = await authInstance.post('/user', {
         name: name,
