@@ -9,6 +9,8 @@ interface TitleSectionProps {
   date?: string;
   content?: string;
   imageUrls?: string[] | string | null;
+  currentUser?: string;
+  postId?: number;
   onDeleteClick: () => void;
 }
 
@@ -18,8 +20,12 @@ const TitleSection: React.FC<TitleSectionProps> = ({
   date = 'Unknown',
   content = 'No Content',
   imageUrls = '',
+  currentUser,
   onDeleteClick,
+  postId,
 }) => {
+  const isAuthor = currentUser === user;
+
   return (
     <div className="flex mt-8">
       <Image
@@ -43,26 +49,29 @@ const TitleSection: React.FC<TitleSectionProps> = ({
               {date}
             </span>
           </div>
-          <div className="flex gap-4">
-            <Link
-              href={{
-                pathname: '/announcement/posting',
-                query: { title, content, imageUrls },
-              }}
-              passHref
-            >
-              <span className="font-pretendard text-base font-normal cursor-pointer">
-                수정
-              </span>
-            </Link>
 
-            <span
-              className="font-pretendard text-base text-danger-50 font-normal cursor-pointer"
-              onClick={onDeleteClick}
-            >
-              삭제
-            </span>
-          </div>
+          {isAuthor && (
+            <div className="flex gap-4">
+              <Link
+                href={{
+                  pathname: '/announcement/posting',
+                  query: { postId, title, content, imageUrls },
+                }}
+                passHref
+              >
+                <span className="font-pretendard text-base font-normal cursor-pointer">
+                  수정
+                </span>
+              </Link>
+
+              <span
+                className="font-pretendard text-base text-danger-50 font-normal cursor-pointer"
+                onClick={onDeleteClick}
+              >
+                삭제
+              </span>
+            </div>
+          )}
         </span>
       </div>
     </div>
