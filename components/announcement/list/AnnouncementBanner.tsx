@@ -4,7 +4,7 @@ export const AnnouncementBanner = () => {
   return (
     <div className="mx-auto w-full pad:w-[786px] dt:w-[1200px] pad:rounded-[24px] flex flex-col justify-center pad:justify-normal ">
       <Banner>
-        <div className="px-20 py-16">
+        <div className="h-[258px] flex flex-col justify-center">
           <h2 className="text-center text-[36px] pad:text-[64px] font-[600] leading-[130%]">
             ANNOUNCEMENT
           </h2>
