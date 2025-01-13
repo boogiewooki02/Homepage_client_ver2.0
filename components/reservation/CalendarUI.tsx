@@ -25,7 +25,8 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
 
   const isSelectable = (date: Date) => {
     const today = new Date();
-    const day = date.getDay(); // number 타입
+    today.setHours(0, 0, 0, 0);
+    const day = date.getDay();
 
     const twoWeeksFromToday = new Date(today);
     twoWeeksFromToday.setDate(today.getDate() + 14);
