@@ -6,22 +6,30 @@ import { cookies } from 'next/headers';
 const restrictedPages = {
   undefined: ['/reservation', '/announcement', '/mypage', '/admin'],
   GENERAL: ['/reservation', '/announcement', '/mypage', '/admin'], // 'GENERAL' 사용자가 접근할 수 없는 페이지
+  UNREVIEWED: ['/reservation', '/announcement', '/mypage', '/admin'], // 'UNREVIEWED' 사용자가 접근할 수 없는 페이지
   KAHLUA: ['/admin'], // 'KAHLUA' 사용자가 접근할 수 없는 페이지
 };
 
 interface DecodedToken {
   role: string;
-  // 다른 필드들 추가
+  exp: number;
 }
 
-// token decoding하여 userRole 추출
-const getUserRole = (token: string | undefined) => {
+// token decoding
+const validateToken = (token: string): DecodedToken | null => {
   try {
-    const decodedToken = jwtDecode<DecodedToken>(token!); // JWT 디코딩
-    return decodedToken.role; // role 추출
+    const decoded = jwtDecode<DecodedToken>(token);
+    const currentTime = Date.now() / 1000;
+
+    if (decoded.exp && decoded.exp < currentTime) {
+      console.warn('Token expired');
+      return null; // 만료된 토큰
+    }
+
+    return decoded;
   } catch (error) {
-    console.error('Invalid token', error);
-    return null;
+    console.error('Invalid token:', error);
+    return null; // 유효하지 않은 토큰
   }
 };
 
@@ -33,8 +41,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  const decodedToken = validateToken(token);
+
+  // accessToken이 유효하지 않은 경우
+  if (!decodedToken) {
+    const res = NextResponse.redirect(new URL('/login', request.url));
+    res.cookies.delete('access_token');
+
+    return res;
+  }
+
   // role 확인
-  const userRole = getUserRole(token);
+  const userRole = decodedToken.role;
 
   // 사용자 역할에 따라 접근 제한이 있는 페이지를 확인
   for (const [role, pages] of Object.entries(restrictedPages)) {
