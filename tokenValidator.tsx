@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { useRecoilState } from 'recoil';
 import { isLoggedInState } from '@/atoms/authAtom';
+import { cookies } from 'next/headers';
 
 // JWT Payload 타입 정의
 interface JwtPayload {
@@ -13,7 +14,7 @@ interface JwtPayload {
 
 // 토큰 유효성 확인 함수
 function checkTokenValidity(): boolean {
-  const token = Cookies.get('accessToken');
+  const token = Cookies.get('access_token');
 
   if (token) {
     try {
@@ -38,7 +39,7 @@ export function useTokenValidator() {
   const [, setLoggedIn] = useRecoilState(isLoggedInState);
 
   useEffect(() => {
-    const token = Cookies.get('accessToken');
+    const token = Cookies.get('access_token');
 
     if (token) {
       try {
@@ -51,7 +52,7 @@ export function useTokenValidator() {
 
           // 만료 시간 이후 로그아웃 처리
           const timeoutId = setTimeout(() => {
-            Cookies.remove('accessToken');
+            Cookies.remove('access_token');
             setLoggedIn(false);
           }, expirationTime * 1000);
 
@@ -59,12 +60,12 @@ export function useTokenValidator() {
           return () => clearTimeout(timeoutId);
         } else {
           // 토큰이 만료된 경우 즉시 로그아웃 처리
-          Cookies.remove('accessToken');
+          Cookies.remove('access_token');
           setLoggedIn(false);
         }
       } catch (error) {
         console.error('Invalid token:', error);
-        Cookies.remove('accessToken');
+        Cookies.remove('access_token');
         setLoggedIn(false);
       }
     } else {
@@ -72,4 +73,13 @@ export function useTokenValidator() {
       setLoggedIn(false);
     }
   }, [setLoggedIn]); // setLoggedIn 의존성
+
+  useEffect(() => {
+    // 강제 렌더링 유도 (의도적으로 상태 변경)
+    const intervalId = setInterval(() => {
+      setLoggedIn((prev) => prev); // 상태 갱신 없이 useEffect 트리거
+    }, 1000); // 브라우저 접속을 체크하기 위한 주기적 실행
+
+    return () => clearInterval(intervalId);
+  }, [setLoggedIn]);
 }
