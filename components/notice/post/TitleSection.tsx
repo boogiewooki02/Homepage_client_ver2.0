@@ -36,10 +36,10 @@ const TitleSection: React.FC<TitleSectionProps> = ({
         className="dt:flex pad:flex ph:hidden"
       />
       <div className="w-full flex flex-col dt:ml-[24px] pad:ml-[24px] ph:ml-0">
-        <span className="font-pretendard text-[32px] font-semibold">
+        <span className="font-pretendard text-[32px] font-semibold break-words  dt:max-w-[calc(100%-88px-24px)] pad:max-w-[calc(100%-88px-24px)] ph:max-w-full">
           {title}
         </span>
-        <span className="w-full flex flex-row mt-[16px] items-center justify-between">
+        <span className="w-full flex flex-row mt-[16px] items-center justify-between dt:max-w-[calc(100%-88px-24px)] pad:max-w-[calc(100%-88px-24px)] ph:max-w-full">
           <div className="flex flex-row gap-2">
             <span className="font-pretendard text-base font-medium flex">
               {user}

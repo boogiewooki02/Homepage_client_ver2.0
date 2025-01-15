@@ -77,7 +77,9 @@ const MyPostsList = () => {
                   : 'border-b-[1px] border-b-gray-10'
               } justify-between`}
             >
-              <p className="text-[20px] leading-6">{post.title}</p>
+              <p className="text-[20px] leading-6 w-full truncate">
+                {post.title}
+              </p>
 
               <div className="flex gap-10 text-gray-40">
                 <div className="flex gap-6">
