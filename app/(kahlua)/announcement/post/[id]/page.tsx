@@ -134,7 +134,7 @@ const Page = () => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full h-full">
-      <div className="flex flex-col items-center justify-center pt-16 w-full max-w-[500px] pad:max-w-[786px] dt:max-w-[1200px] max-pad:px-[16px]">
+      <div className="flex flex-col items-center justify-center pt-16 w-full max-w-[500px] pad:max-w-[786px] dt:max-w-[1200px] ph:px-[16px]">
         <Post
           noticeData={postData}
           postId={postId}
