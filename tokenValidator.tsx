@@ -13,7 +13,7 @@ interface JwtPayload {
 
 // 토큰 유효성 확인 함수
 function checkTokenValidity(): boolean {
-  const token = Cookies.get('accessToken');
+  const token = Cookies.get('access_token');
 
   if (token) {
     try {
@@ -38,7 +38,7 @@ export function useTokenValidator() {
   const [, setLoggedIn] = useRecoilState(isLoggedInState);
 
   useEffect(() => {
-    const token = Cookies.get('accessToken');
+    const token = Cookies.get('access_token');
 
     if (token) {
       try {
@@ -51,7 +51,7 @@ export function useTokenValidator() {
 
           // 만료 시간 이후 로그아웃 처리
           const timeoutId = setTimeout(() => {
-            Cookies.remove('accessToken');
+            Cookies.remove('access_token');
             setLoggedIn(false);
           }, expirationTime * 1000);
 
@@ -59,12 +59,12 @@ export function useTokenValidator() {
           return () => clearTimeout(timeoutId);
         } else {
           // 토큰이 만료된 경우 즉시 로그아웃 처리
-          Cookies.remove('accessToken');
+          Cookies.remove('access_token');
           setLoggedIn(false);
         }
       } catch (error) {
         console.error('Invalid token:', error);
-        Cookies.remove('accessToken');
+        Cookies.remove('access_token');
         setLoggedIn(false);
       }
     } else {
