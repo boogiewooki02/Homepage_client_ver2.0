@@ -71,7 +71,7 @@ const ReservationForm = ({
 
   const handleSuccessModalClose = () => {
     setIsSuccessModalOpen(false);
-    router.push('/');
+    router.push('/reservation');
   };
 
   const handleFailureModalClose = () => {
