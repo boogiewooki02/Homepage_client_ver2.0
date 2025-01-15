@@ -6,7 +6,8 @@ import { cookies } from 'next/headers';
 const restrictedPages = {
   undefined: ['/reservation', '/announcement', '/mypage', '/admin'],
   GENERAL: ['/reservation', '/announcement', '/mypage', '/admin'], // 'GENERAL' 사용자가 접근할 수 없는 페이지
-  UNREVIEWED: ['/reservation', '/announcement', '/mypage', '/admin'], // 'UNREVIEWED' 사용자가 접근할 수 없는 페이지
+  PENDING: ['/reservation', '/announcement', '/mypage', '/admin'], // 'PENDING' 사용자가 접근할 수 없는 페이지
+  UNACCEPTED: ['/reservation', '/announcement', '/mypage', '/admin'], // 'UNACCEPTED' 사용자가 접근할 수 없는 페이지
   KAHLUA: ['/admin'], // 'KAHLUA' 사용자가 접근할 수 없는 페이지
 };
 
