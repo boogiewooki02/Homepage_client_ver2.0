@@ -137,8 +137,8 @@ const page = () => {
       // STOMP 메시지 전송(publish)
       const destination = `/app/reserve.proceed/${reservation.reservationDate}`;
       const body = JSON.stringify({
-        startTime: reservation.startTime,
-        endTime: reservation.endTime,
+        startTime: `${reservation.startTime}:00`,
+        endTime: `${reservation.endTime}:00`,
       });
 
       stompClient.publish({
