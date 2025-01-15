@@ -31,16 +31,24 @@ const TimeTable = ({
 
   // 예약 불가능한 시간 확인
   const isTimeSlotReserved = (startTime: string, endTime: string) => {
+    const formattedStartTime = `${startTime}:00`;
+    const formattedEndTime = `${endTime}:00`;
+
     return reservationsForDate.some(
       (reservation) =>
-        reservation.startTime <= startTime && reservation.endTime >= endTime
+        reservation.startTime <= formattedStartTime &&
+        reservation.endTime >= formattedEndTime
     );
   };
 
   // 예약자 확인
   const getReservedBy = (startTime: string, endTime: string) => {
+    const formattedStartTime = `${startTime}:00`;
+    const formattedEndTime = `${endTime}:00`;
+
     const reservation = reservationsForDate.find(
-      (res) => res.startTime <= startTime && res.endTime >= endTime
+      (res) =>
+        res.startTime <= formattedStartTime && res.endTime >= formattedEndTime
     );
     return reservation ? reservation.clubroomUsername : null;
   };
