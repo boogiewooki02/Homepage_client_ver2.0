@@ -27,7 +27,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({
   const isAuthor = currentUser === user;
 
   return (
-    <div className="flex mt-8">
+    <div className="w-full flex mt-8">
       <Image
         src={defaultImg}
         alt="default-profile"
@@ -35,11 +35,11 @@ const TitleSection: React.FC<TitleSectionProps> = ({
         height={88}
         className="dt:flex pad:flex ph:hidden"
       />
-      <div className="w-full flex flex-col dt:ml-[24px] pad:ml-[24px] ph:ml-0">
-        <span className="font-pretendard text-[32px] font-semibold break-words  dt:max-w-[calc(100%-88px-24px)] pad:max-w-[calc(100%-88px-24px)] ph:max-w-full">
+      <div className="w-full flex flex-col dt:ml-[24px] pad:ml-[24px] ph:ml-0  dt:max-w-[calc(100%-88px-24px)] pad:max-w-[calc(100%-88px-24px)] ph:max-w-full">
+        <span className="w-full font-pretendard text-[32px] font-semibold break-words">
           {title}
         </span>
-        <span className="w-full flex flex-row mt-[16px] items-center justify-between dt:max-w-[calc(100%-88px-24px)] pad:max-w-[calc(100%-88px-24px)] ph:max-w-full">
+        <span className="w-full flex flex-row mt-[16px] items-center justify-between">
           <div className="flex flex-row gap-2">
             <span className="font-pretendard text-base font-medium flex">
               {user}
