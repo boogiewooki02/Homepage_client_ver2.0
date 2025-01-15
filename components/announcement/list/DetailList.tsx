@@ -34,7 +34,7 @@ export const DetailList = ({
               onClick={() => handlePostClick(post.id)}
               className="flex flex-col pad:flex-row py-6 items-start gap-4 self-stretch relative border-y-[1px] border-y-solid border-y-gray-10 justify-between"
             >
-              <p className="text-[20px] leading-6 cursor-pointer">
+              <p className="text-[20px] leading-6 cursor-pointer truncate w-full">
                 {post.title}
               </p>
               <div className="flex gap-6 pad:gap-10 text-gray-40">

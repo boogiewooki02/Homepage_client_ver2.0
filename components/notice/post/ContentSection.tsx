@@ -9,7 +9,7 @@ interface ContentSectionProps {
 const ContentSection: React.FC<ContentSectionProps> = ({ text, imageUrls }) => {
   return (
     <>
-      <div className="font-pretendard text-xl font-medium whitespace-pre-wrap">
+      <div className="font-pretendard text-xl font-medium break-words whitespace-pre-wrap ">
         {text}
       </div>
 
