@@ -17,7 +17,6 @@ interface TimeTableProps {
   onChange: (key: keyof Reservation, value: string) => void;
 }
 
-// todo: reservationsForDate 타임 테이블에 반영
 const TimeTable = ({
   reservation,
   reservationsForDate,
@@ -135,11 +134,31 @@ const TimeTable = ({
     return reservation.reservationDate ? `${dateString} ${timeRange}` : '';
   };
 
-  // 타임 테이블 선택 및 해제 적용
+  // 당일 예약 과거 시간 확인
+  const isPastTime = (timeStr: string) => {
+    if (!reservation.reservationDate) return false;
+
+    const today = new Date();
+    const selectedDate = new Date(reservation.reservationDate);
+
+    if (selectedDate.toDateString() !== today.toDateString()) {
+      return false;
+    }
+
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    const selectedTime = new Date();
+    selectedTime.setHours(hours, minutes, 0);
+
+    return selectedTime <= today;
+  };
+
   const getTimeSlotStatus = (startTime: string, endTime: string) => {
     const timeRange = `${startTime} ~ ${endTime}`;
+    if (isPastTime(startTime)) {
+      return 'past';
+    }
     if (isTimeSlotReserved(startTime, endTime)) {
-      return 'reserved'; // 예약 불가능한 상태
+      return 'reserved';
     }
     return selectedTimes.includes(timeRange) ? 'selected' : 'available';
   };
@@ -162,7 +181,10 @@ const TimeTable = ({
                       : getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
                           'reserved'
                         ? 'bg-primary-10 cursor-not-allowed'
-                        : 'bg-gray-5'
+                        : getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
+                            'past'
+                          ? 'bg-gray-15 cursor-not-allowed'
+                          : 'bg-gray-5'
                     : 'bg-gray-7 cursor-not-allowed'
                 }`}
                 onClick={() =>
@@ -187,7 +209,10 @@ const TimeTable = ({
                       : getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
                           'reserved'
                         ? 'bg-primary-10 cursor-not-allowed'
-                        : 'bg-gray-5'
+                        : getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
+                            'past'
+                          ? 'bg-gray-15 cursor-not-allowed'
+                          : 'bg-gray-5'
                     : 'bg-gray-7 cursor-not-allowed'
                 }`}
                 onClick={() =>
