@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { useRecoilState } from 'recoil';
 import { isLoggedInState } from '@/atoms/authAtom';
+import { cookies } from 'next/headers';
 
 // JWT Payload 타입 정의
 interface JwtPayload {
@@ -72,4 +73,13 @@ export function useTokenValidator() {
       setLoggedIn(false);
     }
   }, [setLoggedIn]); // setLoggedIn 의존성
+
+  useEffect(() => {
+    // 강제 렌더링 유도 (의도적으로 상태 변경)
+    const intervalId = setInterval(() => {
+      setLoggedIn((prev) => prev); // 상태 갱신 없이 useEffect 트리거
+    }, 1000); // 브라우저 접속을 체크하기 위한 주기적 실행
+
+    return () => clearInterval(intervalId);
+  }, [setLoggedIn]);
 }
