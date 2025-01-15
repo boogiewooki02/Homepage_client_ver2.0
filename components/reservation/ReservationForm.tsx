@@ -71,12 +71,12 @@ const ReservationForm = ({
 
   const handleSuccessModalClose = () => {
     setIsSuccessModalOpen(false);
-    router.push('/reservation');
+    window.location.href = '/reservation';
   };
 
   const handleFailureModalClose = () => {
     setIsFailureModalOpen(false);
-    router.push('/reservation');
+    window.location.href = '/reservation';
   };
 
   return (
