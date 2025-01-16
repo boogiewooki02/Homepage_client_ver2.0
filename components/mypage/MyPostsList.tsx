@@ -4,6 +4,7 @@ import likeIcon from '@/public/image/mypage/grayHeart.svg';
 import chatIcon from '@/public/image/mypage/grayChat.svg';
 import Image from 'next/image';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useRouter } from 'next/navigation';
 
 interface myPostProps {
   id: number;
@@ -20,6 +21,7 @@ interface myPostProps {
 
 // 내가 쓴 글 리스트
 const MyPostsList = () => {
+  const router = useRouter();
   const [posts, setPosts] = useState<myPostProps[]>([]);
 
   // 페이지네이션 관련 state
@@ -51,6 +53,11 @@ const MyPostsList = () => {
     }
   };
 
+  // 게시글 클릭 핸들러
+  const handlePostClick = (postId: number) => {
+    router.push(`/announcement/post/${postId}`); // 상세 페이지로 이동
+  };
+
   // 날짜 포맷 함수
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -74,11 +81,12 @@ const MyPostsList = () => {
           return (
             <li
               key={post.id}
-              className={`flex flex-col pad:flex-row py-6 items-start gap-4 self-stretch relative ${
+              className={`flex flex-col pad:flex-row py-6 items-start gap-4 self-stretch relative cursor-pointer ${
                 isLastItem
                   ? 'border-b-[1px] border-b-black'
                   : 'border-b-[1px] border-b-gray-10'
               } justify-between`}
+              onClick={() => handlePostClick(post.id)}
             >
               <p className="text-[20px] leading-6 w-full truncate">
                 {post.title}
