@@ -23,16 +23,19 @@ const MyPostsList = () => {
   const [posts, setPosts] = useState<myPostProps[]>([]);
 
   // 페이지네이션 관련 state
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0); // 전체 페이지 수
 
   const PAGE_SIZE = 5; // 한 페이지에 보여줄 게시글 수
 
   const getPosts = async (page: number) => {
     try {
-      const response = await authInstance.get(
-        `/my-page/post/list?page=${page}&size=${PAGE_SIZE}&sort=created_at,desc`
-      );
+      const response = await authInstance.get('my-page/post/list', {
+        params: {
+          page: page,
+          size: PAGE_SIZE,
+        },
+      });
       setPosts(response.data.result.content);
       setTotalPages(response.data.result.totalPages);
     } catch (error) {
