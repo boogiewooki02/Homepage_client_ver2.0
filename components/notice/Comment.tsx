@@ -132,7 +132,7 @@ const Comment: React.FC<CommentProps> = ({
       )}
 
       {!comment.deletedAt && replyingId === comment.id && (
-        <div className="w-full flex items-start gap-3 ml-6">
+        <div className="w-[calc(100%-24px)] flex items-start gap-3 ml-6 box-border">
           <input
             type="text"
             value={replyText}
@@ -144,11 +144,11 @@ const Comment: React.FC<CommentProps> = ({
                 handleAddReply();
               }
             }}
-            className="min-h-[60px] min-w-[calc(100%-96px)] border font-pretendard text-base font-semibold border-black rounded-lg px-3 py-2 placeholder:text-gray-40 focus:outline-none"
+            className="flex-grow min-h-[60px] min-w-[calc(100%-96px)] border font-pretendard text-base font-semibold border-black rounded-lg px-3 py-2 placeholder:text-gray-40 focus:outline-none box-border"
             placeholder=" 댓글을 입력하세요"
           />
           <div
-            className="flex items-center justify-center border rounded-lg border-black w-[60px] h-[60px] cursor-pointer"
+            className="flex-shrink-0 flex items-center justify-center border rounded-lg border-black w-[60px] h-[60px] cursor-pointer"
             onClick={handleAddReply}
           >
             <Send
