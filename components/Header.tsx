@@ -87,7 +87,17 @@ const Header = () => {
   const [currentLink, setCurrentLink] = useState('');
 
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState); // Recoil 상태 업데이트 함수
+  const [isTicketAvailable, setIsTicketAvailable] = useState(false); // 티켓 예약 가능 여부 상태 (기간이 아니면 false로 설정)
 
+  // 티켓 클릭 시 처리
+  const handleTicketClick = () => {
+    if (!isTicketAvailable) {
+      alert('티켓 예매 기간이 아닙니다. 다른 페이지를 이용해주세요.');
+      router.push('/');
+    } else {
+      router.push('/ticket');
+    }
+  };
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // cookie에서 토큰 확인
@@ -183,6 +193,8 @@ const Header = () => {
                     onClick={() => {
                       if (section === 'KAHLUA') {
                         setIsKahluaClicked(!isKahluaClicked);
+                      } else if (section === 'TICKET') {
+                        handleTicketClick();
                       } else {
                         handleLinkClick(section);
                       }

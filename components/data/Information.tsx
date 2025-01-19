@@ -64,8 +64,8 @@ const createEventDates = (
   };
 };
 
-const dynamicEventDateString = '2024-09-02T19:00:00+09:00';
-const dynamicLastReserveDateString = '2024-09-01T19:00:00+09:00';
+const dynamicEventDateString = '2025-03-04T19:00:00+09:00';
+const dynamicLastReserveDateString = '2025-03-03T19:00:00+09:00';
 
 const { eventDate, lastReserveDate } = createEventDates(
   dynamicEventDateString,
@@ -77,7 +77,7 @@ const getInformation = (): Information => {
   const isDays = true;
 
   return {
-    title: '2024년 9월 정기 공연',
+    title: '2025년 3월 정기 공연',
     location: '001 클럽',
     locationDetails: '서울 마포구 와우산로18길 20 지하 1층',
     dateForString: formatDateForString(eventDate),

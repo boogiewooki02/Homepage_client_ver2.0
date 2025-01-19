@@ -77,6 +77,8 @@ const CLInfo: React.FC<CLInfoProps> = ({ onInfoChange, CoverLetterInfo }) => {
     onInfoChange({ ...CoverLetterInfo, determination: event.target.value });
   };
 
+  const isVocalSelected = session1 === 'VOCAL' || session2 === 'VOCAL';
+
   return (
     <div className="flex flex-col py-10 px-4 pad:px-12 bg-gray-5">
       <div className="flex flex-col pad:flex-row gap-1 pad:gap-3 pad:items-end">
@@ -94,7 +96,13 @@ const CLInfo: React.FC<CLInfoProps> = ({ onInfoChange, CoverLetterInfo }) => {
         selection={handleSessionChange}
         className="mt-6"
       />
-
+      {isVocalSelected && (
+        <div className="mt-6 text-red-500 text-[16px]">
+          보컬 지원 영상은 godblessjiwoo@gmail.com로 제출해 주세요.
+          <br />
+          기재하신 연락처를 통해 지원 방식에 대해 추가 공지드리겠습니다.
+        </div>
+      )}
       <div className="flex flex-col pad:flex-row gap-1 pad:gap-3 pad:items-end mt-12">
         <p className="text-gray-90 text-[20px] font-semibold">
           깔루아 지원동기
