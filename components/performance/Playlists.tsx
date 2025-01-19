@@ -18,6 +18,7 @@ import thumbnail11 from '@/public/image/performance/thumbnails/12.avif';
 import thumbnail12 from '@/public/image/performance/thumbnails/13.avif';
 import thumbnail13 from '@/public/image/performance/thumbnails/14.avif';
 import thumbnail14 from '@/public/image/performance/thumbnails/15.avif';
+import thumbnail15 from '@/public/image/performance/thumbnails/0.avif';
 import chevron_down_blue from '@/public/image/performance/chevron-down-blue.svg';
 
 const detail = [
@@ -105,6 +106,7 @@ const detail = [
     description: ' #쏜애플 #시퍼런_봄 #우리의_밤은_당신의_낮보다_아름답다',
   },
   {
+    year: '2017',
     url: 'https://www.youtube.com/playlist?list=PLLmJk1z9LuutEF-XP649aTv4I8xTaaNKd',
     src: thumbnail11,
     name: '2017.09 정기공연',
@@ -132,6 +134,14 @@ const detail = [
     name: '2016.09 정기공연',
     description: ' #검정치마 #버스커_버스커 #Starlight #우리_지금_만나',
   },
+  {
+    year: '2024',
+    url: 'https://www.youtube.com/playlist?list=PLLmJk1z9LuusmjesBNrHElEHmLon5k-0C&si=6RIEOl5EDsSiRiGe',
+    src: thumbnail15,
+    name: '2024.09.02 정기공연',
+    description:
+      ' #wave_to_earth #좋지_아니한가 #멸종 #Lacuna #한로로 #Day6 #the_volunteers',
+  },
 ];
 
 const Playlists = () => {
@@ -148,6 +158,30 @@ const Playlists = () => {
   return (
     <>
       <div className="pad:max-w-[786px] dt:max-w-[1200px] h-full grid grid-cols-1 pad:grid-cols-3 dt:grid-cols-4 gap-x-6 gap-y-12">
+        {(sYear === 'All' || sYear === '2024') && (
+          <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                window.open(detail[15].url);
+              }}
+            >
+              <Image
+                src={detail[15].src}
+                alt="thumbnail"
+                quality={50}
+                className="rounded-[12px]"
+                sizes="100vw"
+              />
+            </div>
+            <p className="text-[20px] font-semibold leading-8">
+              {detail[15].name}
+            </p>
+            <span className="text-[16px] text-gray-40 font-medium leading-6">
+              {detail[15].description}
+            </span>
+          </div>
+        )}
         {(sYear === 'All' || sYear === '2024') && (
           <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
             <div
@@ -412,7 +446,31 @@ const Playlists = () => {
             </span>
           </div>
         )}
-        {(sYear === 'All' || sYear === '2017') && (
+        {/* {(sYear === 'All' || sYear === '2017') && (
+          <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                window.open(detail[11].url);
+              }}
+            >
+              <Image
+                src={detail[11].src}
+                alt="thumbnail"
+                quality={50}
+                className="rounded-[12px]"
+                sizes="100vw"
+              />
+            </div>
+            <p className="text-[20px] font-semibold leading-8">
+              {detail[11].name}
+            </p>
+            <span className="text-[16px] text-gray-40 font-medium leading-6">
+              {detail[11].description}
+            </span>
+          </div>
+        )} */}
+        {sYear === 'All' && showMore && (
           <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
             <div
               className="cursor-pointer"
@@ -436,7 +494,31 @@ const Playlists = () => {
             </span>
           </div>
         )}
-        {(sYear === 'All' && showMore) ||
+        {sYear === '2017' && (
+          <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                window.open(detail[11].url);
+              }}
+            >
+              <Image
+                src={detail[11].src}
+                alt="thumbnail"
+                quality={50}
+                className="rounded-[12px]"
+                sizes="100vw"
+              />
+            </div>
+            <p className="text-[20px] font-semibold leading-8">
+              {detail[11].name}
+            </p>
+            <span className="text-[16px] text-gray-40 font-medium leading-6">
+              {detail[11].description}
+            </span>
+          </div>
+        )}
+        {/* {(sYear === 'All' && showMore) ||
           (sYear === '2017' && (
             <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
               <div
@@ -460,7 +542,55 @@ const Playlists = () => {
                 {detail[12].description}
               </span>
             </div>
-          ))}
+          ))} */}
+        {sYear === 'All' && showMore && (
+          <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                window.open(detail[12].url);
+              }}
+            >
+              <Image
+                src={detail[12].src}
+                alt="thumbnail"
+                quality={50}
+                className="rounded-[12px]"
+                sizes="100vw"
+              />
+            </div>
+            <p className="text-[20px] font-semibold leading-8">
+              {detail[12].name}
+            </p>
+            <span className="text-[16px] text-gray-40 font-medium leading-6">
+              {detail[12].description}
+            </span>
+          </div>
+        )}
+        {sYear === '2017' && (
+          <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                window.open(detail[12].url);
+              }}
+            >
+              <Image
+                src={detail[12].src}
+                alt="thumbnail"
+                quality={50}
+                className="rounded-[12px]"
+                sizes="100vw"
+              />
+            </div>
+            <p className="text-[20px] font-semibold leading-8">
+              {detail[12].name}
+            </p>
+            <span className="text-[16px] text-gray-40 font-medium leading-6">
+              {detail[12].description}
+            </span>
+          </div>
+        )}
         {/* 같이 적으니 렌더링이 이상해져서 2개로 나눠서 작성했습니다 */}
         {sYear === 'All' && showMore && (
           <div className="w-[328px] pad:w-[246px] dt:w-[282px] flex flex-col items-start gap-[8px]">
@@ -580,7 +710,7 @@ const Playlists = () => {
               height={16}
             />
           ) : (
-            <Image src={chevron_down_blue} alt="more" width={16} height={16}/>
+            <Image src={chevron_down_blue} alt="more" width={16} height={16} />
           )}
         </div>
       )}
