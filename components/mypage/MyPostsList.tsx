@@ -16,6 +16,7 @@ interface myPostProps {
   imageUrls: string;
   created_at: string;
   updated_at: string;
+  deletedAt: string | null;
   liked: boolean;
 }
 
@@ -38,11 +39,34 @@ const MyPostsList = () => {
           size: PAGE_SIZE,
         },
       });
-      setPosts(response.data.result.content);
+
+      const postsWithCommentCount = await Promise.all(
+        response.data.result.content.map(async (post: myPostProps) => {
+          const commentsCount = await getCommentCount(post.id);
+          return { ...post, commentsCount };
+        })
+      );
+
+      setPosts(postsWithCommentCount);
       setTotalPages(response.data.result.totalPages);
     } catch (error) {
       console.error(error);
       alert('게시글을 불러오는 중 문제가 발생했습니다.');
+    }
+  };
+
+  // 댓글 카운트를 가져오는 함수
+  const getCommentCount = async (postId: number) => {
+    try {
+      const response = await authInstance.get(`comment/${postId}/list`);
+      // deletedAt이 null인 댓글만 카운트
+      const activeComments = response.data.result.comments.filter(
+        (comment: any) => comment.deletedAt === null
+      );
+      return activeComments.length;
+    } catch (error) {
+      console.error('댓글을 불러오는 중 문제가 발생했습니다.', error);
+      return 0; // 에러가 발생하면 댓글 수는 0으로 처리
     }
   };
 
