@@ -28,6 +28,7 @@ interface ApplicantInfoProps {
     major: string;
     address: string;
     gender: string;
+    email: string;
   }) => void;
   PersonalInfo: {
     name: string;
@@ -36,6 +37,7 @@ interface ApplicantInfoProps {
     major: string;
     address: string;
     gender: string;
+    email: string;
   };
 }
 
@@ -43,7 +45,8 @@ const ApplicantInfo: React.FC<ApplicantInfoProps> = ({
   onInfoChange,
   PersonalInfo,
 }) => {
-  const { name, birth_date, phone_num, major, address, gender } = PersonalInfo;
+  const { name, birth_date, phone_num, major, address, gender, email } =
+    PersonalInfo;
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onInfoChange({ ...PersonalInfo, name: event.target.value });
@@ -74,6 +77,10 @@ const ApplicantInfo: React.FC<ApplicantInfoProps> = ({
       ...PersonalInfo,
       gender: `${GenderNameMap[StringToEnum(selectedGender)]}`,
     });
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onInfoChange({ ...PersonalInfo, email: event.target.value });
   };
 
   return (
@@ -110,6 +117,14 @@ const ApplicantInfo: React.FC<ApplicantInfoProps> = ({
           value={phone_num}
           onChange={handlePhoneNumChange}
           placeholder="전화번호 -없이 입력"
+        />
+        <p className="mt-6 text-[16px] font-normal leading-6">이메일</p>
+        <Input
+          className="mt-2"
+          type="text"
+          value={email}
+          onChange={handleEmailChange}
+          placeholder="예) gil@naver.com"
         />
         <p className="mt-6 text-[16px] font-normal leading-6">성별</p>
         <TwoOptionBox
