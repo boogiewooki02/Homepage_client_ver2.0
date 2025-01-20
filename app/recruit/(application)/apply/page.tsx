@@ -16,6 +16,7 @@ const page = () => {
     major: '',
     address: '',
     gender: '',
+    email: '',
   });
 
   const [CoverLetterInfo, setCoverLetterInfo] = useState({
@@ -39,6 +40,7 @@ const page = () => {
     major: string;
     address: string;
     gender: string;
+    email: string;
   }) => {
     setPersonalInfo((prevState) => ({
       ...prevState,
@@ -81,6 +83,7 @@ const page = () => {
       PersonalInfo.name.trim() != '' &&
       PersonalInfo.phone_num.trim() != '' &&
       PersonalInfo.address.trim() != '' &&
+      PersonalInfo.email.trim() != '' &&
       CoverLetterInfo.career.trim() != '' &&
       CoverLetterInfo.determination.trim() != '' &&
       CoverLetterInfo.instrument.trim() != '' &&
@@ -111,6 +114,7 @@ const page = () => {
           finish_time: AdditionalInfo.schedule,
           meeting: AdditionalInfo.afterparty,
           readiness: CoverLetterInfo.determination,
+          email: PersonalInfo.email,
         };
 
         const response = await axiosInstance.post('/apply', formData, {
@@ -118,10 +122,12 @@ const page = () => {
             'Content-Type': 'application/json',
           },
         });
+        console.log(response.data);
 
         if (response.status === 200) {
           window.location.href = `/recruit/complete`;
         } else {
+          alert('지원 실패 다시 시도해주세요');
         }
       } catch (error: any) {}
     }
