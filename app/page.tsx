@@ -10,7 +10,7 @@ export default function Home() {
       <div className="flex flex-col w-full h-auto justify-start items-center">
         <About />
         <Performance />
-        <Ticket />
+        {/* <Ticket /> */}
       </div>
 
       {/* 배경색 변경*/}
