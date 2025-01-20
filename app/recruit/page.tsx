@@ -158,7 +158,8 @@ const Schedule = () => {
         <ScheduleCard
           title="오디션"
           period={`~ ${formatMonthToDate(DynamicRecruitingInfo.audition)} ${formatTime(DynamicRecruitingInfo.audition)}`}
-          description={`오디션 뒷풀이<br/>당일 ${formatTime(DynamicRecruitingInfo.afterParty)}`}
+          // description={`오디션 뒷풀이<br/>당일 ${formatTime(DynamicRecruitingInfo.afterParty)}`}
+          description={`오디션 뒷풀이 추후 공지 <br/>(오디션 당일에 진행 예정)`}
           titleClassName=""
           desClassName=""
         />
