@@ -117,7 +117,7 @@ const page = () => {
           major: PersonalInfo.major,
           address: PersonalInfo.address,
           gender: PersonalInfo.gender,
-          first_perference: CoverLetterInfo.session1,
+          first_preference: CoverLetterInfo.session1,
           second_preference: CoverLetterInfo.session2,
           experience_and_reason: CoverLetterInfo.career,
           play_instrument: CoverLetterInfo.instrument,
