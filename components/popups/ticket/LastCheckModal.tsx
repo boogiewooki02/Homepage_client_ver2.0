@@ -5,12 +5,14 @@ interface LastCheckProps {
   isOpen: boolean;
   onClose: () => void;
   onReservationComplete: () => void;
+  isSubmitting: boolean;
 }
 
 const LastCheck: React.FC<LastCheckProps> = ({
   isOpen,
   onClose,
   onReservationComplete,
+  isSubmitting,
 }) => {
   if (!isOpen) return null;
 
@@ -54,7 +56,7 @@ const LastCheck: React.FC<LastCheckProps> = ({
             className="w-full h-[59px] pad:h-[70px] pad:w-[280px] rounded-br-3xl bg-primary-50 text-center text-[18px] pad:text-[20px] font-[medium] text-gray-0"
             onClick={onReservationComplete}
           >
-            제출
+            {isSubmitting ? '제출 중...' : '제출'}
           </button>
         </div>
       </div>

@@ -72,32 +72,43 @@ const page = () => {
     }));
   };
 
-  const [isComplete, setIsComplete] = React.useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const [showLastCheckModal, setShowLastCheckModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   useEffect(() => {
     const isDataComplete =
-      PersonalInfo.birth_date.trim() != '' &&
-      PersonalInfo.major.trim() != '' &&
-      PersonalInfo.gender.trim() != '' &&
-      PersonalInfo.name.trim() != '' &&
-      PersonalInfo.phone_num.trim() != '' &&
-      PersonalInfo.address.trim() != '' &&
-      PersonalInfo.email.trim() != '' &&
-      CoverLetterInfo.career.trim() != '' &&
-      CoverLetterInfo.determination.trim() != '' &&
-      CoverLetterInfo.instrument.trim() != '' &&
-      CoverLetterInfo.motivation.trim() != '' &&
-      CoverLetterInfo.session1 != 'undefined' &&
-      CoverLetterInfo.session2 != 'undefined' &&
-      AdditionalInfo.schedule.trim() != '' &&
-      true;
+      PersonalInfo.birth_date.trim() !== '' &&
+      PersonalInfo.major.trim() !== '' &&
+      PersonalInfo.gender.trim() !== '' &&
+      PersonalInfo.name.trim() !== '' &&
+      PersonalInfo.phone_num.trim() !== '' &&
+      PersonalInfo.address.trim() !== '' &&
+      PersonalInfo.email.trim() !== '' &&
+      CoverLetterInfo.career.trim() !== '' &&
+      CoverLetterInfo.determination.trim() !== '' &&
+      CoverLetterInfo.instrument.trim() !== '' &&
+      CoverLetterInfo.motivation.trim() !== '' &&
+      CoverLetterInfo.session1 !== 'undefined' &&
+      CoverLetterInfo.session2 !== 'undefined' &&
+      AdditionalInfo.schedule.trim() !== '';
 
     setIsComplete(isDataComplete);
   }, [PersonalInfo, CoverLetterInfo, AdditionalInfo]);
 
   const handleApplicationSubmit = async () => {
-    if (isComplete) {
+    if (isComplete && !isSubmitting) {
+      if (!validateEmail(PersonalInfo.email)) {
+        alert('유효하지 않은 이메일 형식입니다. 다시 확인해주세요.');
+        return;
+      }
+
+      setIsSubmitting(true);
       try {
         const formData = {
           name: PersonalInfo.name,
@@ -106,7 +117,7 @@ const page = () => {
           major: PersonalInfo.major,
           address: PersonalInfo.address,
           gender: PersonalInfo.gender,
-          first_perference: CoverLetterInfo.session1,
+          first_preference: CoverLetterInfo.session1,
           second_preference: CoverLetterInfo.session2,
           experience_and_reason: CoverLetterInfo.career,
           play_instrument: CoverLetterInfo.instrument,
@@ -139,10 +150,10 @@ const page = () => {
         <p className="mt-10 text-gray-0 text-center text-[24px] pad:text-[32px] font-semibold leading-[48px]">
           지원 전 필독사항
         </p>
-        <p className="mt-4 text-gray-20 text-center text-[16px] pad:text-[18px]  font-normal leading-[27px] hidden pad:block">
+        <p className="mt-4 text-gray-20 text-center text-[16px] pad:text-[18px] font-normal leading-[27px] hidden pad:block">
           안녕하세요! 홍익대학교 컴퓨터공학과 밴드학회 깔루아입니다.
         </p>
-        <p className="text-gray-20 text-center text-[16px] pad:text-[18px]  font-normal leading-[27px] max-pad:px-6">
+        <p className="text-gray-20 text-center text-[16px] pad:text-[18px] font-normal leading-[27px] max-pad:px-6">
           단순 인원 집계용으로 사용되는 가입 지원서이므로 부담 없이 작성해
           주시면 됩니다.
         </p>
@@ -163,7 +174,7 @@ const page = () => {
       </div>
       <button
         onClick={(e) => setShowLastCheckModal(true)}
-        disabled={!isComplete}
+        disabled={!isComplete || isSubmitting}
         className={`flex justify-center items-center text-center h-[60px] w-[328px] pad:w-[384px] text-[18px] rounded-[12px] mt-[40px] ph:mb-[100px] pad:mb-[140px] dt:mb-[180px] ${isComplete ? 'bg-primary-50 text-gray-0' : 'bg-gray-10 text-gray-40 cursor-not-allowed'}`}
       >
         제출하기
@@ -171,7 +182,12 @@ const page = () => {
       <LastCheckModal
         isOpen={showLastCheckModal}
         onClose={() => setShowLastCheckModal(false)}
-        onReservationComplete={handleApplicationSubmit}
+        onReservationComplete={async () => {
+          if (!isSubmitting) {
+            await handleApplicationSubmit();
+          }
+        }}
+        isSubmitting={isSubmitting}
       />
     </div>
   );
