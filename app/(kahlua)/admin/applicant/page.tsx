@@ -41,7 +41,7 @@ const page = () => {
 
   const getList = async () => {
     try {
-      const response = await authInstance.get('/admin/tickets/download', {
+      const response = await authInstance.get('/admin/apply/download', {
         responseType: 'blob',
       });
       console.log(response.data);
