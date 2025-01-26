@@ -114,14 +114,24 @@ const ApplicantCard = ({
   };
 
   return (
-    <div className="max-w-[384px] h-[242px] rounded-3xl font-pretendard flex flex-col">
+    <div className="w-full max-w-[384px] h-auto rounded-3xl font-pretendard flex flex-col mx-auto">
       {/* 카드 상단 부분 : 이름 및 기본 개인 정보 */}
-      <div className="relative w-full h-[58px] bg-gray-80 rounded-t-3xl flex gap-1 justify-start items-center pl-6">
-        <span className="text-xl font-semibold text-gray-0">{name}</span>
-        <span className="text-lg font-medium text-gray-50">·</span>
-        <span className="text-lg font-medium text-gray-50">{gender}</span>
-        <span className="text-lg font-medium text-gray-50">·</span>
-        <span className="text-lg font-medium text-gray-50">{birth_date}</span>
+      <div className="relative w-full h-[58px] bg-gray-80 rounded-t-3xl flex items-center pl-6 gap-1">
+        <span className="text-lg pad:text-xl font-semibold text-gray-0">
+          {name}
+        </span>
+        <span className="text-base pad:text-lg font-medium text-gray-50">
+          ·
+        </span>
+        <span className="text-base pad:text-lg font-medium text-gray-50">
+          {gender}
+        </span>
+        <span className="text-base pad:text-lg font-medium text-gray-50">
+          ·
+        </span>
+        <span className="text-base pad:text-lg font-medium text-gray-50">
+          {birth_date}
+        </span>
         <Image
           src={show_more}
           alt="show_more_icon"
@@ -131,37 +141,55 @@ const ApplicantCard = ({
           onClick={handleClickOpen('paper')}
         />
       </div>
+
       {/* 카드 하단 부분 : 세부 개인 정보 */}
-      <div className="w-full h-[184px] bg-gray-5 rounded-b-3xl pl-6 pt-4">
-        <div className="flex gap-2 pb-3">
-          <Image src={phone_icon} alt="phone_icon" width={20} height={20} />
-          <span className="text-lg font-medium text-gray-80">{phone_num}</span>
-        </div>
-        <div className="flex gap-2 pb-3">
-          <Image
-            src={department_icon}
-            alt="department_icon"
-            width={20}
-            height={20}
-          />
-          <span className="text-lg font-medium text-gray-80">{major}</span>
-        </div>
-        <div className="flex gap-2 pb-3">
-          <Image src={address_icon} alt="address_icon" width={20} height={20} />
-          <span className="text-lg font-medium text-gray-80">{address}</span>
-        </div>
-        <div className="flex gap-5">
-          <div className="flex gap-2">
-            <span className="text-lg font-medium text-gray-40">1지망</span>
-            <span className="text-lg font-medium text-gray-80">
-              {first_preference}
+      <div className="w-full bg-gray-5 rounded-b-3xl p-6">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <Image src={phone_icon} alt="phone_icon" width={20} height={20} />
+            <span className="text-base pad:text-lg font-medium text-gray-80">
+              {phone_num}
             </span>
           </div>
-          <div className="flex gap-2">
-            <span className="text-lg font-medium text-gray-40">2지망</span>
-            <span className="text-lg font-medium text-gray-80">
-              {second_preference}
+          <div className="flex items-center gap-2">
+            <Image
+              src={department_icon}
+              alt="department_icon"
+              width={20}
+              height={20}
+            />
+            <span className="text-base pad:text-lg font-medium text-gray-80">
+              {major}
             </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Image
+              src={address_icon}
+              alt="address_icon"
+              width={20}
+              height={20}
+            />
+            <span className="text-base pad:text-lg font-medium text-gray-80 break-all">
+              {address}
+            </span>
+          </div>
+          <div className="flex gap-5 mt-1">
+            <div className="flex gap-2">
+              <span className="text-base pad:text-lg font-medium text-gray-40">
+                1지망
+              </span>
+              <span className="text-base pad:text-lg font-medium text-gray-80">
+                {first_preference}
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-base pad:text-lg font-medium text-gray-40">
+                2지망
+              </span>
+              <span className="text-base pad:text-lg font-medium text-gray-80">
+                {second_preference}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -174,16 +202,23 @@ const ApplicantCard = ({
           open={open}
           onClose={handleClose}
           scroll={scroll}
+          className="pad:mx-8"
         >
           <DialogTitle className="relative w-full h-[76px] bg-gray-80 rounded-t-3xl flex justify-between items-center">
-            <div>
-              <span className="text-2xl font-semibold text-gray-0">{name}</span>
-              <span className="text-2xl font-medium text-gray-50 mx-1">·</span>
-              <span className="text-2xl font-medium text-gray-50">
+            <div className="flex items-center gap-1 pad:gap-2">
+              <span className="text-xl pad:text-2xl font-semibold text-gray-0">
+                {name}
+              </span>
+              <span className="text-xl pad:text-2xl font-medium text-gray-50">
+                ·
+              </span>
+              <span className="text-xl pad:text-2xl font-medium text-gray-50">
                 {gender}
               </span>
-              <span className="text-2xl font-medium text-gray-50 mx-1">·</span>
-              <span className="text-2xl font-medium text-gray-50">
+              <span className="text-xl pad:text-2xl font-medium text-gray-50">
+                ·
+              </span>
+              <span className="text-xl pad:text-2xl font-medium text-gray-50">
                 {birth_date}
               </span>
             </div>
@@ -199,97 +234,99 @@ const ApplicantCard = ({
             </DialogActions>
           </DialogTitle>
 
-          <DialogContent className="p-0 max-h-[760px] overflow-y-scroll">
-            <section className="flex py-6 gap-[100px]">
-              <div className="flex-col">
-                <div className="flex gap-2 pb-3">
+          <DialogContent className="p-4 pad:p-8 max-h-[80vh] overflow-y-auto">
+            <section className="flex flex-col pad:flex-row pad:gap-[100px]">
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2">
                   <Image
                     src={phone_icon}
                     alt="phone_icon"
                     width={20}
                     height={20}
                   />
-                  <span className="text-lg font-medium text-gray-80">
+                  <span className="text-base pad:text-lg font-medium text-gray-80">
                     {phone_num}
                   </span>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex items-center gap-2">
                   <Image
                     src={department_icon}
                     alt="department_icon"
                     width={20}
                     height={20}
                   />
-                  <span className="text-lg font-medium text-gray-80">
+                  <span className="text-base pad:text-lg font-medium text-gray-80">
                     {major}
                   </span>
                 </div>
               </div>
-              <div className="flex-col">
-                <div className="flex gap-2 pb-3">
+              <div className="flex flex-col gap-3 mt-3 pad:mt-0">
+                <div className="flex items-center gap-2">
                   <Image
                     src={address_icon}
                     alt="address_icon"
                     width={20}
                     height={20}
                   />
-                  <span className="text-lg font-medium text-gray-80">
+                  <span className="text-base pad:text-lg font-medium text-gray-80">
                     {address}
                   </span>
                 </div>
                 <div className="flex gap-5">
                   <div className="flex gap-2">
-                    <span className="text-lg font-medium text-gray-40">
+                    <span className="text-base pad:text-lg font-medium text-gray-40">
                       1지망
                     </span>
-                    <span className="text-lg font-medium text-gray-80">
+                    <span className="text-base pad:text-lg font-medium text-gray-80">
                       {first_preference}
                     </span>
                   </div>
                   <div className="flex gap-2">
-                    <span className="text-lg font-medium text-gray-40">
+                    <span className="text-base pad:text-lg font-medium text-gray-40">
                       2지망
                     </span>
-                    <span className="text-lg font-medium text-gray-80">
+                    <span className="text-base pad:text-lg font-medium text-gray-80">
                       {second_preference}
                     </span>
                   </div>
                 </div>
               </div>
             </section>
+
             {/* 구분선 */}
-            <div className="max-w-[900px] border-solid border-[1px] border-gray-10"></div>
+            <div className="w-full border-solid border-[1px] border-gray-10 my-6" />
+
             {/* 지원 동기 및 세부 내용 */}
-            <section className="mt-6 font-pretendard flex-col w-full">
-              <div className="flex-col justify-start">
-                <div className="text-lg text-gray-80 font-semibold pb-2">
+            <section className="flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <div className="text-base pad:text-lg text-gray-80 font-semibold">
                   깔루아 지원 동기
                 </div>
-                <div className="inline-flex flex-wrap w-full p-6 justify-center align-center bg-gray-5 rounded-xl gap-[10px] mb-12">
+                <div className="w-full p-4 pad:p-6 bg-gray-5 rounded-xl text-base">
                   {motive}
                 </div>
               </div>
-              <div className="flex-col justify-start">
-                <div className="text-lg text-gray-80 font-semibold pb-2">
+              <div className="flex flex-col gap-2">
+                <div className="text-base pad:text-lg text-gray-80 font-semibold">
                   지원 세션에 대한 경력 및 지원 이유
                 </div>
-                <div className="inline-flex flex-wrap w-full p-6 justify-center align-center bg-gray-5 rounded-xl gap-[10px] mb-12">
+                <div className="w-full p-4 pad:p-6 bg-gray-5 rounded-xl text-base">
                   {experience_and_reason}
                 </div>
               </div>
-              <div className="flex-col justify-start">
-                <div className="text-lg text-gray-80 font-semibold pb-2">
+              <div className="flex flex-col gap-2">
+                <div className="text-base pad:text-lg text-gray-80 font-semibold">
                   이외에 다룰 줄 아는 악기
                 </div>
-                <div className="inline-flex flex-wrap w-full p-6 justify-center align-center bg-gray-5 rounded-xl gap-[10px] mb-12">
+                <div className="w-full p-4 pad:p-6 bg-gray-5 rounded-xl text-base">
                   {play_instrument}
                 </div>
               </div>
-              <div className="flex-col justify-start">
-                <div className="text-lg text-gray-80 font-semibold pb-2">
+              <div className="flex flex-col gap-2">
+                <div className="text-base pad:text-lg text-gray-80 font-semibold">
                   포부 및 각오
                 </div>
-                <div className="inline-flex flex-wrap w-full p-6 justify-center align-center bg-gray-5 rounded-xl gap-[10px]">
+                <div className="w-full p-4 pad:p-6 bg-gray-5 rounded-xl text-base">
                   {readiness}
                 </div>
               </div>
