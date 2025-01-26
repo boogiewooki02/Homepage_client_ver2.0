@@ -119,17 +119,17 @@ const page = () => {
 
   return (
     <div className="w-full h-full">
-      <div className="font-pretendard w-full pt-[64px] flex flex-col items-center">
-        <div className="w-full h-[259px] bg-gray-5 flex justify-between px-[360px]">
-          <div className="flex flex-col mt-16">
-            <span className="font-mustica text-[40px] text-gray-90 font-semibold leading-10 pb-[15px]">
+      <div className="font-pretendard w-full pt-16 flex flex-col items-center">
+        <div className="w-full h-auto min-h-[180px] pad:h-[240px] bg-gray-5 flex flex-col pad:flex-row justify-between px-4 pad:px-8 dt:px-[120px]">
+          <div className="flex flex-col mt-6 pad:mt-12">
+            <span className="font-mustica text-[28px] pad:text-[36px] text-gray-90 font-semibold leading-10 pb-3">
               Applicant
             </span>
-            <section className="flex gap-2 pb-10 items-center">
-              <span className="font-pretendard text-2xl text-gray-90 font-semibold leading-9">
+            <section className="flex gap-2 pb-4 pad:pb-8 items-center">
+              <span className="font-pretendard text-lg pad:text-xl text-gray-90 font-semibold leading-9">
                 {DynamicRecruitingInfo.num}기 지원자 정보
               </span>
-              <span className="font-pretendard text-2xl text-primary-50 font-semibold leading-9">
+              <span className="font-pretendard text-lg pad:text-xl text-primary-50 font-semibold leading-9">
                 {total}
               </span>
               <span
@@ -139,29 +139,35 @@ const page = () => {
                 <PublishIcon sx={{ color: '#757A95' }} />
               </span>
             </section>
-            <section className="w-[504px] h-8 rounded-[32px] bg-gray-0">
-              {sessionArr.map((sessionName) => (
-                <div
-                  key={sessionName}
-                  onClick={() => {
-                    setSession(sessionName);
-                  }}
-                  className={`${session === sessionName ? 'bg-primary-50' : 'bg-gray-0'} " w-[84px] inline-flex px-[12px] py-[4px] justify-center items-center gap-[10px] rounded-[32px] cursor-pointer "`}
-                >
-                  <span
+            <section className="w-full pad:w-[480px] h-8 rounded-[32px] bg-gray-0 overflow-x-auto whitespace-nowrap">
+              <div className="inline-flex">
+                {sessionArr.map((sessionName) => (
+                  <div
                     key={sessionName}
-                    className={`${session === sessionName ? 'text-gray-0' : 'text-gray-50'} " text-center font-pretendard text-[16px] font-medium leading-6 "`}
+                    onClick={() => {
+                      setSession(sessionName);
+                    }}
+                    className={`${
+                      session === sessionName ? 'bg-primary-50' : 'bg-gray-0'
+                    } min-w-[80px] inline-flex px-3 py-1 justify-center items-center gap-2 rounded-[32px] cursor-pointer`}
                   >
-                    {sessionName}
-                  </span>
-                </div>
-              ))}
+                    <span
+                      className={`${
+                        session === sessionName ? 'text-gray-0' : 'text-gray-50'
+                      } text-center font-pretendard text-[14px] pad:text-[16px] font-medium leading-6`}
+                    >
+                      {sessionName}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </section>
           </div>
-          <Image src={applicant_image} alt="image" width={377} height={244} />
+          <div className="hidden pad:block pad:mt-8">
+            <Image src={applicant_image} alt="image" width={320} height={208} />
+          </div>
         </div>
-        <div className="w-full h-full px-[360px] pt-8 grid grid-cols-3 gap-x-6 gap-y-10">
-          {/* 카드 섹션 */}
+        <div className="w-full h-full px-4 pad:px-8 dt:px-[120px] pt-6 pad:pt-8 grid grid-cols-1 pad:grid-cols-2 dt:grid-cols-3 gap-x-4 pad:gap-x-6 gap-y-6 pad:gap-y-8">
           {shownList.map((applicant) => (
             <ApplicantCard
               key={applicant.id}
@@ -177,14 +183,16 @@ const page = () => {
             />
           ))}
         </div>
-
-        <div onClick={handleMore} className="flex mt-16 gap-2 cursor-pointer">
+        <div
+          onClick={handleMore}
+          className="flex mt-8 pad:mt-12 gap-2 cursor-pointer mb-8"
+        >
           {showMore ? (
-            <span className="text-primary-50 text-center text-lg font-medium">
+            <span className="text-primary-50 text-center text-base pad:text-lg font-medium">
               닫기
             </span>
           ) : (
-            <span className="text-primary-50 text-center text-lg font-medium">
+            <span className="text-primary-50 text-center text-base pad:text-lg font-medium">
               더보기
             </span>
           )}
@@ -201,12 +209,11 @@ const page = () => {
           )}
         </div>
       </div>
-      {/* admin 홈으로 Button */}
-      <div className="flex h-auto mx-auto w-full pad:w-[786px] dt:w-[1200px] max-pad:mx-[16px]">
+      <div className="flex h-auto mx-auto w-full px-4 pad:px-8 dt:px-[120px]">
         <Link
           href={'/admin'}
           key="admin"
-          className="flex flex-row gap-[8px] items-center"
+          className="flex flex-row gap-2 items-center my-6"
         >
           <WestIcon />
           <span className="text-[16px] font-medium">Admin 홈으로</span>
