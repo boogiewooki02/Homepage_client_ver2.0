@@ -3,6 +3,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // 기본 스타일
 import './CalendarUI.css';
 import { Reservation } from '@/app/(kahlua)/reservation/page';
+import Modal from '../ui/Modal';
 
 // react-calnedar에서 요구하는 타입 형식 (변경 x)
 type ValuePiece = Date | null;
@@ -14,13 +15,33 @@ interface CalendarProps {
 
 const CalendarUI = ({ onChange }: CalendarProps) => {
   const [value, setValue] = useState<Value>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tempDate, setTempDate] = useState<Date | null>(null);
 
   const handleDateChange = async (newValue: Value) => {
-    setValue(newValue);
     if (newValue instanceof Date) {
-      const dateString = newValue.toLocaleDateString('en-CA'); // Date -> string 변환
+      const day = newValue.getDay();
+
+      if (day === 0) {
+        setTempDate(newValue);
+        setIsModalOpen(true);
+        return;
+      }
+
+      setValue(newValue);
+      const dateString = newValue.toLocaleDateString('en-CA');
       onChange('reservationDate', dateString);
     }
+  };
+
+  const handleModalConfirm = () => {
+    if (tempDate) {
+      setValue(tempDate);
+      const dateString = tempDate.toLocaleDateString('en-CA');
+      onChange('reservationDate', dateString);
+    }
+    setIsModalOpen(false);
+    setTempDate(null);
   };
 
   const isSelectable = (date: Date) => {
@@ -37,8 +58,8 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
     // 오늘 기준 2주 이후 날짜는 비활성화
     if (date > twoWeeksFromToday) return false;
 
-    // 월(=1), 수(=3), 금(=5)만 활성화
-    return day === 1 || day === 3 || day === 5;
+    // 월(=1), 수(=3), 금(=5), 일(=0)만 활성화
+    return day === 1 || day === 3 || day === 5 || day === 0;
   };
 
   return (
@@ -59,6 +80,20 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
         nextLabel=">"
         tileDisabled={({ date }) => !isSelectable(date)}
       />
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className="text-center mt-4 text-2xl text-gray-90">
+          <p>일요일 사용은 제한적으로 진행됩니다.</p>
+          <p>계속하시겠습니까?</p>
+          <div className="flex justify-center items-center mt-4 gap-4">
+            <button onClick={handleModalConfirm} className="px-4 py-2">
+              확인
+            </button>
+            <button onClick={() => setIsModalOpen(false)} className="px-4 py-2">
+              취소
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
