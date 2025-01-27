@@ -1,3 +1,4 @@
+'use client';
 import AdminPageButton from '@/components/admin/adminPageButton';
 
 let AdminUrl = [
@@ -21,10 +22,12 @@ const page = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap max-pad:px-[16px] pad:w-[786px] dt:w-[1200px] h-auto gap-[40px] mt-[24px] pad:mt-[40px]">
+      <div className="w-full pad:w-[786px] dt:w-[1200px] mt-[40px] grid grid-cols-1 pad:grid-cols-2 gap-[40px]">
         {AdminUrl.map((url) => (
           <div
-            className="w-full pad:w-[373px] dt:w-[580px] h-[76px]"
+            className={`w-full pad:w-[373px] dt:w-[580px] h-[76px] ${
+              url.name === '지원 현황' ? 'order-1' : 'order-1' // "지원 현황"을 두 번째로 정렬
+            }`}
             key={url.name}
           >
             <AdminPageButton name={url.name} url={url.url} />
