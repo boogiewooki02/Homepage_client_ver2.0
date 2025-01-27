@@ -1,3 +1,4 @@
+'use client';
 import AdminPageButton from '@/components/admin/adminPageButton';
 
 let AdminUrl = [
@@ -21,15 +22,19 @@ const page = () => {
         </div>
       </div>
 
-      <div className="flex flex-wrap max-pad:px-[16px] pad:w-[786px] dt:w-[1200px] h-auto gap-[40px] mt-[24px] pad:mt-[40px]">
-        {AdminUrl.map((url) => (
-          <div
-            className="w-full pad:w-[373px] dt:w-[580px] h-[76px]"
-            key={url.name}
-          >
-            <AdminPageButton name={url.name} url={url.url} />
-          </div>
-        ))}
+      <div className="flex max-pad:flex-wrap max-pad:px-[16px] pad:w-[786px] dt:w-[1200px] gap-[40px] mt-[24px] pad:mt-[40px] h-auto">
+        <div className="w-[50%] max-pad:w-full">
+          <AdminPageButton name="공연 예매 현황" url="/admin/ticketing" />
+        </div>
+        <div className="flex flex-col gap-[16px] w-[50%] max-pad:w-full">
+          {AdminUrl.filter((url) => url.name !== '공연 예매 현황').map(
+            (url) => (
+              <div key={url.name} className="w-full">
+                <AdminPageButton name={url.name} url={url.url} />
+              </div>
+            )
+          )}
+        </div>
       </div>
     </div>
   );
