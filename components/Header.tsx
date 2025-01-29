@@ -393,15 +393,17 @@ const Header = () => {
                       : ''
                   }`}
                 >
-                  <Link href={url.url} passHref>
-                    <div
-                      onClick={() => {
-                        handleLinkClick(url.name);
-                      }}
-                    >
+                  {url.name === 'TICKET' ? (
+                    <div className="cursor-pointer" onClick={handleTicketClick}>
                       {url.name}
                     </div>
-                  </Link>
+                  ) : (
+                    <Link href={url.url} passHref>
+                      <div onClick={() => handleLinkClick(url.name)}>
+                        {url.name}
+                      </div>
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
