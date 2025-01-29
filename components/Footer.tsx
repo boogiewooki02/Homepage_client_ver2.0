@@ -41,11 +41,11 @@ const Footer = () => {
   return (
     <div className="w-full h-[339px] relative translate-y-0 font-pretendard bg-gray-90 flex flex-col items-center">
       <div className="flex flex-col min-[834px]:flex-row text-center text-base min-[834px]:text-lg leading-6 mt-6 mb-12 min-[834px]:mb-14">
-        <Link href="/ticket">
+        {/* <Link href="/ticket">
           <div className="font-medium text-gray-20 min-[834px]:hidden">
             예매 내역 조회
           </div>
-        </Link>
+        </Link> */}
         <div className="flex flex-row mt-3">
           <Link href="/contributors">
             <span className="text-gray-50 font-normal">CREDIT</span>
@@ -57,15 +57,15 @@ const Footer = () => {
           </Link>
           <Link href="https://kahluaband.notion.site/f877ed4fe6de4aa4a8c0b201530b69df">
             <span className="text-gray-50 font-normal">이용약관</span>
-            <span className="text-gray-80 mx-2 hidden min-[834px]:inline">
+            {/* <span className="text-gray-80 mx-2 hidden min-[834px]:inline">
               |
-            </span>
+            </span> */}
           </Link>
-          <Link href="/ticket">
+          {/* <Link href="/ticket">
             <span className="font-medium text-gray-20 hidden min-[834px]:inline">
               예매 내역 조회
             </span>
-          </Link>
+          </Link> */}
         </div>
       </div>
 
