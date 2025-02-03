@@ -235,7 +235,7 @@ const ApplicantCard = ({
           </DialogTitle>
 
           <DialogContent className="p-4 pad:p-8 max-h-[80vh] overflow-y-auto">
-            <section className="flex flex-col pad:flex-row pad:gap-[100px]">
+            <section className="flex flex-col pad:flex-row pad:gap-[100px] pt-6">
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <Image
