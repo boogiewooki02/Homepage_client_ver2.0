@@ -82,14 +82,14 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
       />
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="text-center mt-4 text-2xl text-gray-90">
-          <p>일요일 사용은 제한적으로 진행됩니다.</p>
-          <p className="mt-4 text-xl">계속하시겠습니까?</p>
+          <p>일요일 예약은 담당자의 확인 후 확정됩니다.</p>
+          <p className="mt-4 text-xl">예약 전 확인해주세요!</p>
           <div className="flex justify-center items-center mt-4 gap-4">
-            <button onClick={handleModalConfirm} className="px-4 py-2">
-              확인
-            </button>
             <button onClick={() => setIsModalOpen(false)} className="px-4 py-2">
               취소
+            </button>
+            <button onClick={handleModalConfirm} className="px-4 py-2">
+              확인
             </button>
           </div>
         </div>
