@@ -1,8 +1,9 @@
+import { authInstance } from '@/api/auth/axios';
 import {
   Reservation,
   ReservationResponse,
 } from '@/app/(kahlua)/reservation/page';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const reservationStatuses = [
   { color: 'bg-gray-15', label: '예약 불가능' },
@@ -17,16 +18,45 @@ interface TimeTableProps {
   onChange: (key: keyof Reservation, value: string) => void;
 }
 
+interface User {
+  id: number;
+  email: string;
+  role: string;
+  name: string;
+  session: string;
+  term: number;
+}
+
 const TimeTable = ({
   reservation,
   reservationsForDate,
   onChange,
 }: TimeTableProps) => {
   const hours = Array.from({ length: 13 }, (_, i) => i + 10); // 10시부터 23시까지
-
   const [selectedTimes, setSelectedTimes] = useState<string[]>([]);
-
   const [countClick, setCountClick] = useState<number>(0);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await authInstance.get('/user');
+        if (response.data.isSuccess) {
+          setUser(response.data.result);
+        } else {
+          console.error('에러 발생: ', response.data.message);
+        }
+      } catch (error) {
+        console.log('User 데이터 불러오기 실패: ', error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  // 본인 예약인지 체크
+  const isMyReservation = (email: string) => {
+    return user?.email === email;
+  };
 
   // 예약 불가능한 시간 확인
   const isTimeSlotReserved = (startTime: string, endTime: string) => {
@@ -41,7 +71,7 @@ const TimeTable = ({
   };
 
   // 예약자 확인
-  const getReservedBy = (startTime: string, endTime: string) => {
+  const getReservedByName = (startTime: string, endTime: string) => {
     const formattedStartTime = `${startTime}:00`;
     const formattedEndTime = `${endTime}:00`;
 
@@ -50,6 +80,17 @@ const TimeTable = ({
         res.startTime <= formattedStartTime && res.endTime >= formattedEndTime
     );
     return reservation ? reservation.clubroomUsername : null;
+  };
+  const getReservedByEmail = (startTime: string, endTime: string) => {
+    const formattedStartTime = `${startTime}:00`;
+    const formattedEndTime = `${endTime}:00`;
+
+    const reservation = reservationsForDate.find(
+      (res) =>
+        res.startTime <= formattedStartTime && res.endTime >= formattedEndTime
+    );
+
+    return reservation ? reservation.email : null;
   };
 
   // 시간 선택 및 해제
@@ -157,8 +198,10 @@ const TimeTable = ({
     if (isPastTime(startTime)) {
       return 'past';
     }
-    if (isTimeSlotReserved(startTime, endTime)) {
-      return 'reserved';
+
+    const reservedByEmail = getReservedByEmail(startTime, endTime);
+    if (reservedByEmail) {
+      return isMyReservation(reservedByEmail) ? 'my-reservation' : 'reserved';
     }
     return selectedTimes.includes(timeRange) ? 'selected' : 'available';
   };
@@ -179,12 +222,15 @@ const TimeTable = ({
                       'selected'
                       ? 'bg-primary-50 text-white'
                       : getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
-                          'reserved'
-                        ? 'bg-primary-10 cursor-not-allowed'
+                          'my-reservation'
+                        ? 'bg-warning-10 cursor-not-allowed'
                         : getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
-                            'past'
-                          ? 'bg-gray-15 cursor-not-allowed'
-                          : 'bg-gray-5'
+                            'reserved'
+                          ? 'bg-primary-10 cursor-not-allowed'
+                          : getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
+                              'past'
+                            ? 'bg-gray-15 cursor-not-allowed'
+                            : 'bg-gray-5'
                     : 'bg-gray-7 cursor-not-allowed'
                 }`}
                 onClick={() =>
@@ -192,10 +238,12 @@ const TimeTable = ({
                     'available' && handleTimeClick(`${hour}:00`, `${hour}:30`)
                 }
               >
-                {getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
-                  'reserved' && (
+                {(getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
+                  'reserved' ||
+                  getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
+                    'my-reservation') && (
                   <span className="absolute text-xs text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    {getReservedBy(`${hour}:00`, `${hour}:30`)}
+                    {getReservedByName(`${hour}:00`, `${hour}:30`)}
                   </span>
                 )}
               </div>
@@ -207,12 +255,17 @@ const TimeTable = ({
                       'selected'
                       ? 'bg-primary-50 text-white'
                       : getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
-                          'reserved'
-                        ? 'bg-primary-10 cursor-not-allowed'
+                          'my-reservation'
+                        ? 'bg-warning-10 cursor-not-allowed'
                         : getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
-                            'past'
-                          ? 'bg-gray-15 cursor-not-allowed'
-                          : 'bg-gray-5'
+                            'reserved'
+                          ? 'bg-primary-10 cursor-not-allowed'
+                          : getTimeSlotStatus(
+                                `${hour}:30`,
+                                `${hour + 1}:00`
+                              ) === 'past'
+                            ? 'bg-gray-15 cursor-not-allowed'
+                            : 'bg-gray-5'
                     : 'bg-gray-7 cursor-not-allowed'
                 }`}
                 onClick={() =>
@@ -221,10 +274,12 @@ const TimeTable = ({
                   handleTimeClick(`${hour}:30`, `${hour + 1}:00`)
                 }
               >
-                {getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
-                  'reserved' && (
+                {(getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
+                  'reserved' ||
+                  getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
+                    'my-reservation') && (
                   <span className="absolute text-xs text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    {getReservedBy(`${hour}:30`, `${hour + 1}:00`)}
+                    {getReservedByName(`${hour}:30`, `${hour + 1}:00`)}
                   </span>
                 )}
               </div>
