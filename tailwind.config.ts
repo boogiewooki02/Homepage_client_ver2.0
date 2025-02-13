@@ -95,7 +95,7 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'ticket-complete':
-          "linear-gradient(rgba(27, 28, 35, 0.60), rgba(27, 28, 35, 0.60)), url('/image/ticket/Poster.avif')",
+          "linear-gradient(rgba(27, 28, 35, 0.60), rgba(27, 28, 35, 0.60)), url('/image/ticket/Poster_202503.avif')",
       },
 
       keyframes: {

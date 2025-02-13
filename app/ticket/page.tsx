@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import DropdownMenu from '@/components/templates/ticket/DropdownMenu';
 import { information } from '@/components/data/Information';
+import RecommendedList from '@/components/ticket/RecommendedList';
 
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
@@ -41,7 +42,7 @@ const Page = () => {
   }, [isDays]);
 
   useEffect(() => {
-    setIsDays(true);
+    setIsDays(false); // 공연 상세 - 예약 가능 여부 알아오기 추가 필요
   }, []);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ const Page = () => {
           });
 
           window.kakao.maps.event.addListener(marker, 'click', function () {
-            window.open('https://place.map.kakao.com/23696074', '_blank');
+            window.open('https://place.map.kakao.com/23696074', '_blank'); //위치 지도
           });
         }
       });
@@ -121,7 +122,7 @@ const Page = () => {
     <div className="flex relative flex-col top-16 h-[1150px] mb:h-[1000px] w-full pad:w-[768px] dt:w-[1200px] mx-auto z-10">
       <div className="flex flex-col pad:flex-row pad:mt-8 pad:h-[328px] w-full pad:w-full dt:h-[376px] dt:justify-center mx-auto">
         <Image
-          src="/image/ticket/Poster.avif"
+          src="/image/ticket/Poster_202503.avif"
           alt="포스터사진"
           width={833}
           height={376}
@@ -190,16 +191,16 @@ const Page = () => {
             </div>
           </div>
           <Link
-            href="/ticket/search/"
-            className="mx-auto dt:ml-[56px] mt-[21px] w-full dt:w-[280px] h-[52px] dt:h-[60px] flex pad:hidden dt:flex flex-shrink-0 text-center items-center justify-center text-gray-60 dt:text-gray-0 bg-gray-5 dt:bg-primary-50 rounded-xl text-[18px] font-medium dt:mr-0 "
+            href={isDays ? '/ticket/search/' : '/video'} // 영상 링크 추가 필요
+            className="max-pad:mx-auto mt-[21px] w-full dt:w-[316px] h-[52px] dt:h-[60px] flex pad:hidden dt:flex flex-shrink-0 text-center items-center justify-center text-gray-60 dt:text-gray-0 bg-gray-5 dt:bg-primary-50 rounded-xl text-[18px] font-medium"
           >
-            예매 조회/취소
+            {isDays ? '예매 조회/취소' : '공연영상 보러가기'}
           </Link>
         </div>
         <div className="z-20 bg-gray-0 h-[40px] w-[100vw] flex pad:hidden items-center" />
         <div className="flex z-10 flex-shrink-0 pad:hidden w-full mb:w-[328px] pad:w-full h-2 bg-gray-5 mx-auto" />
         <div className="z-20 bg-gray-0 h-[24px] w-[100vw] flex pad:hidden items-center" />
-        <div className="flex z-10 bg-gray-0 pad:hidden dt:flex flex-col w-[100%] px-4 mb:px-0 mb:w-[328px] pad:ml-[164px] h-[282px] pad:mt-[78px] pad:h-full mx-auto">
+        <div className="hidden min-[833px]:flex z-10 bg-gray-0 pad:hidden dt:flex flex-col w-[100%] px-4 mb:px-0 mb:w-[328px] pad:ml-[164px] h-[282px] pad:mt-[78px] pad:h-full mx-auto">
           <p className="text-[16px] pad:text-[18px] font-medium left-9 text-primary-60 pad:text-primary-50 h-[27px]">
             공연장 위치
           </p>
@@ -239,14 +240,14 @@ const Page = () => {
             공연장 위치 ↗
           </button>
           <Link
-            href="/ticket/search/"
+            href={isDays ? '/ticket/search/' : '/video'} // 영상 링크 추가 필요
             className="w-[384px] h-[60px] flex dt:hidden flex-shrink-0 text-center items-center justify-center text-gray-0 bg-primary-50 rounded-xl text-[18px] font-medium"
           >
-            예매 조회/취소
+            {isDays ? '예매 조회/취소' : '공연영상 보러가기'}
           </Link>
         </div>
         <Bar className="mt-10 hidden pad:flex w-[768px] dt:w-[1200px]" />
-        <TicketOption isDays={isDays} />
+        {isDays ? <TicketOption isDays={isDays} /> : <RecommendedList />}
         <LocationModal isOpen={isModalOpen} onClose={closeModal} />
       </div>
     </div>

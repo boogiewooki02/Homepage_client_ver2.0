@@ -40,7 +40,7 @@ const TicketStatus: React.FC<TicketStatusProps> = ({
   return (
     <div className="flex flex-row w-full px-4 pad:px-12 my-10">
       <Image
-        src="/image/ticket/Poster.avif"
+        src="/image/ticket/Poster_202503.avif"
         alt="포스터사진"
         width={289}
         height={357}
