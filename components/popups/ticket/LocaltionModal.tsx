@@ -1,10 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 import Image from 'next/image';
 
 interface LocationModalProps {
   isOpen: boolean;
   onClose: () => void;
+  address: string; // ✅ 부모에서 전달받은 주소
+  mapLink: string; // ✅ 부모에서 전달받은 카카오맵 링크
 }
 
 declare global {
@@ -15,9 +17,15 @@ declare global {
 
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
-const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose }) => {
-  const loc = '서울 마포구 와우산로18길 20 지하 1층';
+const LocationModal: React.FC<LocationModalProps> = ({
+  isOpen,
+  onClose,
+  address,
+  mapLink,
+}) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
+  const [latitude, setLatitude] = useState<number | null>(null);
+  const [longitude, setLongitude] = useState<number | null>(null);
 
   const handleOverlayClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -28,13 +36,14 @@ const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose }) => {
   };
 
   const copyLocation = () => {
-    navigator.clipboard.writeText(loc).then(() => {
+    navigator.clipboard.writeText(address).then(() => {
       alert('주소가 복사되었습니다!');
     });
   };
 
   useEffect(() => {
     if (!isOpen) return;
+    if (!address) return;
 
     const script = document.createElement('script');
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${apikey}&autoload=false`;
@@ -42,32 +51,40 @@ const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose }) => {
 
     const handleScriptLoad = () => {
       if (window.kakao && window.kakao.maps) {
-        const container = mapContainerRef.current;
-        if (!container) return;
+        const geocoder = new window.kakao.maps.services.Geocoder();
 
-        const options = {
-          center: new window.kakao.maps.LatLng(
-            37.55099593968109,
-            126.92401144435387
-          ),
-          level: 3,
-        };
+        geocoder.addressSearch(address, (result: any, status: any) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            const lat = parseFloat(result[0].y);
+            const lng = parseFloat(result[0].x);
 
-        const map = new window.kakao.maps.Map(container, options);
+            setLatitude(lat);
+            setLongitude(lng);
 
-        const markerPosition = new window.kakao.maps.LatLng(
-          37.55099593968109,
-          126.92401144435387
-        );
+            console.log(`📌 변환된 좌표: ${lat}, ${lng}`);
 
-        const marker = new window.kakao.maps.Marker({
-          position: markerPosition,
-          map: map,
-          draggable: true,
-        });
+            const container = mapContainerRef.current;
+            if (!container) return;
 
-        window.kakao.maps.event.addListener(marker, 'click', () => {
-          window.open('https://place.map.kakao.com/23696074', '_blank');
+            const options = {
+              center: new window.kakao.maps.LatLng(lat, lng),
+              level: 3,
+            };
+
+            const map = new window.kakao.maps.Map(container, options);
+
+            const marker = new window.kakao.maps.Marker({
+              position: new window.kakao.maps.LatLng(lat, lng),
+              map: map,
+              draggable: true,
+            });
+
+            window.kakao.maps.event.addListener(marker, 'click', () => {
+              window.open(mapLink, '_blank');
+            });
+          } else {
+            console.error('📌 주소 검색 실패');
+          }
         });
       }
     };
@@ -78,9 +95,10 @@ const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose }) => {
     return () => {
       document.head.removeChild(script);
     };
-  }, [isOpen]);
+  }, [isOpen, address, mapLink]);
 
   if (!isOpen) return null;
+
   return (
     <div
       onClick={handleOverlayClick}
@@ -103,11 +121,11 @@ const LocationModal: React.FC<LocationModalProps> = ({ isOpen, onClose }) => {
         <div className="px-8 py-6 flex flex-col">
           <div className="flex flex-row gap-3">
             <p className="text-[20px] font-medium leading-[30px] text-gray-90 text-start whitespace-nowrap truncate">
-              {loc}
+              {address}
             </p>
             <div
               onClick={copyLocation}
-              className="flex flex-row items-center gap-1"
+              className="flex flex-row items-center gap-1 cursor-pointer"
             >
               <Image
                 src="/image/ticket/copy.svg"

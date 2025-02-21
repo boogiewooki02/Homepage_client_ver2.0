@@ -3,16 +3,40 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import OptionBox from '@/components/ui/OptionBox';
 import Ticket from '@/components/ui/Ticket';
-import { information } from '@/components/data/Information';
 
 interface TicketOptionProps {
+  data: any;
   isDays: boolean;
 }
 
-const TicketOption: React.FC<TicketOptionProps> = ({ isDays }) => {
+const TicketOption: React.FC<TicketOptionProps> = ({ data, isDays }) => {
   const [active, setActive] = useState(isDays);
   const [freshman, setFreshman] = useState(false);
   const [general, setGeneral] = useState(true);
+
+  const formatDateTimeSplit = (
+    isoString?: string
+  ): { date: string; time: string } => {
+    if (!isoString) return { date: '', time: '' };
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) return { date: '', time: '' };
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const dateString = `${year}년 ${month}월 ${day}일`;
+
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const timeString = `${hours}시 ${minutes.toString().padStart(2, '0')}분`;
+
+    return { date: dateString, time: timeString };
+  };
+
+  const formatPrice = (price: any): string => {
+    const numericPrice = typeof price === 'number' ? price : Number(price);
+    return `${numericPrice.toLocaleString('ko-KR')}원`;
+  };
 
   useEffect(() => {
     setActive(isDays);
@@ -40,7 +64,12 @@ const TicketOption: React.FC<TicketOptionProps> = ({ isDays }) => {
             </div>
           </div>
           <div className="h-[280px] flex flex-shrink-0 rounded-bl-xl border-r border-gray-15 bg-gray-5 justify-center">
-            <OptionBox option={information.day} isDays={isDays} />
+            <OptionBox
+              option={
+                data?.date_time ? formatDateTimeSplit(data.date_time).date : ''
+              }
+              isDays={isDays}
+            />
           </div>
         </div>
         <div className="w-[262px] dt:w-[400px] flex flex-col">
@@ -52,7 +81,12 @@ const TicketOption: React.FC<TicketOptionProps> = ({ isDays }) => {
             </div>
           </div>
           <div className="h-[280px] flex flex-shrink-0 rounded-bl-[12px] border-r border-gray-15 bg-gray-5 justify-center">
-            <OptionBox option={information.time} isDays={isDays} />
+            <OptionBox
+              option={
+                data?.date_time ? formatDateTimeSplit(data.date_time).time : ''
+              }
+              isDays={isDays}
+            />
           </div>
         </div>
         <div className="w-[262px] dt:w-[400px] flex flex-col">
@@ -69,7 +103,7 @@ const TicketOption: React.FC<TicketOptionProps> = ({ isDays }) => {
               ticket="신입생"
               price="무료"
               state={
-                information.isFreshmanFree
+                data?.freshman_price == 0
                   ? freshman === true
                     ? 'selected'
                     : 'possible'
@@ -80,7 +114,9 @@ const TicketOption: React.FC<TicketOptionProps> = ({ isDays }) => {
             <Ticket
               className="focus:cursor-pointer"
               ticket="일반"
-              price="5,000원"
+              price={
+                data?.general_price ? formatPrice(data.general_price) : '0원'
+              }
               state={!active ? 'impossible' : general ? 'selected' : 'possible'}
               onClick={handleGeneralClick}
             />
@@ -91,8 +127,8 @@ const TicketOption: React.FC<TicketOptionProps> = ({ isDays }) => {
         <Link
           href={
             freshman === true
-              ? 'ticket/freshman_ticket/'
-              : 'ticket/general_ticket/'
+              ? '/ticket/freshman_ticket/'
+              : '/ticket/general_ticket/'
           }
           className={`mt-[24px] w-[280px] h-[60px] flex flex-shrink-0 text-center justify-center items-center ml-auto rounded-xl text-[18px] font-medium 
       ${isDays ? '' : 'cursor-default'}

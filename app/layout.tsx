@@ -28,6 +28,18 @@ export default function RootLayout({
   const isCancelPage = pathname === '/ticket/cancel';
   const isReservationPage = pathname === '/ticket/reservation';
   const isSearchPage = pathname === '/ticket/search';
+  const knownTicketPages = [
+    '/ticket/freshman_ticket',
+    '/ticket/general_ticket',
+    '/ticket/complete',
+    '/ticket/cancel',
+    '/ticket/reservation',
+    '/ticket/search',
+    '/ticket',
+  ];
+
+  const isTicketDetailPage =
+    pathname.startsWith('/ticket/') && !knownTicketPages.includes(pathname);
 
   const isNoticePage = pathname === '/recruit/notice';
   const isApplyCompletePage = pathname === '/recruit/complete';
@@ -96,7 +108,8 @@ export default function RootLayout({
               !isAdminApplicantPage &&
               !isAdminTicketingPage &&
               !isRoomReservationPage &&
-              !(isMobile && isTicketPage) && <Footer />}
+              !(isMobile && isTicketPage) &&
+              !(isMobile && isTicketDetailPage) && <Footer />}
           </body>
         </html>
       </RecoilRoot>

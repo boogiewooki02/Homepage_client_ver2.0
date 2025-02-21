@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { shuffleArray } from '../util/shuffleArray';
 import Link from 'next/link';
-import { RecommendData } from '../data/RecommendData';
 
-const DesktopTicketList = () => {
+const DesktopTicketList = ({
+  tickets,
+  currentId,
+}: {
+  tickets: any[];
+  currentId: number;
+}) => {
   const [visibleCount, setVisibleCount] = useState(6);
+  const [shuffledTickets, setShuffledTickets] = useState<any[] | null>(null);
 
   useEffect(() => {
     const updateVisibleCount = () => {
@@ -22,30 +29,45 @@ const DesktopTicketList = () => {
 
     return () => window.removeEventListener('resize', updateVisibleCount);
   }, []);
+
+  useEffect(() => {
+    if (!tickets.length) return;
+    const filteredTickets = tickets.filter(
+      (show) => show.ticketInfoId !== currentId
+    );
+    const randomizedTickets = shuffleArray(filteredTickets);
+
+    setShuffledTickets(randomizedTickets);
+  }, [tickets, currentId]);
+
+  if (!shuffledTickets) {
+    return <div className="text-center mt-4" />;
+  }
+
   return (
-    <div className="items-center mt-[21px] grid dt:grid-cols-6 pad:grid-cols-4 ph:grid-cols-1 gap-[17px]">
-      {RecommendData.slice(0, visibleCount).map((show, index) => (
-        <div key={index} className="relative block w-[184px]">
-          {show.isLive && (
+    <div className="mt-[21px] grid dt:grid-cols-6 pad:grid-cols-4 ph:grid-cols-1 gap-[17px]">
+      {shuffledTickets.slice(0, visibleCount).map((show) => (
+        <div key={show.ticketInfoId} className="relative w-[184px] block">
+          {show.status === 'OPEN' && (
             <div className="flex items-center justify-center rounded-[20px] z-30 text-center absolute top-[15px] left-[13px] w-[42px] h-[23px] bg-primary-40 text-gray-0 text-xs font-medium rounded-5">
               공연중
             </div>
           )}
-          <Link href={show.link} className="block">
-            <div className="relative w-[184px] h-[257px] rounded-lg overflow-hidden cursor-pointer">
+          <div className="flex items-start relative w-[184px] h-[257px] rounded-lg overflow-hidden cursor-pointer">
+            <Link href={`/ticket/${show.ticketInfoId}`}>
               <Image
-                src={show.image}
+                src={show.posterUrl}
                 alt={show.title}
                 layout="fill"
                 objectFit="cover"
               />
-            </div>
-          </Link>
+            </Link>
+          </div>
           <p className="mt-3 text-left font-pretendard text-base font-semibold text-gray-90">
             {show.title}
           </p>
           <p className="text-left text-sm font-pretendard font-normal text-gray-40">
-            {show.description}
+            {show.content}
           </p>
         </div>
       ))}

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import TicketDetails from './TicketDetails';
 import clsx from 'clsx';
-import { information } from '../data/Information';
+import dayjs from 'dayjs';
 
 interface Option {
   value: string;
@@ -15,32 +15,41 @@ interface DropDownBoxProps {
   onSelect: (value: string) => void;
   member: number;
   setMember: React.Dispatch<React.SetStateAction<number>>;
+  data: any; // API에서 받은 데이터
 }
-
-const dateOptions: Option[] = [
-  { value: information.dateForMinute, label: information.dateForMinute },
-];
-
-const ticketOptions: Option[] = [
-  {
-    value: '신입생 티켓',
-    label: '신입생 티켓',
-    status: information.isFreshmanFree ? 'ACTIVE' : 'INACTIVE',
-  },
-  { value: '일반 티켓', label: '일반 티켓', status: 'ACTIVE' },
-];
 
 const DropDownBox: React.FC<DropDownBoxProps> = ({
   type,
   onSelect,
   member,
   setMember,
+  data,
 }) => {
   const defaultText = type === 'date' ? '회차 선택' : '좌석 선택';
   const [selectedValue, setSelectedValue] = useState<string>(defaultText);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const dateOptions: Option[] = data?.date_time
+    ? [
+        {
+          value: data.dateOption,
+          label: data.dateOption,
+        },
+      ]
+    : [];
+
+  const ticketOptions: Option[] = [
+    {
+      value: '신입생 티켓',
+      label: '신입생 티켓',
+      status: data?.isFreshmanFree ? 'ACTIVE' : 'INACTIVE',
+    },
+    { value: '일반 티켓', label: '일반 티켓', status: 'ACTIVE' },
+  ];
+
+  const options = type === 'date' ? dateOptions : ticketOptions;
 
   const toggleDropdown = () => {
     if (type === 'date' && selectedValue !== defaultText) {
@@ -65,8 +74,6 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
     setSelectedValue(defaultText);
     setIsDropdownVisible(true);
   };
-
-  const options = type === 'date' ? dateOptions : ticketOptions;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -137,15 +144,15 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
                     type="button"
                     className="w-full text-start focus:outline-none flex justify-start hover:bg-gray-200 py-4"
                     onClick={
-                      information.isDays
+                      data?.isDays
                         ? () => handleOptionClick(option.value)
                         : undefined
                     }
-                    disabled={option.status === 'INACTIVE'}
+                    disabled={!data?.isDays}
                   >
                     <p
                       className={clsx(
-                        information.isDays || type === 'date'
+                        data?.isDays || type === 'date'
                           ? 'text-gray-60'
                           : 'text-gray-30'
                       )}
@@ -157,20 +164,20 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
                         <p
                           className={clsx(
                             'ml-2 text-[14px]',
-                            information.isDays
-                              ? 'text-primary-50'
-                              : 'text-gray-30'
+                            data?.isDays ? 'text-primary-50' : 'text-gray-30'
                           )}
                         >
-                          {information.isDays ? '예매 가능' : '예매 불가'}
+                          {data?.isDays ? '예매 가능' : '예매 불가'}
                         </p>
                         <p
                           className={clsx(
                             'ml-auto text-[16px]',
-                            information.isDays ? 'text-gray-60' : 'text-gray-30'
+                            data?.isDays ? 'text-gray-60' : 'text-gray-30'
                           )}
                         >
-                          {option.value === '신입생 티켓' ? '무료' : '5,000원'}
+                          {option.value === '신입생 티켓'
+                            ? (data?.freshmanPrice ?? '무료')
+                            : `${data?.generalPrice ?? '5,000'}`}
                         </p>
                       </>
                     )}

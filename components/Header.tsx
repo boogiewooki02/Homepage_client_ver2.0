@@ -87,7 +87,7 @@ const Header = () => {
   const [currentLink, setCurrentLink] = useState('');
 
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(isLoggedInState); // Recoil 상태 업데이트 함수
-  const [isTicketAvailable, setIsTicketAvailable] = useState(false); // 티켓 예약 가능 여부 상태 (기간이 아니면 false로 설정)
+  const [isTicketAvailable, setIsTicketAvailable] = useState(true); // 티켓 예약 가능 여부 상태 (기간이 아니면 false로 설정)
 
   // 티켓 클릭 시 처리
   const handleTicketClick = () => {
