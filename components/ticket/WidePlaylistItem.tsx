@@ -28,8 +28,7 @@ const WidePlaylistItem = ({ show, id }: { show: Show; id: string }) => {
             // src="/image/ticket/Poster_202503.avif"
             alt={show.title}
             layout="fill"
-            objectFit="cover"
-            className="rounded-[10px]"
+            className="object-cover rounded-[10px]"
           />
         </div>
 
