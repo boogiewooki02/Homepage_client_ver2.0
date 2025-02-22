@@ -34,9 +34,11 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
   const [placeId, setPlaceId] = useState<string | null>(null);
   const [loc, setLoc] = useState('');
   const [statusText, setStatusText] = useState<string>('예매 마감');
+  const [isLoading, setIsLoading] = useState(true);
 
   const getTicketDetail = async (id: string) => {
     try {
+      setIsLoading(true);
       const response = await axiosInstance.get(`/performances/${id}`);
       if (response.data.isSuccess) {
         const rawData = response.data.result.ticketInfoResponse;
@@ -74,6 +76,8 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
       }
     } catch (error) {
       console.error('티켓 상세 정보 불러오는 중 오류 발생:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -207,6 +211,14 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  if (isLoading || !ticketInfo) {
+    return (
+      <div className="flex justify-center items-center w-full h-screen">
+        <p className="text-gray-500 text-lg font-medium" />
+      </div>
+    );
+  }
 
   return (
     <>
