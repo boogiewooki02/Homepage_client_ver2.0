@@ -45,7 +45,7 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
         const bookingStart = dayjs(rawData.booking_start_date);
         const bookingEnd = dayjs(rawData.booking_end_date);
         const now = dayjs();
-        const daysBeforeStart = bookingStart.diff(now, 'day');
+        const daysBeforeStart = Math.ceil(bookingStart.diff(now, 'hours') / 24);
 
         let isAvailable = false;
         let status = '예매 마감';
