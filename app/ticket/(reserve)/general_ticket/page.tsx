@@ -98,6 +98,7 @@ const General_ticket: React.FC = () => {
           phone_num,
           type: 'GENERAL',
           members: members,
+          email: email,
         };
         const response = await axiosInstance.post(`/tickets`, formData, {
           headers: {
