@@ -82,7 +82,7 @@ const TicektList = () => {
         >
           {performance.status === 'OPEN' && (
             <div className="flex items-center justify-center rounded-[20px] z-30 text-center absolute top-[15px] left-[13px] w-[42px] h-[23px] bg-primary-40 text-gray-0 text-xs font-medium">
-              공연중
+              예매중
             </div>
           )}
           <Link href={`/ticket/${performance.ticketInfoId}`} className="block">

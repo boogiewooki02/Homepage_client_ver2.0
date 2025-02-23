@@ -50,7 +50,7 @@ const DesktopTicketList = ({
         <div key={show.ticketInfoId} className="relative w-[184px] block">
           {show.status === 'OPEN' && (
             <div className="flex items-center justify-center rounded-[20px] z-30 text-center absolute top-[15px] left-[13px] w-[42px] h-[23px] bg-primary-40 text-gray-0 text-xs font-medium rounded-5">
-              공연중
+              예매중
             </div>
           )}
           <div className="flex items-start relative w-[184px] h-[257px] rounded-lg overflow-hidden cursor-pointer">
