@@ -79,7 +79,7 @@ const ReservationDetails = () => {
       </div>
       <Link
         href="/ticket/"
-        className="mt-10 w-[384px] h-[59px] flex flex-shrink-0 text-center justify-center items-center mx-auto rounded-xl text-[18px] font-medium text-gray-60 bg-gray-5"
+        className="mt-10 mb-10 w-[384px] h-[59px] flex flex-shrink-0 text-center justify-center items-center mx-auto rounded-xl text-[18px] font-medium text-gray-60 bg-gray-5"
       >
         예매 페이지로 돌아가기
       </Link>

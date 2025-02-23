@@ -35,9 +35,14 @@ const Reservation = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
-    const phoneNumber = e.target.value;
-    const limitedPhoneNumber = filterPhoneNumber(phoneNumber);
-    setInputValue(limitedPhoneNumber);
+    const inputText = e.target.value;
+
+    if (type === 'FRESHMAN') {
+      setInputValue(inputText);
+    } else {
+      const filteredPhoneNumber = filterPhoneNumber(inputText);
+      setInputValue(filteredPhoneNumber);
+    }
   };
 
   const handleConfirmCancel = async () => {
