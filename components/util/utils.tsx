@@ -27,3 +27,7 @@ export const filterBirthdateValue = (value: string): string => {
   }
   return value;
 };
+
+export const filterEmailValue = (value: string): string => {
+  return value.trim().toLowerCase();
+};

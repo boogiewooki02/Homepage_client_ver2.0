@@ -25,6 +25,7 @@ const General_ticket: React.FC = () => {
     buyer: '',
     phone_num: '',
     members: [{ name: '', phone_num: '' }],
+    email: '',
   });
 
   useEffect(() => {
@@ -43,9 +44,9 @@ const General_ticket: React.FC = () => {
     } else if (member === 4) {
       newHeightClass = 'h-[1370px]';
       totalHeightClass = 'h-[1808px]';
-    } else if (member === 5) {
-      newHeightClass = 'h-[1400px]';
-      totalHeightClass = 'h-[1871px]';
+      // } else if (member === 5) {
+      //   newHeightClass = 'h-[1400px]';
+      //   totalHeightClass = 'h-[1871px]';
     } else {
       newHeightClass = 'h-[1400px]';
       totalHeightClass = 'h-[1871px]';
@@ -66,6 +67,7 @@ const General_ticket: React.FC = () => {
     buyer: string;
     phone_num: string;
     members: { name: string; phone_num: string }[];
+    email: string;
   }) => {
     setUserInfo(info);
   };
@@ -87,7 +89,7 @@ const General_ticket: React.FC = () => {
   }, []);
 
   const handleSubmit = async () => {
-    const { buyer, phone_num, members } = userInfo;
+    const { buyer, phone_num, members, email } = userInfo;
     const isDataComplete = isFormComplete;
     if (isDataComplete) {
       try {
@@ -131,9 +133,9 @@ const General_ticket: React.FC = () => {
       >
         <div className="flex flex-col">
           <MemberSelection
-            description="일반 예매는 최대 1인 5매 구매 가능합니다."
+            description="일반 예매는 최대 1인 4매 구매 가능합니다."
             min={1}
-            max={5}
+            max={4}
             ticket={'general'}
             member={member}
             setMember={setMember}

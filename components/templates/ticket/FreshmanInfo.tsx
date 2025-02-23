@@ -5,6 +5,7 @@ import {
   filterNameValue,
   filterStudentIdValue,
   filterPhoneNumber,
+  filterEmailValue,
 } from '@/components/util/utils';
 
 interface FreshmanInfoProps {
@@ -13,12 +14,14 @@ interface FreshmanInfoProps {
     department: string;
     studentId: string;
     phone_num: string;
+    email: string;
   }) => void;
   userInfo: {
     name: string;
     department: string;
     studentId: string;
     phone_num: string;
+    email: string;
   };
 }
 
@@ -34,6 +37,7 @@ const FreshmanInfo: React.FC<FreshmanInfoProps> = ({
   const [studentIdValue, setStudentIdValue] = useState(
     userInfo.studentId || ''
   );
+  const [emailValue, setEmailValue] = useState(userInfo.email || '');
 
   const handleInputChange = (
     setter: React.Dispatch<React.SetStateAction<string>>,
@@ -50,6 +54,7 @@ const FreshmanInfo: React.FC<FreshmanInfoProps> = ({
         studentId:
           setter === setStudentIdValue ? filteredValue : studentIdValue,
         phone_num: setter === setPhoneValue ? filteredValue : phoneValue,
+        email: setter === setEmailValue ? filteredValue : emailValue,
       });
     };
   };
@@ -99,6 +104,14 @@ const FreshmanInfo: React.FC<FreshmanInfoProps> = ({
           value={phoneValue}
           onChange={handleInputChange(setPhoneValue, filterPhoneNumber)}
           placeholder="전화번호 -없이 입력"
+        />
+        <p className="mt-6 text-[16px] font-normal leading-6">이메일</p>
+        <Input
+          className="mt-2"
+          type="text"
+          value={emailValue}
+          onChange={handleInputChange(setEmailValue, filterEmailValue)}
+          placeholder="예) kahluaband@gmail.com"
         />
       </div>
     </div>

@@ -53,13 +53,13 @@ const PartySelection: React.FC<PartySelectionProps> = ({ dispatch, state }) => {
       </div>
       <div className="flex flex-col mt-6">
         <SelectBox
-          name="3월 14일 참석"
+          name="3월 5일 참석"
           state={state.participation1}
           onClick={() => dispatch({ type: 'PARTICIPATION1' })}
           alt="PartySelection"
         />
         <SelectBox
-          name="3월 15일 참석"
+          name="3월 6일 참석"
           state={state.participation2}
           onClick={() => dispatch({ type: 'PARTICIPATION2' })}
           alt="PartySelection"

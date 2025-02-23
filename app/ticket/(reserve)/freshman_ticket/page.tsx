@@ -40,6 +40,7 @@ const Freshman_ticket: React.FC = () => {
     studentId: '',
     phone_num: '',
     type: 'FRESHMAN',
+    email: '',
   });
 
   const handleUserInfoChange = (info: {
@@ -47,6 +48,7 @@ const Freshman_ticket: React.FC = () => {
     department: string;
     studentId: string;
     phone_num: string;
+    email: string;
   }) => {
     setUserInfo((prevState) => ({
       ...prevState,
@@ -68,12 +70,13 @@ const Freshman_ticket: React.FC = () => {
   };
 
   useEffect(() => {
-    const { name, phone_num, department, studentId } = userInfo;
+    const { name, phone_num, department, studentId, email } = userInfo;
     const areUserInfoComplete =
       name.trim() !== '' &&
       phone_num.trim() !== '' &&
       department.trim() !== '' &&
-      studentId.trim() !== '';
+      studentId.trim() !== '' &&
+      email.trim() !== '';
 
     const isParticipationValid =
       partySelection.notParticipation ||
@@ -85,7 +88,7 @@ const Freshman_ticket: React.FC = () => {
   }, [userInfo, partySelection]);
 
   const handleSubmit = async () => {
-    const { name, phone_num, department, studentId, type } = userInfo;
+    const { name, phone_num, department, studentId, type, email } = userInfo;
     const meeting = handleMeeting(partySelection);
     const isDataComplete = isFormComplete;
     if (isDataComplete) {
@@ -98,6 +101,7 @@ const Freshman_ticket: React.FC = () => {
           studentId,
           meeting,
           members: [],
+          email,
         };
         const response = await axiosInstance.post(`/tickets`, formData, {
           headers: {

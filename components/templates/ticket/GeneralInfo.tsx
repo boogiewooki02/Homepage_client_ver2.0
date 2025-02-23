@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import InfoTemplate from './InfoTemplate';
+import { filterEmailValue } from '@/components/util/utils';
+import { Input } from '@/components/ui/InputBox';
 
 interface GeneralInfoProps {
   member: number;
@@ -9,11 +11,13 @@ interface GeneralInfoProps {
     buyer: string;
     phone_num: string;
     members: { name: string; phone_num: string }[];
+    email: string;
   }) => void;
   userInfo: {
     buyer: string;
     phone_num: string;
     members: Array<{ name: string; phone_num: string }>;
+    email: string;
   };
 }
 
@@ -26,6 +30,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
 }) => {
   const [buyer, setBuyer] = useState(userInfo.buyer || '');
   const [phone, setPhone] = useState(userInfo.phone_num || '');
+  const [emailValue, setEmailValue] = useState(userInfo.email || '');
   const [namesArray, setNamesArray] = useState<string[]>(
     userInfo.members.map((member) => member.name)
   );
@@ -58,6 +63,11 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
     const updatedPhones = [...phonesArray];
     updatedPhones[index] = limitedPhoneNumber;
     setPhonesArray(updatedPhones);
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const filteredEmail = filterEmailValue(event.target.value);
+    setEmailValue(filteredEmail);
   };
 
   const addCompanion = useCallback(() => {
@@ -107,24 +117,49 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
     const isFormComplete =
       buyer.trim() !== '' &&
       phone.trim() !== '' &&
+      emailValue.trim() !== '' &&
       namesArray.slice(0, member - 1).every((name) => name.trim() !== '') &&
       phonesArray.slice(0, member - 1).every((phone) => phone.trim() !== '');
 
     onInfoComplete(isFormComplete);
-  }, [buyer, phone, namesArray, phonesArray, member, onInfoComplete]);
+  }, [
+    buyer,
+    phone,
+    emailValue,
+    namesArray,
+    phonesArray,
+    member,
+    onInfoComplete,
+  ]);
 
   useEffect(() => {
     const updatedMembers = namesArray
       .slice(0, member - 1)
       .map((name, index) => ({ name, phone_num: phonesArray[index] }));
+
     if (
       buyer !== userInfo.buyer ||
       phone !== userInfo.phone_num ||
+      emailValue !== userInfo.email ||
       !arraysEqual(updatedMembers, userInfo.members)
     ) {
-      onInfoChange({ buyer, phone_num: phone, members: updatedMembers });
+      onInfoChange({
+        buyer,
+        phone_num: phone,
+        members: updatedMembers,
+        email: emailValue,
+      });
     }
-  }, [buyer, phone, namesArray, phonesArray, onInfoChange, userInfo, member]);
+  }, [
+    buyer,
+    phone,
+    emailValue,
+    namesArray,
+    phonesArray,
+    onInfoChange,
+    userInfo,
+    member,
+  ]);
 
   function arraysEqual(arr1: any[], arr2: any[]) {
     if (arr1.length !== arr2.length) return false;
@@ -171,7 +206,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
           />
         </div>
       ))}
-      {member < 5 && (
+      {member < 4 && (
         <button
           onClick={addCompanion}
           className="mt-6 flex items-center justify-center w-[282px] pad:w-[588px] h-[59px] bg-gray-5 rounded-xl text-gray-60 text-center font-normal leading-6 text-[18px]"
@@ -179,6 +214,14 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
           + 동반인 추가...
         </button>
       )}
+      <p className="mt-6 text-[16px] font-normal leading-6">이메일</p>
+      <Input
+        className="mt-2"
+        type="text"
+        value={emailValue}
+        onChange={handleEmailChange}
+        placeholder="예) kahluaband@gmail.com"
+      />
     </div>
   );
 };
