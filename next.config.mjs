@@ -2,7 +2,12 @@
 const nextConfig = {
   images: {
     formats: ['image/avif'],
-    domains: ['kahlua-bucket.s3.ap-northeast-2.amazonaws.com', 'ibb.co'],
+    domains: [
+      'kahlua-bucket.s3.ap-northeast-2.amazonaws.com',
+      'ibb.co',
+      'contents.lotteon.com',
+      'localhost',
+    ],
   },
 
   reactStrictMode: false,

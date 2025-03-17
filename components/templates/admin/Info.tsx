@@ -2,15 +2,24 @@ import Date from '@/components/ui/admin/Date';
 import DateTime from '@/components/ui/admin/DateTime';
 import Text from '@/components/ui/admin/TextBox';
 import { InputFieldType } from '@/components/ui/admin/type';
+import { useCallback } from 'react';
 
 interface AdminInfoProps {
   data: Record<string, any>;
   fieldList: InputFieldType[];
-  onChange: (newValue: any, title: string) => void;
+  onChange: (newValue: any, label: string) => void;
 }
 
 // title, inputBox 형식의 information list
 const InfoList: React.FC<AdminInfoProps> = ({ data, fieldList, onChange }) => {
+  const handleChange = useCallback(
+    (newValue: any, field: InputFieldType) => {
+      console.log('InfoList onChange:', field.label, newValue);
+      onChange(newValue, field.label);
+    },
+    [onChange]
+  );
+
   return (
     <div className="flex flex-col gap-[16px] w-full">
       {fieldList.map((field: InputFieldType) => {
@@ -21,7 +30,7 @@ const InfoList: React.FC<AdminInfoProps> = ({ data, fieldList, onChange }) => {
               <div className="flex items-center w-[160px] h-[30px] pad:h-12">
                 {title}
               </div>
-              {renderInput(field, data[label], onChange)}
+              {renderInput(field, data[label], handleChange)}
             </div>
           </div>
         );
@@ -34,7 +43,7 @@ const InfoList: React.FC<AdminInfoProps> = ({ data, fieldList, onChange }) => {
 function renderInput(
   field: InputFieldType,
   value: any,
-  onChange: (newValue: any, title: string) => void
+  onChange: (newValue: any, field: InputFieldType) => void
 ) {
   const components: { [key: string]: React.ComponentType<any> } = {
     text: Text,
@@ -45,7 +54,11 @@ function renderInput(
   const Component = components[field.type];
 
   return Component ? (
-    <Component field={field} value={value} onChange={onChange} />
+    <Component
+      field={field}
+      value={value}
+      onChange={(newValue: any) => onChange(newValue, field)}
+    />
   ) : (
     <div>정의되지 않은 타입</div>
   );

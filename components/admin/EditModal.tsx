@@ -15,8 +15,8 @@ const EditModal: React.FC<ModalProps> = ({
     <ButtonModal
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
-      mainContent={<p>모집 정보를 수정하시겠습니까?</p>}
-      buttonContent={<p>수정하기</p>}
+      mainContent={<p>공연 정보를 생성하시겠습니까?</p>}
+      buttonContent={<p>생성하기</p>}
       handleSubmit={() => handleSubmit()}
     />
   );

@@ -1,27 +1,26 @@
 'use client';
 
-import * as React from 'react';
-import { useState, useCallback, useMemo } from 'react';
-import Link from 'next/link';
-import WestIcon from '@mui/icons-material/West';
-import Banner from '@/components/ui/Banner';
+import { authInstance } from '@/api/auth/axios';
+import CancelModal from '@/components/admin/CancelModal';
+import EditModal from '@/components/admin/EditModal';
 import InfoList from '@/components/templates/admin/Info';
+import AdminButton from '@/components/ui/admin/Button';
+import ImageBox from '@/components/ui/admin/ImageBox';
+import TicketInfoList from '@/components/ui/admin/TicketInfo';
+import Banner from '@/components/ui/Banner';
+import WestIcon from '@mui/icons-material/West';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
 import {
   defaultData,
-  defaultImage,
-  performanceInfoList,
-  performanceImage,
   defaultFreshmanTicketData,
   defaultGeneralTicketData,
+  defaultImage,
   freshmanTiketInfoList,
   generalTiketInfoList,
+  performanceImage,
+  performanceInfoList,
 } from './performanceData';
-import AdminButton from '@/components/ui/admin/Button';
-import EditModal from '@/components/admin/EditModal';
-import CancelModal from '@/components/admin/CancelModal';
-import ImageBox from '@/components/ui/admin/ImageBox';
-import { isChanged } from '@/components/util/isChanged';
-import TicketInfoList from '@/components/ui/admin/TicketInfo';
 
 const PerformancePage = () => {
   const [data, setData] = useState<{ [key: string]: any }>(defaultData);
@@ -35,59 +34,81 @@ const PerformancePage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [isCandelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
 
-  // 변경 사항 유무 체크
-  const isNotChanged = useMemo(() => {
-    return (
-      !isChanged(data, defaultData) &&
-      !isChanged(image, defaultImage) &&
-      !isChanged(freshmanTicketData, defaultFreshmanTicketData) &&
-      !isChanged(generalTicketData, defaultGeneralTicketData)
-    );
-  }, [data, image, freshmanTicketData, generalTicketData]);
-
-  // 수정 취소
-  const onCancelEdit = useCallback(() => {
-    if (isNotChanged) {
-      return;
-    }
-    setData(defaultData);
-    setImage(defaultImage);
-    setfreshmanTicketData(defaultFreshmanTicketData);
-    setgeneralTicketData(defaultGeneralTicketData);
-  }, [isNotChanged]);
-
-  // 변경 사항 저장
-  const onSaveEdit = useCallback(() => {
-    // [todo] api 연결
-    setIsEditModalOpen(false);
-  }, []);
+  const router = useRouter();
 
   const onChangeData = useCallback((newValue: any, label: string) => {
-    setData((prevData) => ({ ...prevData, [label]: newValue }));
+    setData((prevData) => {
+      const updatedData = { ...prevData, [label]: newValue };
+      return updatedData;
+    });
   }, []);
 
   const onChangeImage = useCallback((newValue: string, label: string) => {
-    setImage((prevData) => ({ ...prevData, [label]: newValue }));
+    setImage((prevData) => {
+      const updatedImage = { ...prevData, [label]: newValue };
+      return updatedImage;
+    });
   }, []);
 
   const onChangeFreshmanTicketData = useCallback(
     (newValue: number, label: string) => {
-      setfreshmanTicketData((prevData) => ({ ...prevData, [label]: newValue }));
+      setfreshmanTicketData((prevData) => {
+        const updatedData = { ...prevData, [label]: newValue };
+        return updatedData;
+      });
     },
     []
   );
 
   const onChangeGeneralTicketData = useCallback(
     (newValue: number, label: string) => {
-      setgeneralTicketData((prevData) => ({ ...prevData, [label]: newValue }));
+      setgeneralTicketData((prevData) => {
+        const updatedData = { ...prevData, [label]: newValue };
+        return updatedData;
+      });
     },
     []
   );
 
+  const onSaveEdit = useCallback(async () => {
+    try {
+      const performanceData = {
+        ...data,
+        posterImageUrl: image.posterImageUrl,
+        freshmanPrice: String(freshmanTicketData.freshmanPrice),
+        freshmanMaxPurchase: freshmanTicketData.freshmanMaxPurchase,
+        generalPrice: String(generalTicketData.generalPrice),
+        generalMaxPurchase: generalTicketData.generalMaxPurchase,
+      };
+
+      const response = await authInstance.post(
+        '/performances/create',
+        performanceData
+      );
+
+      if (response.status === 200) {
+        alert('공연 정보가 성공적으로 생성되었습니다.');
+        setIsEditModalOpen(false);
+        router.push('/admin');
+      }
+    } catch (error: any) {
+      console.error('공연 정보 생성 실패:', error);
+      alert('공연 정보 생성에 실패했습니다.');
+    }
+  }, [data, image, freshmanTicketData, generalTicketData, router]);
+
+  // 수정 취소
+  const onCancelEdit = useCallback(() => {
+    setData(defaultData);
+    setImage(defaultImage);
+    setfreshmanTicketData(defaultFreshmanTicketData);
+    setgeneralTicketData(defaultGeneralTicketData);
+  }, []);
+
   return (
     <div className="font-pretendard mx-auto w-full pad:w-[786px] dt:w-[1200px] h-auto flex flex-col gap-[40px]">
       {/* Banner */}
-      <Banner>공연 정보 수정</Banner>
+      <Banner>공연 정보 생성</Banner>
 
       {/* List */}
       <div className="flex flex-col pad:flex-row w-full max-pad:px-[16px] gap-[40px] justify-center items-center pad:items-start">
@@ -123,11 +144,10 @@ const PerformancePage = () => {
       <div className="flex flex-row gap-[24px] w-full max-pad:px-[16px] justify-end">
         <AdminButton onClick={onCancelEdit}>취소하기</AdminButton>
         <AdminButton
-          disabled={isNotChanged}
           onClick={() => setIsEditModalOpen(true)}
-          className={`${isNotChanged ? 'bg-gray-10' : 'bg-primary-50'}`}
+          className="bg-primary-50"
         >
-          저장하기
+          생성하기
         </AdminButton>
         <EditModal
           isOpen={isEditModalOpen}

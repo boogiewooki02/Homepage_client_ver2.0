@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { Reservation } from '@/app/(kahlua)/reservation/page';
+import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // 기본 스타일
-import './CalendarUI.css';
-import { Reservation } from '@/app/(kahlua)/reservation/page';
 import Modal from '../ui/Modal';
+import './CalendarUI.css';
 
 // react-calnedar에서 요구하는 타입 형식 (변경 x)
 type ValuePiece = Date | null;
@@ -46,17 +46,29 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
 
   const isSelectable = (date: Date) => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+
+    // 날짜 비교를 위해 양쪽 모두 현지 시간대의 00:00:00으로 설정
+    const compareDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+    const compareToday = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    );
+
     const day = date.getDay();
 
-    const twoWeeksFromToday = new Date(today);
-    twoWeeksFromToday.setDate(today.getDate() + 14);
+    const twoWeeksFromToday = new Date(compareToday);
+    twoWeeksFromToday.setDate(compareToday.getDate() + 14);
 
     // 오늘 이전 날짜는 비활성화
-    if (date < today) return false;
+    if (compareDate < compareToday) return false;
 
     // 오늘 기준 2주 이후 날짜는 비활성화
-    if (date > twoWeeksFromToday) return false;
+    if (compareDate > twoWeeksFromToday) return false;
 
     // 월(=1), 수(=3), 금(=5), 일(=0)만 활성화
     return day === 1 || day === 3 || day === 5 || day === 0;
