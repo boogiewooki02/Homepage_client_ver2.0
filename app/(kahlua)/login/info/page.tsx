@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import LoginModal from '@/components/login/loginModal';
 import LoginSelectBox from '@/components/login/LoginSelectBox';
 import NameInput from '@/components/login/nameInput';
@@ -10,10 +9,17 @@ import { authInstance } from '@/api/auth/axios';
 import { useSetRecoilState } from 'recoil';
 import { isLoggedInState } from '@/atoms/authAtom';
 
-// 기수 23 ~ 1기
+// 기수 24 ~ 1기
+const currentYear = new Date().getFullYear();
+const currentGeneration = currentYear - 2001;
+
+const totalGenerations = currentGeneration;
+
 const generations: string[] = Array.from(
-  { length: 23 },
-  (_, i) => `${23 - i}기`
+  { length: totalGenerations },
+  (_, i) => {
+    return `${currentGeneration - i}기`;
+  }
 );
 
 // 세션
