@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import LocationModal from '@/components/popups/ticket/LocaltionModal';
-import TicketOption from '@/components/templates/ticket/TicketOption';
-import Bar from '@/components/ui/Bar';
-import DropdownMenu from '@/components/templates/ticket/DropdownMenu';
-import RecommendedList from '@/components/ticket/RecommendedList';
 import { axiosInstance } from '@/api/auth/axios';
+import LocationModal from '@/components/popups/ticket/LocaltionModal';
+import DropdownMenu from '@/components/templates/ticket/DropdownMenu';
+import TicketOption from '@/components/templates/ticket/TicketOption';
+import RecommendedList from '@/components/ticket/RecommendedList';
+import Bar from '@/components/ui/Bar';
 import defaultPoster from '@/public/image/ticket/DefaultPoster.svg';
 import dayjs from 'dayjs';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
@@ -41,7 +41,7 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
       setIsLoading(true);
       const response = await axiosInstance.get(`/performances/${id}`);
       if (response.data.isSuccess) {
-        const rawData = response.data.result.ticketInfoResponse;
+        const rawData = response.data.result.performanceResponse;
         const bookingStart = dayjs(rawData.booking_start_date);
         const bookingEnd = dayjs(rawData.booking_end_date);
         const now = dayjs();
