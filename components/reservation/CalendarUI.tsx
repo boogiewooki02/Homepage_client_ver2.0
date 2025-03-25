@@ -70,8 +70,8 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
     // 오늘 기준 2주 이후 날짜는 비활성화
     if (compareDate > twoWeeksFromToday) return false;
 
-    // 월(=1), 수(=3), 금(=5), 일(=0)만 활성화
-    return day === 1 || day === 3 || day === 5 || day === 0;
+    // 화(=2), 수(=3), 금(=5), 일(=0)만 활성화
+    return day === 2 || day === 3 || day === 5 || day === 0;
   };
 
   return (
