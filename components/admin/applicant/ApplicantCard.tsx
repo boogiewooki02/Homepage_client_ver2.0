@@ -4,7 +4,7 @@ import phone_icon from '@/public/image/admin/tabler_device-mobile.svg';
 import department_icon from '@/public/image/admin/tabler_book-2.svg';
 import address_icon from '@/public/image/admin/tabler_map-pin.svg';
 import Image from 'next/image';
-import show_more from '@/public/image/admin/tabler_chevron-down.svg';
+import show_more from '@/public/image/admin/arrowUp.svg';
 import Button from '@mui/material/Button';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
