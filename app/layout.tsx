@@ -6,7 +6,6 @@ import Header from '@/components/Header';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import './globals.css';
-import Head from 'next/head';
 
 import * as gtag from '../libs/gtag';
 
@@ -67,11 +66,11 @@ export default function RootLayout({
     <>
       <RecoilRoot>
         <html lang="en">
-          <Head>
+          <head>
             {/*<!-- Google tag (gtag.js) -->*/}
             <script
               async
-              src="https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}"
+              src="https://www.googletagmanager.com/gtag/js?id=G-YQQMCPC12M"
             ></script>
             <script
               dangerouslySetInnerHTML={{
@@ -91,7 +90,7 @@ export default function RootLayout({
             <meta property="og:type" content="website" />
             <meta property="og:image" content="/image/Thumbnail.png?v=1" />
             <meta property="og:url" content="https://kahluaband.com" />
-          </Head>
+          </head>
           <body className={roboto.className}>
             <div className="font-pretendard w-full h-auto mb-40">
               <Header />
