@@ -4,7 +4,7 @@ import AdminPageButton from '@/components/admin/adminPageButton';
 let AdminUrl = [
   { name: '공연 예매 현황', url: '/admin/ticketing' },
   { name: '지원 현황', url: '/admin/applicant' },
-  { name: '공연 정보 관리', url: '/admin/performanceInfo' },
+  { name: '공연 정보 생성', url: '/admin/performanceInfo' },
   { name: '지원 정보 관리', url: '/admin/recruitingInfo' },
 ];
 

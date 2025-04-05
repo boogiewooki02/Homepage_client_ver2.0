@@ -58,18 +58,6 @@ const TimeTable = ({
     return user?.email === email;
   };
 
-  // 예약 불가능한 시간 확인
-  const isTimeSlotReserved = (startTime: string, endTime: string) => {
-    const formattedStartTime = `${startTime}:00`;
-    const formattedEndTime = `${endTime}:00`;
-
-    return reservationsForDate.some(
-      (reservation) =>
-        reservation.startTime <= formattedStartTime &&
-        reservation.endTime >= formattedEndTime
-    );
-  };
-
   // 예약자 확인
   const getReservedByName = (startTime: string, endTime: string) => {
     const formattedStartTime = `${startTime}:00`;
@@ -119,10 +107,24 @@ const TimeTable = ({
     // 시작 시간이 설정된 상태에서 두 번째 클릭: 종료 시간으로 설정
     else {
       onChange('endTime', endTimeStr);
+      const [startHour, startMinute] = reservation.startTime
+        .split(':')
+        .map(Number);
+      const [endHour, endMinute] = endTimeStr.split(':').map(Number);
+
+      // 시작 시간과 종료 시간을 비교하여 순서를 결정
+      const isEndTimeEarlier =
+        endHour < startHour ||
+        (endHour === startHour && endMinute < startMinute);
+      const actualStartTime = isEndTimeEarlier
+        ? startTimeStr
+        : reservation.startTime;
+      const actualEndTime = isEndTimeEarlier ? reservation.endTime : endTimeStr;
+
       const newSelectedTimes = generateTimeRange(
-        reservation.startTime,
-        endTimeStr
-      ); // 사이 시간 모두 선택
+        actualStartTime,
+        actualEndTime
+      );
       setSelectedTimes(newSelectedTimes);
       setCountClick(countClick + 1); // 2
     }
@@ -143,7 +145,6 @@ const TimeTable = ({
       current = nextTime;
     }
 
-    times.push(`${current} ~ ${end}`);
     return times;
   };
 

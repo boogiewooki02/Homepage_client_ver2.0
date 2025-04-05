@@ -1,15 +1,15 @@
-import { axiosInstance } from '@/api/auth/axios';
+import { authInstance, axiosInstance } from '@/api/auth/axios';
 import LocationModal from '@/components/popups/ticket/LocaltionModal';
 import DropdownMenu from '@/components/templates/ticket/DropdownMenu';
 import TicketOption from '@/components/templates/ticket/TicketOption';
 import RecommendedList from '@/components/ticket/RecommendedList';
 import Bar from '@/components/ui/Bar';
 import defaultPoster from '@/public/image/ticket/DefaultPoster.svg';
+import SettingsIcon from '@mui/icons-material/Settings';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
 declare global {
@@ -35,6 +35,7 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
   const [loc, setLoc] = useState('');
   const [statusText, setStatusText] = useState<string>('예매 마감');
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const getTicketDetail = async (id: string) => {
     try {
@@ -81,9 +82,23 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
     }
   };
 
+  const checkAdmin = async () => {
+    try {
+      const response = await authInstance.get('/user');
+      if (response.data.result.role === 'ADMIN') {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (error) {
+      console.error('관리자 여부 확인 중 오류 발생:', error);
+    }
+  };
+
   useEffect(() => {
     setIsClient(true);
     setNowUrl(window.location.href);
+    checkAdmin(); // 어드민 여부 확인
   }, []);
 
   useEffect(() => {
@@ -242,18 +257,28 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
           >
             {statusText}
           </div>
-          <div className="mt-5 pad:mt-4 gap-1 pad:gap-4 flex flex-row">
+          <div className="mt-5 pad:mt-4 gap-1 pad:gap-4 flex flex-row items-center">
             <p className="min-w-[190px] pad:w-[217px] pad:max-w-[217px] h-9 text-gray-90 font-semibold leading-9 text-[20px] pad:text-[24px] whitespace-nowrap">
               {ticketInfo?.title}
             </p>
-            <div onClick={copyUrl} className="flex flex-col justify-center">
-              <Image
-                src="/image/ticket/share.svg"
-                alt="share"
-                width={24}
-                height={24}
-                className="cursor-pointer h-5 w-5 pad:h-6 pad:w-6"
-              />
+            <div className="flex flex-row gap-2 items-center">
+              <div onClick={copyUrl} className="flex flex-col justify-center">
+                <Image
+                  src="/image/ticket/share.svg"
+                  alt="share"
+                  width={24}
+                  height={24}
+                  className="cursor-pointer h-5 w-5 pad:h-6 pad:w-6"
+                />
+              </div>
+              {isAdmin && (
+                <Link href={`/admin/performance/${id}`}>
+                  <SettingsIcon
+                    className="cursor-pointer text-gray-60"
+                    sx={{ fontSize: '28px' }}
+                  />
+                </Link>
+              )}
             </div>
           </div>
           <div className="flex flex-row mt-4 pad:mt-6 text-[16px] pad:text-[18px] leading-9 font-normal gap-6 h-7">
