@@ -63,10 +63,15 @@ const TimeTable = ({
     const formattedStartTime = `${startTime}:00`;
     const formattedEndTime = `${endTime}:00`;
 
-    const reservation = reservationsForDate.find(
-      (res) =>
-        res.startTime <= formattedStartTime && res.endTime >= formattedEndTime
-    );
+    const reservation = reservationsForDate.find((res) => {
+      // 시간이 겹치는지 확인
+      return (
+        (res.startTime <= formattedStartTime &&
+          res.endTime > formattedStartTime) || // 예약이 슬롯 시작 전에 시작
+        (res.startTime < formattedEndTime && res.endTime >= formattedEndTime) || // 예약이 슬롯 종료 후에 끝
+        (res.startTime >= formattedStartTime && res.endTime <= formattedEndTime) // 예약이 슬롯 안에 완전히 포함
+      );
+    });
     return reservation ? reservation.clubroomUsername : null;
   };
   const getReservedByEmail = (startTime: string, endTime: string) => {

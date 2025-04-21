@@ -1,15 +1,15 @@
 'use client';
+import { authInstance } from '@/api/auth/axios';
 import Banner from '@/components/reservation/Banner';
 import CalendarUI from '@/components/reservation/CalendarUI';
 import ReservationForm from '@/components/reservation/ReservationForm';
 import RoomNotice from '@/components/reservation/RoomNotice';
 import TimeTable from '@/components/reservation/TimeTable';
-import React, { useEffect, useState } from 'react';
-import { authInstance } from '@/api/auth/axios';
-import SockJS from 'sockjs-client';
 import * as StompJs from '@stomp/stompjs';
 import Cookie from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import SockJS from 'sockjs-client';
 
 // 예약 요청 정보 타입
 export type Reservation = {
@@ -74,7 +74,21 @@ const page = () => {
         client.subscribe(
           `/topic/public/${reservation.reservationDate}`,
           (message) => {
-            console.log('메시지: ', JSON.parse(message.body));
+            const reservationData = JSON.parse(message.body);
+            console.log('새로운 예약 메시지:', reservationData);
+
+            // 시간 형식 확인 및 수정
+            if (!reservationData.startTime.includes(':00')) {
+              reservationData.startTime = `${reservationData.startTime}:00`;
+            }
+            if (!reservationData.endTime.includes(':00')) {
+              reservationData.endTime = `${reservationData.endTime}:00`;
+            }
+
+            setReservationsForDate((prevReservations) => [
+              ...prevReservations,
+              reservationData,
+            ]);
           }
         );
       }
@@ -111,6 +125,12 @@ const page = () => {
       ...prev,
       [key]: value,
     }));
+
+    // 날짜가 변경될 때 예약 목록 초기화
+    if (key === 'reservationDate') {
+      setReservationsForDate([]); // 예약 목록 초기화
+      fetchReservationsForDate(value);
+    }
   };
 
   // 날짜별 예약 내역 조회 (http 요청)
@@ -184,9 +204,6 @@ const page = () => {
       <CalendarUI
         onChange={(key, value) => {
           handleChange(key, value);
-          if (key === 'reservationDate') {
-            fetchReservationsForDate(value);
-          }
         }}
       />
       <TimeTable
