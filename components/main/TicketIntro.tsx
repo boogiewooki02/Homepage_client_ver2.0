@@ -16,7 +16,7 @@ const TicketIntroPad: React.FC<props> = ({ className }) => {
         <Image
           src="/image/ticket/Poster_202503.avif"
           alt="poster"
-          layout="fill"
+          fill
           sizes="100vw"
           priority
         />
@@ -58,12 +58,7 @@ const TicketIntroPhone: React.FC<props> = ({ className }) => {
         </div>
 
         <div className="flex shrink-0 absolute top-0 rounded-[16px] w-[264px] h-[351px]">
-          <Image
-            src="/image/ticket/Poster_202503.avif"
-            layout="fill"
-            alt="poster"
-            fill
-          />
+          <Image src="/image/ticket/Poster_202503.avif" alt="poster" fill />
         </div>
       </div>
       <TicketButton className="flex mt-[32px]" />

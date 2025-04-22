@@ -6,7 +6,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 ChartJS.register(ArcElement, Tooltip, ChartDataLabels);
 
 interface PieChartProps {
-  chartData: any; // 전달받는 chartData의 타입
+  chartData: any;
 }
 
 const PieChart: React.FC<PieChartProps> = ({ chartData }) => {
@@ -17,7 +17,7 @@ const PieChart: React.FC<PieChartProps> = ({ chartData }) => {
   useEffect(() => {
     // 화면 크기에 따라 legend 위치 변경
     const handleResize = () => {
-      if (window.innerWidth >= 1500) {
+      if (window.innerWidth >= 834) {
         setLegendPosition('right');
       } else {
         setLegendPosition('bottom');
@@ -67,7 +67,7 @@ const PieChart: React.FC<PieChartProps> = ({ chartData }) => {
   };
 
   const customLegend = chartData?.labels.map((label: string, index: number) => (
-    <div key={index} className="flex items-center mb-4">
+    <div key={index} className="flex items-center mb-4 w-[167px]">
       <div
         style={{
           width: '60px',
@@ -89,7 +89,7 @@ const PieChart: React.FC<PieChartProps> = ({ chartData }) => {
       <div
         className="flex items-center justify-center"
         style={{
-          width: '280px', // 차트 컨테이너 크기
+          width: '280px',
           height: '280px',
           padding: '37.62px',
         }}

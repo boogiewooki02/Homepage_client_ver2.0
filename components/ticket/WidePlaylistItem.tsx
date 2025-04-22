@@ -25,9 +25,8 @@ const WidePlaylistItem = ({ show, id }: { show: Show; id: string }) => {
 
           <Image
             src={show.posterUrl}
-            // src="/image/ticket/Poster_202503.avif"
             alt={show.title}
-            layout="fill"
+            fill
             className="object-cover rounded-l-[10px]"
           />
         </div>
