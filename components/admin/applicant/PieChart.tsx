@@ -53,7 +53,7 @@ const PieChart: React.FC<PieChartProps> = ({ chartData }) => {
             ((value / (dataset.data as number[]).reduce((a, b) => a + b, 0)) *
               100) |
             0;
-          return `${percent}% (${value})`;
+          return `${percent}%`;
         },
       },
     },

@@ -13,6 +13,7 @@ interface TableRowProps {
   ) => void;
   handleSelectGrade: (id: number, userType: string) => void;
   dropdownRef: React.MutableRefObject<HTMLDivElement | null>;
+  changedIds: Set<number>;
 }
 
 const TableRow = ({
@@ -24,6 +25,7 @@ const TableRow = ({
   handleSelectGrade,
   setOpenIndex,
   dropdownRef,
+  changedIds,
 }: TableRowProps) => {
   return (
     <div
@@ -56,7 +58,11 @@ const TableRow = ({
         onClick={(e) => toggleDropdown(index, e)}
         onDoubleClick={(e) => toggleDropdown(index, e)}
       >
-        <span>{member.userType}</span>
+        <span
+          className={`${changedIds.has(member.id) ? 'text-primary-30' : ''}`}
+        >
+          {member.userType}
+        </span>
         <ExpandMoreIcon
           className={`cursor-pointer ${openIndex === index ? 'rotate-180' : ''} max-pad:hidden`}
         />
