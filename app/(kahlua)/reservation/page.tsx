@@ -85,10 +85,20 @@ const page = () => {
               reservationData.endTime = `${reservationData.endTime}:00`;
             }
 
-            setReservationsForDate((prevReservations) => [
-              ...prevReservations,
-              reservationData,
-            ]);
+            setReservationsForDate((prevReservations) => {
+              // 동일 시간대 예약이 있으면 제거
+              const filtered = prevReservations.filter(
+                (r) =>
+                  !(
+                    r.startTime === reservationData.startTime &&
+                    r.endTime === reservationData.endTime &&
+                    r.reservationDate === reservationData.reservationDate
+                  )
+              );
+
+              // 새 데이터 추가
+              return [...filtered, reservationData];
+            });
           }
         );
       }
