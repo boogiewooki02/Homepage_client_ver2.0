@@ -65,8 +65,9 @@ export default function RootLayout({
   return (
     <>
       <RecoilRoot>
-        <html lang="en">
+        <html lang="ko">
           <head>
+            <title>KAHLUA BAND</title>
             {/*<!-- Google tag (gtag.js) -->*/}
             <script
               async

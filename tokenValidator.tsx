@@ -5,7 +5,6 @@ import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { useRecoilState } from 'recoil';
 import { isLoggedInState } from '@/atoms/authAtom';
-import { cookies } from 'next/headers';
 
 // JWT Payload 타입 정의
 interface JwtPayload {
