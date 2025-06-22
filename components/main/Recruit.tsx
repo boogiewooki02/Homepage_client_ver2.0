@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+
 import syn from '@/public/image/recruit/syn.svg';
 import guitar from '@/public/image/recruit/guitar.svg';
 

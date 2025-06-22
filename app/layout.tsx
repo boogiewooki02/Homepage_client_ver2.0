@@ -2,12 +2,12 @@
 import { RecoilRoot } from 'recoil';
 import { Roboto } from 'next/font/google';
 import Footer from '@/components/Footer';
-import Header from '@/components/Header';
+import Header from '@/components/header/Header';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import './globals.css';
 
-import * as gtag from '../libs/gtag';
+import * as gtag from '@/libs/gtag';
 
 const roboto = Roboto({
   weight: '400',
@@ -47,7 +47,6 @@ export default function RootLayout({
   const isLoginPage = pathname === '/login';
   const isAdminApplicantPage = pathname === '/admin/applicant';
   const isAdminTicketingPage = pathname === '/admin/ticketing';
-
   const isRoomReservationPage = pathname === '/reservation';
 
   const [isMobile, setIsMobile] = useState(false);

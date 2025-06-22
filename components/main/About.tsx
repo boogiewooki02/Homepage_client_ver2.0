@@ -1,7 +1,9 @@
-import TopRightRoundBorder from '@/components/ui/RoundBorder';
 import Image from 'next/image';
-import music from '@/public/image/main/mainMusic.svg';
 import Link from 'next/link';
+
+import TopRightRoundBorder from '@/components/ui/RoundBorder';
+
+import music from '@/public/image/main/mainMusic.svg';
 import arrow from '@/public/image/arrow_right.svg';
 
 export default function About() {
@@ -21,7 +23,7 @@ export default function About() {
         <div className="absolute -right-[20px] -top-[20px] bg-gray-0 rounded-bl-[48px] w-[224px] h-[134px] z-20 hidden pad:block" />
         <TopRightRoundBorder className="absolute -right-[20px] top-[94px] hidden pad:block" />
 
-        {/* pad: right top 파란상자 ph: bottome left 파란상자 */}
+        {/* pad: right top 파란상자 ph: bottom left 파란상자 */}
         <div className="w-[144px] h-[56px] pad:w-[180px] pad:h-[90px] absolute bottom-0 max-pad:left-0 pad:top-0 pad:right-0 bg-primary-50 rounded-[48px] z-30">
           <div className="absolute w-[179px] h-[120px] pad:w-[195px] pad:h-[128px] bottom-0 left-[6px] pad:left-[16px]">
             <Image src={music} fill alt="music" />
@@ -46,6 +48,13 @@ export default function About() {
 }
 
 const AboutSmallBox = () => {
+  const firstYear = 2002; // 1기 연도
+
+  const getYearsOfTradition = () => {
+    const currentYear = new Date().getFullYear();
+    return currentYear - firstYear + 1;
+  };
+
   return (
     <div className="w-full h-full pad:w-[384px] pad:h-[300px] rounded-[32px] pad:rounded-[48px] bg-primary-50 z-0 text-gray-0 py-[24px] px-[32px] pad:py-[32px] pad:px-[40px]">
       <p className="text-[24px] font-semibold pad:text-[32px] pad:font-bold">
@@ -53,16 +62,15 @@ const AboutSmallBox = () => {
         <br />깔 깔 깔 깔루아!
       </p>
       <p className="text-[16px] pad:text-[20px] font-medium text-primary-10 mt-[16px] pad:mt-[24px]">
-        KAHLUA는 2003년부터 지금까지
+        KAHLUA는 {firstYear}년부터 지금까지
         <br />
-        23년의 전통을 이어오고 있는
+        {getYearsOfTradition()}년의 전통을 이어오고 있는
         <br />
         홍익대학교 컴퓨터공학과
         <br />
         밴드학회입니다.
       </p>
 
-      {/* right bottome 흰상자 */}
       <div className="absolute -right-[16px] -bottom-[16px] pad:-right-[20px] pad:-bottom-[20px] rounded-tl-[32px] pad:rounded-tl-[48px] bg-gray-0 z-20 w-[88px] h-[88px] pad:w-[122px] pad:h-[122px]" />
       <TopRightRoundBorder className="absolute rotate-90 -right-[16px] bottom-[56px] pad:-right-[20px] pad:bottom-[82px]" />
       <TopRightRoundBorder className="absolute rotate-90 right-[56px] -bottom-[16px] pad:right-[82px] pad:-bottom-[20px]" />

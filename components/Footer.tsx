@@ -1,10 +1,13 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import logo from '../public/image/KAHLUA.svg';
-import youtube_icon from '../public/image/youtube-icon.svg';
-import instagram_icon from '../public/image/instagram-icon.svg';
-import kakaotalk_icon from '../public/image/kakaotalk-icon.svg';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+
+import clsx from 'clsx';
+
+import logo from '@/public/image/KAHLUA.svg';
+import youtube_icon from '@/public/image/youtube-icon.svg';
+import instagram_icon from '@/public/image/instagram-icon.svg';
+import kakaotalk_icon from '@/public/image/kakaotalk-icon.svg';
 
 export interface SocialIconProps {
   href: string;
@@ -38,17 +41,29 @@ const SocialIcon: React.FC<SocialIconProps> = ({
 
 const Footer = () => {
   const router = useRouter();
+  const pathname = usePathname();
   return (
     <div className="w-full h-[339px] relative translate-y-0 font-pretendard bg-gray-90 flex flex-col items-center">
       <div className="flex flex-col min-[834px]:flex-row text-center text-base min-[834px]:text-lg leading-6 mt-6 mb-12 min-[834px]:mb-14">
-        {/* <Link href="/ticket">
-          <div className="font-medium text-gray-20 min-[834px]:hidden">
+        <Link href="/ticket">
+          <span
+            className={clsx(
+              'min-[834px]:hidden font-medium',
+              pathname === '/ticket' ? 'text-gray-20' : 'text-gray-50'
+            )}
+          >
             예매 내역 조회
-          </div>
-        </Link> */}
+          </span>
+        </Link>
         <div className="flex flex-row mt-3">
           <Link href="/contributors">
-            <span className="text-gray-50 font-normal">CREDIT</span>
+            <span
+              className={
+                pathname === '/contributors' ? 'text-gray-20' : 'text-gray-50'
+              }
+            >
+              CREDIT
+            </span>
             <span className="text-gray-80 mx-2">|</span>
           </Link>
           <Link href="https://kahluaband.notion.site/1554ccf2afa9453f9dbce7550734b33a">
@@ -57,15 +72,20 @@ const Footer = () => {
           </Link>
           <Link href="https://kahluaband.notion.site/f877ed4fe6de4aa4a8c0b201530b69df">
             <span className="text-gray-50 font-normal">이용약관</span>
-            {/* <span className="text-gray-80 mx-2 hidden min-[834px]:inline">
+            <span className="text-gray-80 mx-2 hidden min-[834px]:inline">
               |
-            </span> */}
+            </span>
           </Link>
-          {/* <Link href="/ticket">
-            <span className="font-medium text-gray-20 hidden min-[834px]:inline">
+          <Link href="/ticket">
+            <span
+              className={clsx(
+                'hidden min-[834px]:inline font-medium',
+                pathname === '/ticket' ? 'text-gray-20' : 'text-gray-50'
+              )}
+            >
               예매 내역 조회
             </span>
-          </Link> */}
+          </Link>
         </div>
       </div>
 

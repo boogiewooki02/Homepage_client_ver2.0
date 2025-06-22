@@ -1,6 +1,7 @@
 import Image from 'next/image';
-import arrow from '@/public/image/arrow_right.svg';
 import Link from 'next/link';
+
+import arrow from '@/public/image/arrow_right.svg';
 
 interface TicketInfoProps {
   performanceName: string;
@@ -13,12 +14,7 @@ interface buttonProps {
   className: string;
 }
 
-const TicketInfo: React.FC<TicketInfoProps> = ({
-  performanceName,
-  place,
-  time,
-  day,
-}) => {
+const TicketInfo = ({ performanceName, place, time, day }: TicketInfoProps) => {
   return (
     <div className="flex flex-row">
       <div className="flex flex-col max-pad:justify-end w-full h-full pad:h-[232px] max-pad:px-[32px] py-[24px] pad:pl-[36px] dt:pl-[40px] pad:py-[32px] rounded-br-[48px] rounded-l-[48px] pad:rounded-br-[32px] bg-primary-50 z-0">
@@ -56,7 +52,7 @@ const TicketInfo: React.FC<TicketInfoProps> = ({
   );
 };
 
-const TicketButton: React.FC<buttonProps> = ({ className }) => {
+const TicketButton = ({ className }: buttonProps) => {
   return (
     <Link
       href={'/ticket'}

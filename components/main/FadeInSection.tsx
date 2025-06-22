@@ -6,7 +6,7 @@ interface FadeInSectionProps {
   children: React.ReactNode;
 }
 
-export const FadeInSection: React.FC<FadeInSectionProps> = ({ children }) => {
+const FadeInSection = ({ children }: FadeInSectionProps) => {
   const [isVisible, setVisible] = useState(false);
   const domRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,3 +33,5 @@ export const FadeInSection: React.FC<FadeInSectionProps> = ({ children }) => {
     </div>
   );
 };
+
+export default FadeInSection;

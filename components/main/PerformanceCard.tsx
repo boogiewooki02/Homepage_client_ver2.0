@@ -5,7 +5,7 @@ interface SongProps {
   song: song;
 }
 
-const PerformanceCard: React.FC<SongProps> = ({ song }) => {
+const PerformanceCard = ({ song }: SongProps) => {
   return (
     // hover시 카드 크기 키우려면 hover:pad:w-[440px]
     <div className="w-[282px] pad:w-[384px] ease-in-out h-auto flex flex-col items-start">

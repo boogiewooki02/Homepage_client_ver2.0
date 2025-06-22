@@ -1,10 +1,11 @@
 'use client';
+
 import About from '@/components/main/About';
 import Performance from '@/components/main/Performance';
 import Recruit from '@/components/main/Recruit';
 import Ticket from '@/components/main/Ticket';
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="font-pretendard flex flex-col relative top-16 w-full h-auto justify-start items-center pad:mt-[32px] -mb-40">
       <div className="flex flex-col w-full h-auto justify-start items-center">
@@ -21,4 +22,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
+};
+
+export default Home;

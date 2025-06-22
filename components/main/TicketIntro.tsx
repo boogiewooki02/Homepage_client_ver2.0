@@ -1,13 +1,15 @@
 import Image from 'next/image';
-import { TicketInfo, TicketButton } from './TicketInfo';
-import React from 'react';
-import { information } from '../data/Information';
 
-interface props {
+import React from 'react';
+
+import { TicketInfo, TicketButton } from './TicketInfo';
+import { information } from '@/components/data/Information';
+
+interface TicketIntroProps {
   className: string;
 }
 
-const TicketIntroPad: React.FC<props> = ({ className }) => {
+const TicketIntroPad = ({ className }: TicketIntroProps) => {
   return (
     <div
       className={`flex flex-row w-full h-auto mt-[32px] gap-[32px] ${className}`}
@@ -38,7 +40,7 @@ const TicketIntroPad: React.FC<props> = ({ className }) => {
   );
 };
 
-const TicketIntroPhone: React.FC<props> = ({ className }) => {
+const TicketIntroPhone = ({ className }: TicketIntroProps) => {
   return (
     <div
       className={`flex flex-col justify-center items-center w-full h-full ${className}`}
