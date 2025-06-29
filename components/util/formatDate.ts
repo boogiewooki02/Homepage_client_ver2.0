@@ -5,3 +5,12 @@ export const formatDate = (dateString: string) => {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}.${month}.${day}`;
 };
+
+export const formatDateTime = (dateString: string) => {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hour = date.getHours();
+  return `${year}년 ${month}월 ${day}일 ${hour}시`;
+};

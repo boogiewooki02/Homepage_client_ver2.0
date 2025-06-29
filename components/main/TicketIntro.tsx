@@ -1,22 +1,29 @@
 import Image from 'next/image';
-
 import React from 'react';
 
 import { TicketInfo, TicketButton } from './TicketInfo';
-import { information } from '@/components/data/Information';
+import { formatDate, formatDateTime } from '@/components/util/formatDate';
+import { PerformanceResponse } from '@/types/performace';
 
 interface TicketIntroProps {
-  className: string;
+  className?: string;
+  performance: PerformanceResponse;
 }
 
-const TicketIntroPad = ({ className }: TicketIntroProps) => {
+export const TicketIntroPad = ({
+  className = '',
+  performance,
+}: TicketIntroProps) => {
+  const day = formatDate(performance.booking_end_date);
+  const time = formatDateTime(performance.date_time);
+
   return (
     <div
       className={`flex flex-row w-full h-auto mt-[32px] gap-[32px] ${className}`}
     >
       <div className="flex shrink-0 relative rounded-[16px] w-[264px] h-[351px] pad:w-[246px] pad:h-[329px] dt:w-[282px] dt:h-[377px]">
         <Image
-          src="/image/ticket/Poster_202503.avif"
+          src={performance.poster_image_url}
           alt="poster"
           fill
           sizes="100vw"
@@ -30,17 +37,23 @@ const TicketIntroPad = ({ className }: TicketIntroProps) => {
           홈페이지에서 간편하게 예매하세요
         </p>
         <TicketInfo
-          day={information.dayForString}
-          performanceName={information.title}
-          place={information.location}
-          time={information.dateForString}
+          day={day}
+          performanceName={performance.title}
+          place={performance.venue}
+          time={time}
         />
       </div>
     </div>
   );
 };
 
-const TicketIntroPhone = ({ className }: TicketIntroProps) => {
+export const TicketIntroPhone = ({
+  className = '',
+  performance,
+}: TicketIntroProps) => {
+  const day = formatDate(performance.booking_end_date);
+  const time = formatDateTime(performance.date_time);
+
   return (
     <div
       className={`flex flex-col justify-center items-center w-full h-full ${className}`}
@@ -51,21 +64,19 @@ const TicketIntroPhone = ({ className }: TicketIntroProps) => {
           <div className="flex h-[105px] w-[120px] bg-primary-50 z-0" />
           <div className="flex h-[262px] w-full bg-primary-50 rounded-b-[32px] rounded-tl-[32px] z-0">
             <TicketInfo
-              day={information.dayForString}
-              performanceName={information.title}
-              place={information.location}
-              time={information.dateForString}
+              day={day}
+              performanceName={performance.title}
+              place={performance.venue}
+              time={time}
             />
           </div>
         </div>
 
         <div className="flex shrink-0 absolute top-0 rounded-[16px] w-[264px] h-[351px]">
-          <Image src="/image/ticket/Poster_202503.avif" alt="poster" fill />
+          <Image src={performance.poster_image_url} alt="poster" fill />
         </div>
       </div>
       <TicketButton className="flex mt-[32px]" />
     </div>
   );
 };
-
-export { TicketIntroPad, TicketIntroPhone };
