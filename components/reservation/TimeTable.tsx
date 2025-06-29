@@ -1,8 +1,5 @@
 import { authInstance } from '@/api/auth/axios';
-import {
-  Reservation,
-  ReservationResponse,
-} from '@/app/(kahlua)/reservation/page';
+import { ReservationRequest, ReservationResponse } from '@/types/reservation';
 import { useEffect, useState } from 'react';
 
 export const reservationStatuses = [
@@ -13,9 +10,9 @@ export const reservationStatuses = [
 ];
 
 interface TimeTableProps {
-  reservation: Reservation;
+  reservation: ReservationRequest;
   reservationsForDate: ReservationResponse[];
-  onChange: (key: keyof Reservation, value: string) => void;
+  onChange: (key: keyof ReservationRequest, value: string) => void;
 }
 
 interface User {

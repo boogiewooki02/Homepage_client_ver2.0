@@ -8,8 +8,10 @@ import {
   toggleList,
 } from '@/components/announcement/list/dto';
 import Pagination from '@/components/announcement/list/Pagination';
-import { authInstance } from '@/api/auth/axios';
 import { DetailList } from '@/components/announcement/list/DetailList';
+
+import { useDebounce } from '@/hooks/useDebounce';
+import { fetchPostComments, fetchPostList } from '@/api/kahlua/post';
 
 const List = () => {
   const [toggle, setToggle] = useState(toggleList[0].toggle);
@@ -22,48 +24,36 @@ const List = () => {
     (AnnouncementProps | CommunityProps)[]
   >([]);
 
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
   const fetchListData = async () => {
     const postType = toggle === toggleList[0].toggle ? 'NOTICE' : 'KAHLUA_TIME';
 
     try {
-      const response = await authInstance.get('/post/list', {
-        params: {
-          post_type: postType,
-          page: currentPage - 1, // 0부터 시작
-          size: itemsPerPage,
-          search_word: searchQuery,
-        },
+      const { content, totalPages } = await fetchPostList({
+        postType,
+        page: currentPage - 1,
+        size: itemsPerPage,
+        searchWord: debouncedSearch,
       });
 
-      const { content, totalPages } = response.data.result;
-
-      // 댓글 개수 추가
       const updatedContent = await Promise.all(
         content.map(async (post: AnnouncementProps | CommunityProps) => {
           try {
-            const commentResponse = await authInstance.get(
-              `/comment/${post.id}/list`
-            );
-            const comments = commentResponse.data.result.comments || []; // 댓글 배열
-
-            return {
-              ...post,
-              comments,
-            };
-          } catch (error) {
-            console.error(`댓글 개수 로드 실패 (postId: ${post.id}):`, error);
-            return { ...post, comments: [] }; // 기본값
+            const comments = await fetchPostComments(post.id);
+            return { ...post, comments };
+          } catch {
+            return { ...post, comments: [] };
           }
         })
       );
 
       setFilteredData(updatedContent);
       setTotalPages(totalPages);
-    } catch (error) {
-      console.error('게시글 리스트 로드 실패:', error);
+    } catch (err) {
+      console.error('게시글 리스트 로드 실패:', err);
     }
   };
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
@@ -82,29 +72,28 @@ const List = () => {
     }
   };
 
-  // 반응형 처리
   useEffect(() => {
     const handleResize = () => {
       const newItemsPerPage = window.innerWidth >= 834 ? 10 : 5;
       const newPagesPerGroup = window.innerWidth >= 834 ? 10 : 5;
 
-      // 현재 페이지에 표시되는 첫 아이템의 인덱스를 기반으로 새로운 페이지 번호 계산
       const currentItemIndex = (currentPage - 1) * itemsPerPage;
       const newPage = Math.floor(currentItemIndex / newItemsPerPage) + 1;
-
-      // 총 페이지 그룹 재계산
       const newPageGroup = Math.floor((newPage - 1) / newPagesPerGroup);
 
-      setItemsPerPage(newItemsPerPage);
-      setPageGroup(newPageGroup);
-      setCurrentPage(newPage);
+      // 상태 실제로 바뀔 때만 업데이트
+      setItemsPerPage((prev) =>
+        prev !== newItemsPerPage ? newItemsPerPage : prev
+      );
+      setPageGroup((prev) => (prev !== newPageGroup ? newPageGroup : prev));
+      setCurrentPage((prev) => (prev !== newPage ? newPage : prev));
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize();
+    handleResize(); // mount 시 1회 실행
 
     return () => window.removeEventListener('resize', handleResize);
-  }, [currentPage, itemsPerPage]);
+  }, []);
 
   // 토글이나 검색 쿼리가 바뀔 때 데이터 초기화
   useEffect(() => {
@@ -116,7 +105,7 @@ const List = () => {
   // API 요청 트리거
   useEffect(() => {
     fetchListData();
-  }, [currentPage, itemsPerPage, toggle, searchQuery]);
+  }, [currentPage, itemsPerPage, toggle, debouncedSearch]);
 
   return (
     <div className="flex flex-col mt-10 mx-4 pad:mx-auto pad:w-[786px] dt:w-[1200px]">

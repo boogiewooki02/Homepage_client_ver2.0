@@ -6,37 +6,17 @@ import ReservationForm from '@/components/reservation/ReservationForm';
 import RoomNotice from '@/components/reservation/RoomNotice';
 import TimeTable from '@/components/reservation/TimeTable';
 import * as StompJs from '@stomp/stompjs';
+import { ReservationRequest, ReservationResponse } from '@/types/reservation';
 import Cookie from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SockJS from 'sockjs-client';
 
-// 예약 요청 정보 타입
-export type Reservation = {
-  type: string; // ex) TEAM
-  clubroomUsername: string;
-  reservationDate: string; // '2024-01-01'
-  startTime: string; // '11:00:00'
-  endTime: string; //'12:00:00'
-};
-
-// 예약 정보 응답 타입
-export type ReservationResponse = {
-  reservationId: number;
-  email: string;
-  type: string;
-  clubroomUsername: string;
-  reservationDate: string;
-  startTime: string;
-  endTime: string;
-  status: string; // ex) RESERVED
-};
-
 const page = () => {
   // 예약 폼 표시 여부
   const [isFormVisible, setIsFormVisible] = useState(true);
 
-  const [reservation, setReservation] = useState<Reservation>({
+  const [reservation, setReservation] = useState<ReservationRequest>({
     type: '',
     clubroomUsername: '',
     reservationDate: '',
@@ -130,7 +110,7 @@ const page = () => {
     };
   }, [reservation.reservationDate]); // reservationDate가 변경될 때마다 연결
 
-  const handleChange = (key: keyof Reservation, value: string) => {
+  const handleChange = (key: keyof ReservationRequest, value: string) => {
     setReservation((prev) => ({
       ...prev,
       [key]: value,
@@ -183,7 +163,7 @@ const page = () => {
   };
 
   // 예약 확정 (5. 발행2)
-  const handleReservationSubmit = async (reservation: Reservation) => {
+  const handleReservationSubmit = async (reservation: ReservationRequest) => {
     console.log('예약 정보:', reservation);
 
     if (stompClient && stompClient.connected) {

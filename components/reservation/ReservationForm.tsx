@@ -3,13 +3,13 @@ import ReservationNotice from './ReservationNotice';
 import ReservationSuccessModal from './ReservationSuccessModal';
 import ReservationFailureModal from './ReservationFailureModal';
 import Modal from '../ui/Modal';
-import { Reservation } from '@/app/(kahlua)/reservation/page';
+import { ReservationRequest } from '@/types/reservation';
 import { useRouter } from 'next/navigation';
 
 interface ReservationFormProps {
-  reservation: Reservation;
-  onChange: (key: keyof Reservation, value: string) => void;
-  onSubmit: (reservation: Reservation) => void;
+  reservation: ReservationRequest;
+  onChange: (key: keyof ReservationRequest, value: string) => void;
+  onSubmit: (reservation: ReservationRequest) => void;
 }
 
 const ReservationForm = ({

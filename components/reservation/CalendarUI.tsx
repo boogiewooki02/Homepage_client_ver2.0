@@ -1,4 +1,4 @@
-import { Reservation } from '@/app/(kahlua)/reservation/page';
+import { ReservationRequest } from '@/types/reservation';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css'; // 기본 스타일
@@ -10,7 +10,7 @@ type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
 interface CalendarProps {
-  onChange: (key: keyof Reservation, value: string) => void;
+  onChange: (key: keyof ReservationRequest, value: string) => void;
 }
 
 const CalendarUI = ({ onChange }: CalendarProps) => {
