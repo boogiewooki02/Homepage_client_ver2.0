@@ -85,7 +85,8 @@ export default function RootLayout({
             <meta property="og:title" content="KAHLUA BAND" />
             <meta
               property="og:description"
-              content="안녕하세요 홍익대학교 컴퓨터공학과 밴드부 Kahlua 입니다!"
+              // content="안녕하세요 홍익대학교 컴퓨터공학과 밴드부 Kahlua 입니다!"
+              content="안녕하세요 컴퓨터공학과 밴드부 Kahlua 입니다!"
             />
             <meta property="og:type" content="website" />
             <meta property="og:image" content="/image/Thumbnail.png?v=1" />

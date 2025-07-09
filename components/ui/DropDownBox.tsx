@@ -31,7 +31,7 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
   const [selectedTicket, setSelectedTicket] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const dateOptions: Option[] = data?.date_time
+  const dateOptions: Option[] = data?.performance_start_time
     ? [
         {
           value: data.dateOption,

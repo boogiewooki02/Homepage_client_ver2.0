@@ -66,7 +66,9 @@ const TicketOption: React.FC<TicketOptionProps> = ({ data, isDays }) => {
           <div className="h-[280px] flex flex-shrink-0 rounded-bl-xl border-r border-gray-15 bg-gray-5 justify-center">
             <OptionBox
               option={
-                data?.date_time ? formatDateTimeSplit(data.date_time).date : ''
+                data?.performance_start_time
+                  ? formatDateTimeSplit(data.performance_start_time).date
+                  : ''
               }
               isDays={isDays}
             />
@@ -83,7 +85,9 @@ const TicketOption: React.FC<TicketOptionProps> = ({ data, isDays }) => {
           <div className="h-[280px] flex flex-shrink-0 rounded-bl-[12px] border-r border-gray-15 bg-gray-5 justify-center">
             <OptionBox
               option={
-                data?.date_time ? formatDateTimeSplit(data.date_time).time : ''
+                data?.performance_start_time
+                  ? formatDateTimeSplit(data.performance_start_time).time
+                  : ''
               }
               isDays={isDays}
             />

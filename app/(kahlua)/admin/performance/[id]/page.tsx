@@ -51,7 +51,7 @@ const EditPerformancePage = () => {
             content: performanceData.content,
             venue: performanceData.venue,
             address: performanceData.address,
-            dateTime: performanceData.date_time,
+            dateTime: performanceData.performance_start_time,
             bookingStartDate: performanceData.booking_start_date,
             bookingEndDate: performanceData.booking_end_date,
             youtubeUrl: performanceData.youtube_url || '',

@@ -28,7 +28,9 @@ const DropdownMenu = ({ isDays, data }: TicketOptionProps) => {
     return {
       ...rawData,
       isDays,
-      dateOption: dayjs(rawData?.date_time).format('YYYY년 M월 D일 HH시 mm분'),
+      dateOption: dayjs(rawData?.performance_start_time).format(
+        'YYYY년 M월 D일 HH시 mm분'
+      ),
     };
   };
 

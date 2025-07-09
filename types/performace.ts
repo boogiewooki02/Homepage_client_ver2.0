@@ -6,7 +6,8 @@ export interface PerformanceResponse {
   content: string;
   venue: string;
   address: string;
-  date_time: string;
+  performance_start_time: string;
+  performance_end_time: string;
   freshman_price: string;
   freshman_max_purchase: number;
   general_price: string;

@@ -11,8 +11,8 @@ export default function About() {
     <div className="flex flex-col w-full max-pad:max-w-[500px] max-pad:px-[16px] items-center mb-[48px] pad:mb-[120px]">
       <div className="w-full h-[260px] pad:w-[786px] dt:w-[1200px] pad:h-[744px] bg-mainAbout bg-center bg-contain object-contain rounded-[32px] pad:rounded-[48px] border-none relative z-0">
         <p className="font-mustica text-[24px] pad:text-[40px] dt:text-[64px] font-semibold text-gray-0 m-[24px] pad:m-[56px]">
-          Hongik University
-          <br />
+          {/* Hongik University */}
+          {/* <br /> */}
           Computer Engineering
           <br />
           Band Club KAHLUA!
@@ -66,7 +66,8 @@ const AboutSmallBox = () => {
         <br />
         {getYearsOfTradition()}년의 전통을 이어오고 있는
         <br />
-        홍익대학교 컴퓨터공학과
+        {/* 홍익대학교 컴퓨터공학과 */}
+        컴퓨터공학과
         <br />
         밴드학회입니다.
       </p>

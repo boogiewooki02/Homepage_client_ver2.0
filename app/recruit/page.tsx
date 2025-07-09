@@ -99,7 +99,8 @@ const Requirement = () => {
       <div className="inline-flex flex-wrap flex-row justify-center align-top mt-16 gap-6">
         <RequirementCard
           title="💻 컴퓨터공학과 신입생"
-          description="홍익대학교 컴퓨터공학과생 및<br/>컴퓨터공학과 진입 예정인 자율전공학부생"
+          description="컴퓨터공학과 진입 예정인 자율전공학부생"
+          // description="홍익대학교 컴퓨터공학과생 및<br/>컴퓨터공학과 진입 예정인 자율전공학부생"
         />
         <RequirementCard
           title="👊🏻 성실한 멤버"

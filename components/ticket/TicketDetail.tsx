@@ -61,8 +61,10 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
         setLoc(rawData?.address);
         setTicketInfo({
           ...rawData,
-          dateForMinute: dayjs(rawData.date_time).format('YYYY-MM-DD HH:mm'),
-          dateOption: dayjs(rawData.date_time).format(
+          dateForMinute: dayjs(rawData.performance_start_time).format(
+            'YYYY-MM-DD HH:mm'
+          ),
+          dateOption: dayjs(rawData.performance_start_time).format(
             'YYYY년 MM월 DD일 HH시 mm분'
           ),
           freshmanPrice: rawData.freshman_price
@@ -288,7 +290,7 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
           <div className="flex flex-row mt-4 pad:mt-6 text-[16px] pad:text-[18px] leading-9 font-normal gap-6 h-7">
             <p className="text-gray-40 w-7 pad:w-8">일시</p>
             <p className="text-gray-90 ">
-              {formatDateTime(ticketInfo?.date_time) || ''}
+              {formatDateTime(ticketInfo?.performance_start_time) || ''}
             </p>
           </div>
           <div className="flex flex-row mt-4 pad:mt-6 text-[16px] pad:text-[18px] leading-9 font-normal">
@@ -330,14 +332,15 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
               if (
                 !isDays &&
                 !ticketInfo?.youtube_url &&
-                !dayjs().isBefore(dayjs(ticketInfo?.date_time))
+                !dayjs().isBefore(dayjs(ticketInfo?.performance_end_time))
               ) {
                 e.preventDefault();
                 alert('공연 영상이 존재하지 않습니다.');
               }
             }}
             className={`max-pad:mx-auto mt-[21px] w-full dt:w-[316px] h-[52px] dt:h-[60px] flex pad:hidden dt:flex flex-shrink-0 text-center items-center justify-center rounded-xl text-[18px] font-medium   ${
-              !isDays && dayjs().isBefore(dayjs(ticketInfo?.date_time))
+              !isDays &&
+              dayjs().isBefore(dayjs(ticketInfo?.performance_start_time))
                 ? 'bg-gray-5 text-gray-60 cursor-not-allowed'
                 : 'bg-gray-5 ph:bg-primary-50 text-gray-60 ph:text-gray-0'
             }`}
@@ -395,14 +398,15 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
               if (
                 !isDays &&
                 !ticketInfo?.youtube_url &&
-                !dayjs().isBefore(dayjs(ticketInfo?.date_time))
+                !dayjs().isBefore(dayjs(ticketInfo?.performance_end_time))
               ) {
                 e.preventDefault();
                 alert('공연 영상이 존재하지 않습니다.');
               }
             }}
             className={`w-[376px] h-[60px] flex dt:hidden flex-shrink-0 text-center items-center justify-center rounded-xl text-[18px] font-medium ${
-              !isDays && dayjs().isBefore(dayjs(ticketInfo?.date_time))
+              !isDays &&
+              dayjs().isBefore(dayjs(ticketInfo?.performance_start_time))
                 ? 'bg-gray-5 text-gray-60 cursor-not-allowed'
                 : ' bg-primary-50 text-gray-0'
             }`}
