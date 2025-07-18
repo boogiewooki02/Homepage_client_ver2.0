@@ -78,6 +78,7 @@ const buildCommentTree = (comments: CommentType[]): CommentType[] => {
           deletedAt: new Date().toISOString(),
           replies: [],
           parentCommentId: null,
+          profileImageUrl: '',
           created_at: new Date().toISOString(),
         };
         rootComments.push(commentMap[parentId]);

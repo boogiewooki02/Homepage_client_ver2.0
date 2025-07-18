@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
-import defaultImg from '@/public/image/notice/defaultProfile.svg';
+import defaultImg from '@/public/image/mypage/defaultProfile.svg';
 import Send from '@mui/icons-material/Send';
 import { Comment as CommentType } from './dto';
 import DeletePopup from '@/components/notice/DeleteCommentPopup';
@@ -75,11 +75,11 @@ const Comment: React.FC<CommentProps> = ({
       ) : (
         <div className="flex items-start gap-3">
           <Image
-            src={defaultImg}
-            alt="default-profile"
+            src={comment.profileImageUrl || defaultImg}
+            alt="user-profile"
             width={54}
             height={54}
-            className="rounded-full"
+            className="w-[54px] h-[54px] object-cover object-center rounded-full"
           />
           <div className="w-full flex flex-col gap-1 overflow-auto">
             <div className="flex w-full flex-row justify-between">

@@ -15,6 +15,7 @@ interface NoticeData {
   likes: number;
   id: number;
   liked: boolean;
+  profileImageUrl?: string;
 }
 
 interface PostProps {
@@ -36,13 +37,13 @@ const formatDate = (dateString?: string) => {
     .replace(/\.$/, '');
 };
 
-const Post: React.FC<PostProps> = ({
+const Post = ({
   noticeData,
   commentCount = 0,
   replyCount = 0,
   currentUser,
   postId,
-}) => {
+}: PostProps) => {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
 
   const handleDeleteClick = () => setShowDeletePopup(true);
@@ -73,6 +74,7 @@ const Post: React.FC<PostProps> = ({
             date={formatDate(noticeData.created_at)}
             content={noticeData.content || ''}
             imageUrls={imageUrls}
+            profileImageUrl={noticeData.profileImageUrl}
             onDeleteClick={handleDeleteClick}
             currentUser={currentUser}
             postId={postId}

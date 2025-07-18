@@ -13,6 +13,7 @@ export interface Comment {
   user: string;
   date: string;
   content: string;
+  profileImageUrl: string;
   parentCommentId?: string | null;
   deletedAt?: string | null;
   replies?: Comment[];

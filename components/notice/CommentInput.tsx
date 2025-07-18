@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Send from '@mui/icons-material/Send';
 
 interface CommentInputProps {

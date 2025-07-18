@@ -11,29 +11,31 @@ interface TitleSectionProps {
   imageUrls?: string[] | string | null;
   currentUser?: string;
   postId?: number;
+  profileImageUrl?: string;
   onDeleteClick: () => void;
 }
 
-const TitleSection: React.FC<TitleSectionProps> = ({
+const TitleSection = ({
   title = 'No Title',
   user = 'Unknown',
   date = 'Unknown',
   content = 'No Content',
   imageUrls = '',
+  profileImageUrl = '',
   currentUser,
   onDeleteClick,
   postId,
-}) => {
+}: TitleSectionProps) => {
   const isAuthor = currentUser === user;
 
   return (
     <div className="w-full flex mt-8">
       <Image
-        src={defaultImg}
+        src={profileImageUrl || defaultImg}
         alt="default-profile"
         width={88}
         height={88}
-        className="dt:flex pad:flex ph:hidden"
+        className="dt:flex pad:flex ph:hidden rounded-full object-cover object-center h-[88px] w-[88px]"
       />
       <div className="w-full flex flex-col dt:ml-[24px] pad:ml-[24px] ph:ml-0  dt:max-w-[calc(100%-88px-24px)] pad:max-w-[calc(100%-88px-24px)] ph:max-w-full">
         <span className="w-full font-pretendard text-[32px] font-semibold break-words">
