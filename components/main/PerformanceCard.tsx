@@ -17,6 +17,7 @@ const PerformanceCard = ({ song }: SongProps) => {
         sizes="(max-width: 834px) 282px, 384px"
         width={384}
         height={216}
+        unoptimized
       />
       <p className="text-[20px] pad:text-[22px] font-semibold mt-[8px] pad:mt-[12px]">
         {song.name}
