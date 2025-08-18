@@ -64,8 +64,8 @@ const createEventDates = (
   };
 };
 
-const dynamicEventDateString = '2025-03-04T19:00:00+09:00';
-const dynamicLastReserveDateString = '2025-03-03T19:00:00+09:00';
+const dynamicEventDateString = '2025-09-01T19:00:00+09:00';
+const dynamicLastReserveDateString = '2025-09-01T19:00:00+09:00';
 
 const { eventDate, lastReserveDate } = createEventDates(
   dynamicEventDateString,
@@ -77,9 +77,9 @@ const getInformation = (): Information => {
   const isDays = true;
 
   return {
-    title: '2025년 3월 정기 공연',
-    location: '001 클럽',
-    locationDetails: '서울 마포구 와우산로18길 20 지하 1층',
+    title: '2025년 9월 정기 공연',
+    location: '플렉스라운지',
+    locationDetails: '서울특별시 마포구 양화로 100-10',
     dateForString: formatDateForString(eventDate),
     dateForMinute: formatDateForMinute(eventDate),
     dayForString: formatDayForString(lastReserveDate),
@@ -99,7 +99,7 @@ const getInformation = (): Information => {
       general: {
         name: '일반 티켓',
         price: '5,000원',
-        maxQuantity: 5,
+        maxQuantity: 4,
       },
     },
   };

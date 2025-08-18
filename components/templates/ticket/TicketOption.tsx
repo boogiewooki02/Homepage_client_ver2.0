@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import OptionBox from '@/components/ui/OptionBox';
 import Ticket from '@/components/ui/Ticket';
+import dayjs from 'dayjs';
 
 interface TicketOptionProps {
   data: any;
@@ -18,19 +19,12 @@ const TicketOption: React.FC<TicketOptionProps> = ({ data, isDays }) => {
     isoString?: string
   ): { date: string; time: string } => {
     if (!isoString) return { date: '', time: '' };
-    const date = new Date(isoString);
-    if (isNaN(date.getTime())) return { date: '', time: '' };
+    const d = dayjs.utc(isoString).tz('Asia/Seoul');
 
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const dateString = `${year}년 ${month}월 ${day}일`;
-
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const timeString = `${hours}시 ${minutes.toString().padStart(2, '0')}분`;
-
-    return { date: dateString, time: timeString };
+    return {
+      date: d.format('YYYY년 M월 D일'),
+      time: d.format('H시 mm분'),
+    };
   };
 
   const formatPrice = (price: any): string => {
@@ -102,7 +96,7 @@ const TicketOption: React.FC<TicketOptionProps> = ({ data, isDays }) => {
             </div>
           </div>
           <div className="h-[280px] flex flex-col flex-shrink-0 rounded-br-xl border-gray-15 bg-gray-5 items-center">
-            <Ticket
+            {/* <Ticket
               className="focus:cursor-pointer"
               ticket="신입생"
               price="무료"
@@ -114,7 +108,7 @@ const TicketOption: React.FC<TicketOptionProps> = ({ data, isDays }) => {
                   : 'impossible'
               }
               onClick={handleFreshmanClick}
-            />
+            /> */}
             <Ticket
               className="focus:cursor-pointer"
               ticket="일반"

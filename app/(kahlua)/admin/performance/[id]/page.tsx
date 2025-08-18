@@ -21,6 +21,12 @@ import {
   performanceImage,
   performanceInfoList,
 } from '../../performanceInfo/performanceData';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const EditPerformancePage = () => {
   const params = useParams();
@@ -44,31 +50,39 @@ const EditPerformancePage = () => {
       try {
         const response = await authInstance.get(`/performances/${params.id}`);
         if (response.data.isSuccess) {
-          const performanceData = response.data.result.performanceResponse;
+          const p = response.data.result.performanceResponse;
+
+          // UTC → KST 변환
+          const start = dayjs.utc(p.performance_start_time).tz('Asia/Seoul');
+          const end = p.performance_end_time
+            ? dayjs.utc(p.performance_end_time).tz('Asia/Seoul')
+            : start.add(3, 'hour');
 
           setData({
-            title: performanceData.title,
-            content: performanceData.content,
-            venue: performanceData.venue,
-            address: performanceData.address,
-            dateTime: performanceData.performance_start_time,
-            bookingStartDate: performanceData.booking_start_date,
-            bookingEndDate: performanceData.booking_end_date,
-            youtubeUrl: performanceData.youtube_url || '',
+            title: p.title,
+            content: p.content,
+            venue: p.venue,
+            address: p.address,
+            dateTime: start.format('YYYY-MM-DDTHH:mm'), // ISO-like 포맷 for input[type="datetime-local"]
+            performanceStartTime: start.toISOString(),
+            performanceEndTime: end.toISOString(),
+            bookingStartDate: p.booking_start_date,
+            bookingEndDate: p.booking_end_date,
+            youtubeUrl: p.youtube_url || '',
           });
 
           setImage({
-            posterImageUrl: performanceData.poster_image_url,
+            posterImageUrl: p.poster_image_url,
           });
 
           setFreshmanTicketData({
-            freshmanPrice: Number(performanceData.freshman_price),
-            freshmanMaxPurchase: performanceData.freshman_max_purchase,
+            freshmanPrice: Number(p.freshman_price),
+            freshmanMaxPurchase: p.freshman_max_purchase,
           });
 
           setGeneralTicketData({
-            generalPrice: Number(performanceData.general_price),
-            generalMaxPurchase: performanceData.general_max_purchase,
+            generalPrice: Number(p.general_price),
+            generalMaxPurchase: p.general_max_purchase,
           });
         }
       } catch (error) {
@@ -135,6 +149,8 @@ const EditPerformancePage = () => {
         generalMaxPurchase: generalTicketData.generalMaxPurchase,
         bookingStartDate: data.bookingStartDate,
         bookingEndDate: data.bookingEndDate,
+        performanceStartTime: data.performanceStartTime,
+        performanceEndTime: data.performanceEndTime,
       };
 
       const response = await authInstance.put(

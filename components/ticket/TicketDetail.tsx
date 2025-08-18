@@ -7,10 +7,15 @@ import Bar from '@/components/ui/Bar';
 import defaultPoster from '@/public/image/ticket/DefaultPoster.svg';
 import SettingsIcon from '@mui/icons-material/Settings';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 declare global {
   interface Window {
@@ -204,13 +209,7 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
 
   const formatDateTime = (isoString: string): string => {
     if (!isoString) return '';
-    const date = new Date(isoString);
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const hours = date.getHours();
-
-    return `${year}년 ${month}월 ${day}일 ${hours}시`;
+    return dayjs.utc(isoString).tz('Asia/Seoul').format('YYYY년 M월 D일 H시');
   };
 
   const openModal = () => setIsModalOpen(true);

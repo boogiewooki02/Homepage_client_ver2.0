@@ -45,7 +45,7 @@ export const performanceInfoList: InputFieldType[] = [
   },
   {
     title: '일시',
-    label: 'dateTime',
+    label: 'performanceStartTime',
     type: 'datetime',
     required: true,
   },
