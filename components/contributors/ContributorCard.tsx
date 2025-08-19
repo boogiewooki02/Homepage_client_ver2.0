@@ -37,11 +37,16 @@ const PadDtCard: React.FC<ContributorCardProps> = ({
             src={image}
             alt={name}
             fill
-            style={{objectFit: "cover"}}
-            className="rounded-xl"
+            style={{ objectFit: 'cover' }}
+            className="rounded-xl object-top"
           />
         </div>
-        <Image src={blurCard} alt="blurCard" fill style={{objectFit: "cover"}} />
+        <Image
+          src={blurCard}
+          alt="blurCard"
+          fill
+          style={{ objectFit: 'cover' }}
+        />
         <div className="absolute w-full h-full flex">
           <p className="absolute top-[20px] left-[128px] text-2xl leading-normal text-gray-0 font-semibold">
             {name}
@@ -108,8 +113,8 @@ const PhCard: React.FC<ContributorCardProps> = ({
           src={image}
           alt={name}
           fill
-          style={{objectFit: "cover"}}
-          className="rounded-xl"
+          style={{ objectFit: 'cover' }}
+          className="rounded-xl object-top"
         />
       </div>
       <div className="relative w-full h-full">
@@ -117,7 +122,7 @@ const PhCard: React.FC<ContributorCardProps> = ({
           src={isEven ? blurCard3 : blurCard2}
           alt={isEven ? 'blurCard' : 'blurCard'}
           fill
-          style={{objectFit: "cover"}}
+          style={{ objectFit: 'cover' }}
         />
         <div className="absolute w-full h-full flex">
           <p

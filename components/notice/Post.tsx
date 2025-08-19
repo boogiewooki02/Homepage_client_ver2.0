@@ -51,7 +51,7 @@ const Post = ({
 
   const handleDeleteConfirm = async () => {
     try {
-      await authInstance.delete(`/post/notice/${noticeData.id}/delete`);
+      await authInstance.delete(`/post/${noticeData.id}/delete`);
       setShowDeletePopup(false);
       window.location.href = '/announcement';
     } catch (error) {

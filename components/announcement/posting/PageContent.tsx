@@ -49,7 +49,7 @@ const PageContent = () => {
       if (isEditMode) {
         response = await authInstance.patch(`post/${postId}/update`, postData);
       } else {
-        response = await authInstance.post('/post/notice/create', postData);
+        response = await authInstance.post('/post/create', postData);
       }
 
       const updatedPostId = response.data.result.id;

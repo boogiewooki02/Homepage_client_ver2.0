@@ -1,3 +1,10 @@
+import dayjs from 'dayjs';
+
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   const year = date.getFullYear();
@@ -6,11 +13,7 @@ export const formatDate = (dateString: string) => {
   return `${year}.${month}.${day}`;
 };
 
-export const formatDateTime = (dateString: string) => {
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const hour = date.getHours();
-  return `${year}년 ${month}월 ${day}일 ${hour}시`;
+export const formatDateTime = (isoString: string): string => {
+  if (!isoString) return '';
+  return dayjs.utc(isoString).tz('Asia/Seoul').format('YYYY년 M월 D일 H시');
 };

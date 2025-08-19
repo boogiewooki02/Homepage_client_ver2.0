@@ -7,15 +7,11 @@ import Bar from '@/components/ui/Bar';
 import defaultPoster from '@/public/image/ticket/DefaultPoster.svg';
 import SettingsIcon from '@mui/icons-material/Settings';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { formatDateTime } from '../util/formatDate';
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 declare global {
   interface Window {
@@ -205,11 +201,6 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
     navigator.clipboard.writeText(loc).then(() => {
       alert('주소가 복사되었습니다!');
     });
-  };
-
-  const formatDateTime = (isoString: string): string => {
-    if (!isoString) return '';
-    return dayjs.utc(isoString).tz('Asia/Seoul').format('YYYY년 M월 D일 H시');
   };
 
   const openModal = () => setIsModalOpen(true);
