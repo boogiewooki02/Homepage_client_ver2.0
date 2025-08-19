@@ -37,6 +37,7 @@ const PadDtCard: React.FC<ContributorCardProps> = ({
             src={image}
             alt={name}
             fill
+            unoptimized
             style={{ objectFit: 'cover' }}
             className="rounded-xl object-top"
           />
