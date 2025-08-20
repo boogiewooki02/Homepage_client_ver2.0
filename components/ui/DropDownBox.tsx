@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import TicketDetails from './TicketDetails';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
+import { formatDateTimeMinute } from '../util/formatDate';
 
 interface Option {
   value: string;
@@ -34,18 +35,20 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
   const dateOptions: Option[] = data?.performance_start_time
     ? [
         {
-          value: data.dateOption,
-          label: data.dateOption,
+          value: data.performance_start_time, // 원본(UTC)
+          label: formatDateTimeMinute(data.performance_start_time), // 표시용(KST)
         },
       ]
     : [];
 
+  console.log(data);
+
   const ticketOptions: Option[] = [
-    {
-      value: '신입생 티켓',
-      label: '신입생 티켓',
-      status: data?.isFreshmanFree ? 'ACTIVE' : 'INACTIVE',
-    },
+    // {
+    //   value: '신입생 티켓',
+    //   label: '신입생 티켓',
+    //   status: data?.isFreshmanFree ? 'ACTIVE' : 'INACTIVE',
+    // },
     { value: '일반 티켓', label: '일반 티켓', status: 'ACTIVE' },
   ];
 
@@ -125,7 +128,6 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
                 transform: isDropdownVisible
                   ? 'rotate(180deg)'
                   : 'rotate(0deg)',
-                transition: 'transform 0.2s ease-out',
               }}
             />
           </div>
