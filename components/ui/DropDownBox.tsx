@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import TicketDetails from './TicketDetails';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
 import { formatDateTimeMinute } from '../util/formatDate';
 
 interface Option {
@@ -35,13 +34,11 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
   const dateOptions: Option[] = data?.performance_start_time
     ? [
         {
-          value: data.performance_start_time, // 원본(UTC)
-          label: formatDateTimeMinute(data.performance_start_time), // 표시용(KST)
+          value: formatDateTimeMinute(data.performance_start_time),
+          label: formatDateTimeMinute(data.performance_start_time),
         },
       ]
     : [];
-
-  console.log(data);
 
   const ticketOptions: Option[] = [
     // {
@@ -101,6 +98,7 @@ const DropDownBox: React.FC<DropDownBoxProps> = ({
     >
       {selectedTicket ? (
         <TicketDetails
+          maxTicket={data.general_max_purchase}
           ticketType={selectedTicket}
           onClick={handleTicketDetailsClick}
           member={member}

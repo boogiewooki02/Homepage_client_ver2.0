@@ -5,9 +5,10 @@ const TicketDetails: React.FC<{
   ticketType: string;
   onClick: (event: React.MouseEvent) => void;
   member: number;
+  maxTicket: number;
   setMember: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ ticketType, onClick, member, setMember }) => {
-  const max = ticketType === '신입생 티켓' ? 1 : 5;
+}> = ({ ticketType, onClick, member, setMember, maxTicket }) => {
+  const max = ticketType === '신입생 티켓' ? 1 : maxTicket;
   const min = 1;
   const ticket = ticketType === '신입생 티켓' ? 'freshman' : 'general';
 
