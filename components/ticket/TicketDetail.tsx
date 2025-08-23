@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { formatDateTime } from '../util/formatDate';
+import { formatDateTime } from '@/utils/dateUtils';
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
 declare global {

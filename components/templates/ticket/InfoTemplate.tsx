@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/InputBox';
 import Image from 'next/image';
-import { filterPhoneNumber, filterNameValue } from '@/components/util/utils';
+import { filterPhoneNumber, filterNameValue } from '@/utils/filterUtils';
 
 interface InfoTemplateProps {
   index: number;

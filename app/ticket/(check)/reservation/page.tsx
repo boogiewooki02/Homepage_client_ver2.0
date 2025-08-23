@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import { axiosInstance } from '@/api/auth/axios';
-import { filterPhoneNumber } from '@/components/util/utils';
+import { filterPhoneNumber } from '@/utils/filterUtils';
 import { information } from '@/components/data/Information';
 
 const Reservation = () => {

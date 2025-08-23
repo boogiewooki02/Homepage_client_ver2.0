@@ -1,9 +1,6 @@
 import { Input } from '@/components/ui/InputBox';
 import TwoOptionBox from '@/components/ui/twoOptionbox';
-import {
-  filterBirthdateValue,
-  filterPhoneNumber,
-} from '@/components/util/utils';
+import { filterBirthdateValue, filterPhoneNumber } from '@/utils/filterUtils';
 
 export enum Gender {
   남성,

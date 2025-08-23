@@ -6,7 +6,7 @@ import {
   filterStudentIdValue,
   filterPhoneNumber,
   filterEmailValue,
-} from '@/components/util/utils';
+} from '@/utils/filterUtils';
 
 interface FreshmanInfoProps {
   onInfoChange: (info: {

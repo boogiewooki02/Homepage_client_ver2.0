@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { formatDate } from '@/components/util/formatDate';
+import { formatDate } from '@/utils/dateUtils';
 import {
   AnnouncementProps,
   CommunityProps,

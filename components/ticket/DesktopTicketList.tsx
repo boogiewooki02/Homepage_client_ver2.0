@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { shuffleArray } from '../util/shuffleArray';
+import { shuffleArray } from '@/utils/shuffleArrayUtils';
 import Link from 'next/link';
 
 const DesktopTicketList = ({

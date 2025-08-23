@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Toggle } from '@/components/announcement/list/Toggle';
 import {
   AnnouncementProps,
@@ -11,66 +11,70 @@ import Pagination from '@/components/announcement/list/Pagination';
 import { DetailList } from '@/components/announcement/list/DetailList';
 
 import { useDebounce } from '@/hooks/useDebounce';
-import { fetchPostComments, fetchPostList } from '@/api/kahlua/post';
+import { fetchPostList, searchPosts } from '@/api/kahlua/post';
+import { normalizePosts } from '@/utils/noticeUtils';
 
 const List = () => {
   const [toggle, setToggle] = useState(toggleList[0].toggle);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearch = useDebounce(searchQuery, 500);
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [pageGroup, setPageGroup] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const [hasNext, setHasNext] = useState<boolean | undefined>(undefined);
+
+  const reqIdRef = useRef(0);
   const [filteredData, setFilteredData] = useState<
     (AnnouncementProps | CommunityProps)[]
   >([]);
 
-  const debouncedSearch = useDebounce(searchQuery, 500);
+  const postType = useMemo(
+    () => (toggle === toggleList[0].toggle ? 'NOTICE' : 'KAHLUA_TIME'),
+    [toggle]
+  );
 
-  const fetchListData = async () => {
-    const postType = toggle === toggleList[0].toggle ? 'NOTICE' : 'KAHLUA_TIME';
-
+  const runQuery = async () => {
+    const myId = ++reqIdRef.current;
+    const page0 = currentPage - 1;
     try {
-      const { content, totalPages } = await fetchPostList({
-        postType,
-        page: currentPage - 1,
-        size: itemsPerPage,
-        searchWord: debouncedSearch,
-      });
+      const keyword = debouncedSearch.trim();
 
-      const updatedContent = await Promise.all(
-        content.map(async (post: AnnouncementProps | CommunityProps) => {
-          try {
-            const comments = await fetchPostComments(post.id);
-            return { ...post, comments };
-          } catch {
-            return { ...post, comments: [] };
-          }
-        })
-      );
+      const result = keyword
+        ? await searchPosts({
+            query: keyword,
+            postType,
+            page: page0,
+            size: itemsPerPage,
+          })
+        : await fetchPostList({
+            postType,
+            page: page0,
+            size: itemsPerPage,
+          });
 
-      setFilteredData(updatedContent);
-      setTotalPages(totalPages);
+      if (myId !== reqIdRef.current) return;
+
+      setFilteredData(normalizePosts(result.items));
+      setTotalPages(result.totalPages ?? 0);
+      setHasNext(result.hasNext);
     } catch (err) {
-      console.error('게시글 리스트 로드 실패:', err);
-    }
-  };
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handlePrevGroup = () => {
-    if (pageGroup > 0) {
-      setPageGroup(pageGroup - 1);
-      setCurrentPage((pageGroup - 1) * 5 + 1);
+      if (myId !== reqIdRef.current) return;
+      console.error('게시글 목록/검색 로드 실패:', err);
     }
   };
 
-  const handleNextGroup = () => {
-    if ((pageGroup + 1) * 5 < totalPages) {
-      setPageGroup(pageGroup + 1);
-      setCurrentPage((pageGroup + 1) * 5 + 1);
-    }
-  };
+  // 트리거: 페이지, 사이즈, 토글, 디바운스 검색어
+  useEffect(() => {
+    runQuery();
+  }, [currentPage, itemsPerPage, postType, debouncedSearch]);
+
+  useEffect(() => {
+    setSearchQuery('');
+    setCurrentPage(1);
+    setPageGroup(0);
+  }, [toggle]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -81,7 +85,6 @@ const List = () => {
       const newPage = Math.floor(currentItemIndex / newItemsPerPage) + 1;
       const newPageGroup = Math.floor((newPage - 1) / newPagesPerGroup);
 
-      // 상태 실제로 바뀔 때만 업데이트
       setItemsPerPage((prev) =>
         prev !== newItemsPerPage ? newItemsPerPage : prev
       );
@@ -91,50 +94,52 @@ const List = () => {
 
     window.addEventListener('resize', handleResize);
     handleResize(); // mount 시 1회 실행
-
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
-  // 토글이나 검색 쿼리가 바뀔 때 데이터 초기화
-  useEffect(() => {
-    setSearchQuery('');
-    setCurrentPage(1);
-    setPageGroup(0);
-  }, [toggle]);
-
-  // API 요청 트리거
-  useEffect(() => {
-    fetchListData();
-  }, [currentPage, itemsPerPage, toggle, debouncedSearch]);
+  const safeTotalPages = useMemo(() => {
+    if (totalPages && totalPages > 0) return totalPages;
+    if (typeof hasNext === 'boolean') {
+      return hasNext ? currentPage + 1 : currentPage;
+    }
+    return totalPages;
+  }, [totalPages, hasNext, currentPage]);
 
   return (
     <div className="flex flex-col mt-10 mx-4 pad:mx-auto pad:w-[786px] dt:w-[1200px]">
-      {/* 토글 */}
       <Toggle
         toggle={toggle}
         onToggleChange={setToggle}
         searchQuery={searchQuery}
-        onSearchChange={(query) => {
-          setSearchQuery(query);
+        onSearchChange={(q) => {
+          setSearchQuery(q);
           setCurrentPage(1);
         }}
+        onSubmit={() => runQuery()}
       />
 
-      {/* 리스트 */}
       <section className="flex flex-col border-t-[1px] border-t-black border-b-[1px] border-b-black">
-        {toggle === toggleList[0].toggle && <DetailList data={filteredData} />}
-        {toggle === toggleList[1].toggle && <DetailList data={filteredData} />}
+        <DetailList data={filteredData} />
       </section>
 
-      {/* 페이지네이션 */}
       <Pagination
         currentPage={currentPage}
-        totalPages={totalPages}
+        totalPages={safeTotalPages}
         pageGroup={pageGroup}
         pagesPerGroup={5}
-        onPageChange={handlePageChange}
-        onPrevGroup={handlePrevGroup}
-        onNextGroup={handleNextGroup}
+        onPageChange={setCurrentPage}
+        onPrevGroup={() => {
+          if (pageGroup > 0) {
+            setPageGroup(pageGroup - 1);
+            setCurrentPage((pageGroup - 1) * 5 + 1);
+          }
+        }}
+        onNextGroup={() => {
+          if ((pageGroup + 1) * 5 < safeTotalPages) {
+            setPageGroup(pageGroup + 1);
+            setCurrentPage((pageGroup + 1) * 5 + 1);
+          }
+        }}
       />
     </div>
   );

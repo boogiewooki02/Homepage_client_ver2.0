@@ -1,5 +1,10 @@
 import { authInstance } from '@/api/auth/axios';
-import { Comment } from '../notice/dto';
+import { Comment } from '../components/notice/dto';
+import {
+  AnnouncementProps,
+  CommunityProps,
+} from '@/components/announcement/list/dto';
+import { PostItem } from '@/types/post';
 
 export const createCommentOrReply = async (
   postId: number,
@@ -137,3 +142,30 @@ export const handleDeleteCancel = (
 ) => {
   setShowDeletePopup(false);
 };
+
+export function normalizePosts(
+  items: PostItem[]
+): (AnnouncementProps | CommunityProps)[] {
+  return items.map((p) => {
+    const imgs = Array.isArray(p.imageUrls)
+      ? p.imageUrls
+      : p.imageUrls
+        ? [p.imageUrls]
+        : [];
+    return {
+      id: p.id,
+      title: p.title,
+      writer: p.writer,
+      likes: p.likes ?? 0,
+      comments: [],
+      commentsCount: p.commentsCount ?? 0,
+      created_at: p.createdAt,
+      createdAt: p.createdAt,
+      profileImageUrl: p.profileImageUrl,
+      content: p.content,
+      liked: p.liked,
+      postType: p.postType,
+      imageUrls: imgs,
+    } as AnnouncementProps | CommunityProps;
+  });
+}

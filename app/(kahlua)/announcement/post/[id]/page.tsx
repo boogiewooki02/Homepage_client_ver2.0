@@ -12,7 +12,7 @@ import {
   handleDeleteCommentOrReply,
   handleDeleteCancel,
   handleDeleteConfirm,
-} from '@/components/util/noticeUtils';
+} from '@/utils/noticeUtils';
 import { authInstance } from '@/api/auth/axios';
 import { Comment as CommentType } from '@/components/notice/dto';
 

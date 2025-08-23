@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import InfoTemplate from './InfoTemplate';
-import { filterEmailValue } from '@/components/util/utils';
+import { filterEmailValue } from '@/utils/filterUtils';
 import { Input } from '@/components/ui/InputBox';
 
 interface GeneralInfoProps {

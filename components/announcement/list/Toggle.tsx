@@ -11,28 +11,29 @@ export const Toggle = ({
   onToggleChange,
   searchQuery,
   onSearchChange,
+  onSubmit,
 }: {
   toggle: string;
   onToggleChange: (toggle: string) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  onSubmit?: () => void;
 }) => {
   const router = useRouter();
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchUserRole = async () => {
+    (async () => {
       try {
         const response = await authInstance.get('/user');
-        const { role } = response.data.result;
-        setUserRole(role); // role 저장
+        const { role } = response.data.result ?? {};
+        setUserRole(role ?? null);
       } catch (error) {
         console.error('유저 role 가져오기 실패:', error);
       }
-    };
-
-    fetchUserRole();
+    })();
   }, []);
+
   return (
     <section className="flex flex-col gap-6 pad:flex-row pad:gap-0 mb-6 text-2xl font-semibold justify-between">
       <ul className="flex gap-6">
@@ -46,12 +47,16 @@ export const Toggle = ({
           </li>
         ))}
       </ul>
+
       <div className="flex justify-between gap-5">
         <div className="relative flex-1">
           <input
             placeholder="게시글 검색"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') onSubmit?.();
+            }}
             className={`relative w-full pad:w-[200px] ${toggle === toggleList[1].toggle ? 'h-[32px]' : 'h-[38px]'} pad:h-[38px] border-[1px] text-[16px] pad:text-[20px] font-[500] border-black rounded-[8px] focus:outline-none pl-3 pr-9 py-1`}
           />
           <Image
@@ -60,6 +65,7 @@ export const Toggle = ({
             width={24}
             height={24}
             className="absolute top-[6px] right-[12px] cursor-pointer"
+            onClick={() => onSubmit?.()}
           />
         </div>
         {(toggle === toggleList[1].toggle ||

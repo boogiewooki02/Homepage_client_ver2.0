@@ -1,5 +1,11 @@
 import { authInstance } from '@/api/auth/axios';
-import { MyPost } from '@/types/post';
+import {
+  FetchListParams,
+  MyPost,
+  PagedResult,
+  PostItem,
+  SearchPostParams,
+} from '@/types/post';
 
 // 글 목록 조회
 export const fetchPostList = async ({
@@ -7,22 +13,41 @@ export const fetchPostList = async ({
   page,
   size,
   searchWord,
-}: {
-  postType: 'NOTICE' | 'KAHLUA_TIME';
-  page: number;
-  size: number;
-  searchWord?: string;
-}) => {
-  const response = await authInstance.get('/post/list', {
+}: FetchListParams): Promise<PagedResult> => {
+  const { data } = await authInstance.get('/post/list', {
     params: {
       post_type: postType,
-      page,
-      size,
       search_word: searchWord,
+      'pageable.page': page,
+      'pageable.size': size,
     },
   });
 
-  return response.data.result;
+  const res = data?.result ?? {};
+  const content = Array.isArray(res.content) ? res.content : [];
+
+  const items: PostItem[] = content.map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    content: p.content,
+    writer: p.writer,
+    profileImageUrl: p.profileImageUrl,
+    likes: p.likes,
+    postType: p.postType,
+    commentsCount: p.commentsCount,
+    imageUrls: p.imageUrls,
+    createdAt: p.created_at,
+    updatedAt: p.updated_at,
+    liked: p.liked,
+  }));
+
+  return {
+    items,
+    totalPages: res.totalPages ?? 0,
+    totalElements: res.totalElements ?? 0,
+    page: res.number ?? page,
+    size: res.size ?? size,
+  };
 };
 
 // 글 댓글 목록 조회
@@ -37,7 +62,7 @@ export const fetchMyPosts = async (
   size: number
 ): Promise<{ posts: MyPost[]; totalPages: number } | null> => {
   try {
-    const response = await authInstance.get('my-page/post/list', {
+    const response = await authInstance.get('/my-page/post/list', {
       params: { page, size },
     });
     return {
@@ -60,3 +85,36 @@ export const fetchCommentCount = async (postId: number): Promise<number> => {
     return 0;
   }
 };
+
+// 게시글 검색
+export async function searchPosts({
+  query,
+  postType,
+  page = 0,
+  size = 10,
+}: SearchPostParams): Promise<PagedResult> {
+  const { data } = await authInstance.get('/post/search', {
+    params: { query, postType, page, size },
+  });
+
+  const posts = Array.isArray(data?.posts) ? data.posts : [];
+  const pageInfo = data?.pageInfo ?? {};
+
+  const items: PostItem[] = posts.map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    writer: p.writer,
+    likes: p.likes ?? 0,
+    commentsCount: p.commentsCount ?? 0,
+    createdAt: p.createdAt,
+  }));
+
+  return {
+    items,
+    totalPages: pageInfo.totalPages ?? 0,
+    hasNext: Boolean(pageInfo.hasNext),
+    page,
+    size,
+    totalElements: 0,
+  };
+}
