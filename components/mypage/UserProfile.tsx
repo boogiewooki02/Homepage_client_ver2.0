@@ -12,7 +12,7 @@ import {
   patchProfileImage,
 } from '@/api/user/user';
 import { getPresignedUrl } from '@/api/s3/s3';
-import { uploadImageToS3 } from '@/utils/uploadImageToS3';
+import { uploadImageToS3 } from '@/utils/s3Utils';
 
 interface UserProps {
   name: string;

@@ -9,7 +9,7 @@ import AdminButton from '@/components/ui/admin/Button';
 import WestIcon from '@mui/icons-material/West';
 import CancelModal from '@/components/admin/CancelModal';
 import EditModal from '@/components/admin/EditModal';
-import { isChanged } from '@/utils/isChanged';
+import { isChanged } from '@/utils/isChangedUtils';
 
 const RecruitingPage = () => {
   const [data, setData] = useState<{ [key: string]: any }>(defaultData); // Explicitly typing data
