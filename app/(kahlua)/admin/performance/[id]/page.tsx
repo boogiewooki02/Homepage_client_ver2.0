@@ -1,14 +1,12 @@
 'use client';
 
 import { authInstance } from '@/api/auth/axios';
-import CancelModal from '@/components/admin/CancelModal';
 import EditModal from '@/components/admin/EditModal';
 import InfoList from '@/components/templates/admin/Info';
 import AdminButton from '@/components/ui/admin/Button';
 import ImageBox from '@/components/ui/admin/ImageBox';
 import TicketInfoList from '@/components/ui/admin/TicketInfo';
 import Banner from '@/components/ui/Banner';
-import WestIcon from '@mui/icons-material/West';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -41,7 +39,7 @@ const EditPerformancePage = () => {
   }>(defaultGeneralTicketData);
   const [image, setImage] = useState<{ [key: string]: string }>(defaultImage);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  const [isCancelModalOpen, setIsCancelModalOpen] = useState<boolean>(false);
+  const [IsDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // 공연 정보 가져오기
@@ -173,6 +171,19 @@ const EditPerformancePage = () => {
     router.push(`/ticket/${params.id}`);
   }, [router, params.id]);
 
+  const onDeletePerformance = useCallback(async () => {
+    try {
+      const response = await authInstance.delete(`/performances/${params.id}`);
+      if (response.status === 200) {
+        alert('공연 정보가 성공적으로 삭제되었습니다.');
+        router.push('/performance');
+      }
+    } catch (error: any) {
+      console.error('공연 정보 삭제 실패:', error);
+      alert('공연 정보 삭제에 실패했습니다.');
+    }
+  }, [params.id, router]);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center w-full h-screen">
@@ -215,7 +226,13 @@ const EditPerformancePage = () => {
       </div>
 
       <div className="flex flex-row gap-[24px] w-full max-pad:px-[16px] justify-end">
-        <AdminButton onClick={onCancelEdit}>취소하기</AdminButton>
+        {/* <AdminButton onClick={onCancelEdit}>취소하기</AdminButton> */}
+        <AdminButton
+          onClick={() => setIsDeleteModalOpen(true)}
+          className="bg-danger-30"
+        >
+          삭제하기
+        </AdminButton>
         <AdminButton
           onClick={() => setIsEditModalOpen(true)}
           className="bg-primary-50"
@@ -227,21 +244,14 @@ const EditPerformancePage = () => {
           setIsOpen={setIsEditModalOpen}
           handleSubmit={onSaveEdit}
         />
+        <EditModal
+          isOpen={IsDeleteModalOpen}
+          setIsOpen={setIsDeleteModalOpen}
+          handleSubmit={onDeletePerformance}
+          mainContent={<p>공연 정보를 삭제하시겠습니까?</p>}
+          buttonContent={<p>삭제하기</p>}
+        />
       </div>
-
-      <div className="flex w-auto h-auto max-pad:mx-[16px]">
-        <div
-          className="flex flex-row gap-[8px] items-center cursor-pointer"
-          onClick={() => setIsCancelModalOpen(true)}
-        >
-          <WestIcon />
-          <span className="text-[16px] font-medium">Admin 홈으로</span>
-        </div>
-      </div>
-      <CancelModal
-        isOpen={isCancelModalOpen}
-        setIsOpen={setIsCancelModalOpen}
-      />
     </div>
   );
 };

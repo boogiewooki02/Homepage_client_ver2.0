@@ -72,50 +72,92 @@ const TicektList = () => {
     fetchPerformanceData();
   }, []);
 
+  // 스켈레톤 컴포넌트
+  // 태블릿, 데스크탑용
+  const SkeletonCard = () => {
+    return (
+      <div className="animate-pulse w-[184px] dt:w-[273px]">
+        <div className="rounded-lg bg-gray-30 w-full h-[257px] dt:h-[380px]" />
+        <div className="mt-3 h-5 bg-gray-30 rounded w-3/4" />
+        <div className="mt-2 h-4 bg-gray-30 rounded w-2/3" />
+      </div>
+    );
+  };
+  // 모바일용
+  const SkeletonWide = () => {
+    return (
+      <div className="animate-pulse flex flex-row gap-[14px] pr-[14px] w-[344px] h-[184px] rounded-[10px] overflow-hidden">
+        <div className="relative w-[128px] h-[184px] bg-gray-30 rounded-l-[10px]" />
+        <div className="flex flex-col w-[200px] justify-center gap-[5px] py-4">
+          <div className="h-5 bg-gray-30 rounded w-4/5 mb-2" />
+          <div className="h-4 bg-gray-30 rounded w-3/4" />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="pad:w-[786px] dt:w-[1200px] h-full grid grid-cols-1 pad:grid-cols-4 pad:gap-x-4 dt:gap-x-9 gap-y-12">
+      {isLoading &&
+        Array.from({ length: 8 }).map((_, idx) => (
+          <div key={idx} className="max-[833px]:hidden">
+            <SkeletonCard />
+          </div>
+        ))}
+      {isLoading &&
+        Array.from({ length: 8 }).map((_, idx) => (
+          <div key={idx} className="hidden max-[833px]:block">
+            <SkeletonWide />
+          </div>
+        ))}
+
       {/* 태블릿 & 데스크탑 */}
-      {data.map((performance) => (
-        <div
-          key={performance.ticketInfoId}
-          className="max-[833px]:hidden relative block w-[184px] dt:w-[273px]"
-        >
-          {performance.status === 'OPEN' && (
-            <div className="flex items-center justify-center rounded-[20px] z-30 text-center absolute top-[15px] left-[13px] w-[42px] h-[23px] bg-primary-40 text-gray-0 text-xs font-medium">
-              예매중
-            </div>
-          )}
-          <Link href={`/ticket/${performance.ticketInfoId}`} className="block">
-            <div className="relative w-full h-[257px] dt:h-[380px] rounded-lg overflow-hidden cursor-pointer">
-              <Image
-                src={performance.posterUrl}
-                alt={performance.title}
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-          </Link>
-          <p className="mt-3 text-left font-pretendard text-base font-semibold text-gray-90">
-            {performance.title}
-          </p>
-          <p className="text-left text-sm font-pretendard font-normal text-gray-40">
-            {performance.content}
-          </p>
-        </div>
-      ))}
+      {!isLoading &&
+        data.map((performance) => (
+          <div
+            key={performance.ticketInfoId}
+            className="max-[833px]:hidden relative block w-[184px] dt:w-[273px]"
+          >
+            {performance.status === 'OPEN' && (
+              <div className="flex items-center justify-center rounded-[20px] z-30 text-center absolute top-[15px] left-[13px] w-[42px] h-[23px] bg-primary-40 text-gray-0 text-xs font-medium">
+                예매중
+              </div>
+            )}
+            <Link
+              href={`/ticket/${performance.ticketInfoId}`}
+              className="block"
+            >
+              <div className="relative w-full h-[257px] dt:h-[380px] rounded-lg overflow-hidden cursor-pointer">
+                <Image
+                  src={performance.posterUrl}
+                  alt={performance.title}
+                  layout="fill"
+                  objectFit="cover"
+                />
+              </div>
+            </Link>
+            <p className="mt-3 text-left font-pretendard text-base font-semibold text-gray-90">
+              {performance.title}
+            </p>
+            <p className="text-left text-sm font-pretendard font-normal text-gray-40">
+              {performance.content}
+            </p>
+          </div>
+        ))}
 
       {/* 모바일 */}
-      {data.map((performance) => (
-        <div
-          key={performance.ticketInfoId}
-          className="hidden max-[833px]:block w-full"
-        >
-          <WidePlaylistItem
-            show={performance}
-            id={String(performance.ticketInfoId)}
-          />
-        </div>
-      ))}
+      {!isLoading &&
+        data.map((performance) => (
+          <div
+            key={performance.ticketInfoId}
+            className="hidden max-[833px]:block w-full"
+          >
+            <WidePlaylistItem
+              show={performance}
+              id={String(performance.ticketInfoId)}
+            />
+          </div>
+        ))}
 
       <div ref={observerRef} className="w-full h-10" />
     </div>

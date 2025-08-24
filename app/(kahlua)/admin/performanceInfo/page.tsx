@@ -153,6 +153,8 @@ const PerformancePage = () => {
           isOpen={isEditModalOpen}
           setIsOpen={setIsEditModalOpen}
           handleSubmit={onSaveEdit}
+          mainContent={<p>공연 정보를 생성하시겠습니까?</p>}
+          buttonContent={<p>생성하기</p>}
         />
       </div>
 

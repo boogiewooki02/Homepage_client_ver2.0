@@ -1,16 +1,17 @@
 import { authInstance, axiosInstance } from '@/api/auth/axios';
+import { fetchLatestPerformance } from '@/api/performance/performance';
 import LocationModal from '@/components/popups/ticket/LocaltionModal';
 import DropdownMenu from '@/components/templates/ticket/DropdownMenu';
 import TicketOption from '@/components/templates/ticket/TicketOption';
 import RecommendedList from '@/components/ticket/RecommendedList';
 import Bar from '@/components/ui/Bar';
 import defaultPoster from '@/public/image/ticket/DefaultPoster.svg';
+import { formatDateTime } from '@/utils/dateUtils';
 import SettingsIcon from '@mui/icons-material/Settings';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { formatDateTime } from '@/utils/dateUtils';
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
 declare global {
@@ -20,10 +21,18 @@ declare global {
 }
 
 interface TicketDetailProps {
-  id: string;
+  id?: string;
 }
 
-const TicketDetail = ({ id }: TicketDetailProps) => {
+const Skeleton = ({
+  className = '',
+  rounded = 'rounded-md',
+}: {
+  className?: string;
+  rounded?: string;
+}) => <div className={`animate-pulse ${rounded} bg-gray-30 ${className}`} />;
+
+const TicketDetail = ({ id: prodId }: TicketDetailProps) => {
   const [isDays, setIsDays] = useState(false);
   const [ticketInfo, setTicketInfo] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,17 +46,36 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
   const [statusText, setStatusText] = useState<string>('예매 마감');
   const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [performanceId, setPerformanceId] = useState<number | null>(null);
 
-  const getTicketDetail = async (id: string) => {
+  const effectiveId = prodId ?? performanceId;
+
+  const fetchTickets = async (prodId: number) => {
+    try {
+      console.log('Fetching tickets for prodId:', prodId);
+      const response = await axiosInstance.get(`/performances/${prodId}`);
+      if (response.data.isSuccess) {
+        return response.data.result.performanceResponse;
+      }
+    } catch (error) {
+      console.error('Error fetching performances:', error);
+    }
+  };
+
+  const getTicketDetail = async () => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance.get(`/performances/${id}`);
-      if (response.data.isSuccess) {
-        const rawData = response.data.result.performanceResponse;
+
+      const response = prodId
+        ? await fetchTickets(Number(prodId))
+        : await fetchLatestPerformance();
+      if (response) {
+        const rawData = response;
         const bookingStart = dayjs(rawData.booking_start_date);
         const bookingEnd = dayjs(rawData.booking_end_date);
         const now = dayjs();
         const daysBeforeStart = Math.ceil(bookingStart.diff(now, 'hours') / 24);
+        setPerformanceId(rawData.id);
 
         let isAvailable = false;
         let status = '예매 마감';
@@ -105,10 +133,8 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
   }, []);
 
   useEffect(() => {
-    if (id) {
-      getTicketDetail(id);
-    }
-  }, [id]);
+    getTicketDetail();
+  }, [prodId]);
 
   useEffect(() => {
     if (loc) {
@@ -221,8 +247,82 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
 
   if (isLoading || !ticketInfo) {
     return (
-      <div className="flex justify-center items-center w-full h-screen">
-        <p className="text-gray-500 text-lg font-medium" />
+      <div className="flex flex-col pad:flex-row pad:mt-8 pad:h-[328px] w-full pad:w-full dt:h-[376px] dt:justify-center mx-auto">
+        {/* === 포스터(좌측) 영역 === */}
+        <Skeleton
+          rounded="mb:rounded-xl"
+          className="z-[-1] sticky top-0 w-full h-[300px] mb:w-[300px] pad:w-[246px] pad:h-[328px] dt:w-[282px] dt:h-[376px] mx-auto pad:mx-0"
+        />
+
+        {/* === 상세 정보(우측) 영역 === */}
+        <div className="z-10 bg-gray-0 flex flex-col w-full h-[355px] mb:w-[350px] pad:w-full dt:w-[338px] px-4 pt-6 pad:pt-0 pad:mt-2 pad:ml-8 mx-auto dt:mr-0 pad:px-0">
+          {/* 상태 뱃지 */}
+          <Skeleton className="inline-flex h-8 w-[88px] rounded-full" />
+
+          {/* 제목 & 아이콘 영역 */}
+          <div className="mt-5 pad:mt-4 gap-1 pad:gap-4 flex flex-row items-center">
+            <Skeleton className="min-w-[190px] pad:w-[217px] pad:max-w-[217px] h-9" />
+            <div className="flex flex-row gap-2 items-center">
+              <Skeleton
+                rounded="rounded-full"
+                className="h-5 w-5 pad:h-6 pad:w-6"
+              />
+              <Skeleton rounded="rounded-full" className="h-7 w-7" />
+            </div>
+          </div>
+
+          {/* 장소 */}
+          <div className="flex flex-row mt-4 pad:mt-6 text-[16px] pad:text-[18px] leading-9 font-normal gap-6 h-7 items-center">
+            <Skeleton className="w-7 pad:w-8 h-6 rounded" />
+            <Skeleton className="w-40 h-6 rounded" />
+          </div>
+
+          {/* 일시 */}
+          <div className="flex flex-row mt-4 pad:mt-6 text-[16px] pad:text-[18px] leading-9 font-normal gap-6 h-7 items-center">
+            <Skeleton className="w-7 pad:w-8 h-6 rounded" />
+            <Skeleton className="w-56 h-6 rounded" />
+          </div>
+
+          {/* 가격 */}
+          <div className="flex flex-row mt-4 pad:mt-6 text-[16px] pad:text-[18px] leading-9 font-normal">
+            <Skeleton className="w-7 pad:w-8 h-7 rounded" />
+            <div className="ml-6 flex flex-col w-full">
+              {/* 일반 티켓 라인 */}
+              <div className="flex flex-row items-start h-7 mb-9 pad:mb-12 gap-4">
+                <Skeleton className="w-[72px] pad:w-[84px] h-6 rounded" />
+                <Skeleton className="w-[72px] pad:w-[84px] h-6 rounded" />
+                <Skeleton className="w-28 h-6 rounded" />
+              </div>
+            </div>
+          </div>
+
+          {/* 버튼(예매/영상) */}
+          <Skeleton className="max-pad:mx-auto mt-[21px] w-full dt:w-[316px] h-[52px] dt:h-[60px] rounded-xl" />
+        </div>
+
+        {/* === 모바일/패드 구분선 === */}
+        <div className="z-20 bg-gray-0 h-[40px] w-[100vw] flex pad:hidden items-center" />
+        <Skeleton className="flex z-10 flex-shrink-0 pad:hidden w-full mb:w-[328px] pad:w-full h-2 mx-auto" />
+        <div className="z-20 bg-gray-0 h-[24px] w-[100vw] flex pad:hidden items-center" />
+
+        {/* === 데스크탑 지도/주소 영역 === */}
+        <div className="hidden ph:flex z-10 bg-gray-0 pad:hidden dt:flex flex-col w-[100%] px-4 mb:px-0 mb:w-[328px] pad:ml-[164px] h-[282px] pad:mt-[78px] pad:h-full mx-auto">
+          {/* 지도 타이틀 */}
+          <Skeleton className="h-[27px] w-24 mb-2 rounded" />
+
+          {/* 주소 & 복사버튼 */}
+          <div className="flex flex-row gap-3 mt-1 items-center">
+            <Skeleton className="w-[194px] pad:w-[294px] h-6 rounded" />
+            <div className="flex flex-row items-center gap-1">
+              <Skeleton className="w-5 h-5 rounded" />
+              <Skeleton className="w-12 h-5 rounded" />
+            </div>
+          </div>
+
+          {/* 지도 스켈레톤 */}
+          <Skeleton className="top-[11px] w-full h-[calc(100vw*192/328)] max-h-[192px] pad:max-h-[225px] mb:w-[328px] pad:w-[376px] mb:h-[192px] pad:h-[225px] rounded-xl mt-2" />
+          <div className="min-h-[164px]" />
+        </div>
       </div>
     );
   }
@@ -260,11 +360,11 @@ const TicketDetail = ({ id }: TicketDetailProps) => {
                   alt="share"
                   width={24}
                   height={24}
-                  className="cursor-pointer h-5 w-5 pad:h-6 pad:w-6"
+                  className="cursor-poFer h-5 w-5 pad:h-6 pad:w-6"
                 />
               </div>
               {isAdmin && (
-                <Link href={`/admin/performance/${id}`}>
+                <Link href={`/admin/performance/${effectiveId}`}>
                   <SettingsIcon
                     className="cursor-pointer text-gray-60"
                     sx={{ fontSize: '28px' }}

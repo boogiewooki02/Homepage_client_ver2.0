@@ -128,6 +128,8 @@ const TimeTable = ({
         actualEndTime
       );
       setSelectedTimes(newSelectedTimes);
+      onChange('startTime', actualStartTime);
+      onChange('endTime', actualEndTime);
       setCountClick(countClick + 1); // 2
     }
   };
