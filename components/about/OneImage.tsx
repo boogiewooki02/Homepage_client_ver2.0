@@ -29,6 +29,7 @@ const OneImage: React.FC<OneImageProps> = ({
         fill
         sizes="384px"
         priority
+        unoptimized
         onLoad={() => setLoading(false)}
         style={{ display: loading ? 'none' : 'block', objectFit: 'cover' }}
       />
