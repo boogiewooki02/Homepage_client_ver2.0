@@ -1,13 +1,15 @@
 'use client';
+
 import Image from 'next/image';
-import { formatDate } from '@/utils/dateUtils';
+import { useRouter } from 'next/navigation';
+
 import {
   AnnouncementProps,
   CommunityProps,
 } from '@/components/announcement/list/dto';
-import likeIcon from '@/public/image/grayHeart.svg';
 import chatIcon from '@/public/image/grayChat.svg';
-import { useRouter } from 'next/navigation';
+import likeIcon from '@/public/image/grayHeart.svg';
+import { formatDate } from '@/utils/dateUtils';
 
 export const DetailList = ({
   data,

@@ -1,10 +1,11 @@
-import music from '@/public/image/about/music.svg';
-import ensemble1 from '@/public/image/about/ensemble1.avif';
-import ensemble2 from '@/public/image/about/ensemble2.avif';
-import ensemble3 from '@/public/image/about/ensemble3.avif';
 import Card from './Card';
 import OneImage from './OneImage';
 import TwoImages from './TwoImages';
+
+import ensemble1 from '@/public/image/about/ensemble1.avif';
+import ensemble2 from '@/public/image/about/ensemble2.avif';
+import ensemble3 from '@/public/image/about/ensemble3.avif';
+import music from '@/public/image/about/music.svg';
 
 const Ensemble = () => {
   const dtImages = [

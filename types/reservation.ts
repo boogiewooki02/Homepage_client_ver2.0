@@ -4,7 +4,7 @@ export type ReservationRequest = {
   clubroomUsername: string;
   reservationDate: string; // '2024-01-01'
   startTime: string; // '11:00:00'
-  endTime: string; //'12:00:00'
+  endTime: string; // '12:00:00'
 };
 
 // 예약 정보 응답 타입

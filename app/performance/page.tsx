@@ -1,6 +1,8 @@
 'use client';
-import MainContainer from '@/components/performance/MainContainer';
+
 import { RecoilRoot } from 'recoil';
+
+import MainContainer from '@/components/performance/MainContainer';
 
 const page = () => {
   return (

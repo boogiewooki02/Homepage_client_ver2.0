@@ -1,17 +1,17 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Toggle } from '@/components/announcement/list/Toggle';
+
+import { fetchPostList, searchPosts } from '@/api/kahlua/post';
+import { DetailList } from '@/components/announcement/list/DetailList';
 import {
   AnnouncementProps,
   CommunityProps,
   toggleList,
 } from '@/components/announcement/list/dto';
 import Pagination from '@/components/announcement/list/Pagination';
-import { DetailList } from '@/components/announcement/list/DetailList';
-
+import { Toggle } from '@/components/announcement/list/Toggle';
 import { useDebounce } from '@/hooks/useDebounce';
-import { fetchPostList, searchPosts } from '@/api/kahlua/post';
 import { normalizePosts } from '@/utils/noticeUtils';
 
 const List = () => {

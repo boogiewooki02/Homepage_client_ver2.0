@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import likeIcon from '@/public/image/mypage/grayHeart.svg';
+import { fetchCommentCount, fetchMyPosts } from '@/api/kahlua/post';
 import chatIcon from '@/public/image/mypage/grayChat.svg';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-import { fetchMyPosts, fetchCommentCount } from '@/api/kahlua/post';
+import likeIcon from '@/public/image/mypage/grayHeart.svg';
 import { MyPost } from '@/types/post';
 
 // 내가 쓴 글 리스트

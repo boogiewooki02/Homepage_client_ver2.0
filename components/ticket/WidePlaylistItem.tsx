@@ -22,7 +22,6 @@ const WidePlaylistItem = ({ show, id }: { show: Show; id: string }) => {
           )}
 
           {/* 이미지 */}
-
           <Image
             src={show.posterUrl}
             alt={show.title}

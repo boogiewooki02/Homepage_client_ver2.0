@@ -5,7 +5,7 @@ interface TitleInputProps {
   setTitle: (value: string) => void;
 }
 
-const TitleInput: React.FC<TitleInputProps> = ({ title, setTitle }) => (
+const TitleInput = ({ title, setTitle }: TitleInputProps) => (
   <input
     type="text"
     placeholder="제목"

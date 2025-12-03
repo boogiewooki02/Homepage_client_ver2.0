@@ -1,4 +1,4 @@
-interface ScheduleProps {
+interface ScheduleCardProps {
   title: string;
   period: string;
   description: string;
@@ -6,13 +6,13 @@ interface ScheduleProps {
   desClassName: string;
 }
 
-const ScheduleCard: React.FC<ScheduleProps> = ({
+const ScheduleCard = ({
   title,
   period,
   description,
   titleClassName,
   desClassName,
-}) => {
+}: ScheduleCardProps) => {
   return (
     <div
       className={`flex flex-col bg-gray-80/50 w-[282px] h-[196px] p-[24px] rounded-[16px] justify-center items-start text-left ${titleClassName}`}

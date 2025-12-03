@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
+
 import { isLoggedInState } from '@/atoms/authAtom';
 
 // JWT Payload 타입 정의
@@ -12,26 +13,26 @@ interface JwtPayload {
 }
 
 // 토큰 유효성 확인 함수
-function checkTokenValidity(): boolean {
-  const token = Cookies.get('access_token');
+// function checkTokenValidity(): boolean {
+//   const token = Cookies.get('access_token');
 
-  if (token) {
-    try {
-      const decoded = jwtDecode<JwtPayload>(token);
-      const currentTime = Date.now() / 1000;
+//   if (token) {
+//     try {
+//       const decoded = jwtDecode<JwtPayload>(token);
+//       const currentTime = Date.now() / 1000;
 
-      // 토큰 만료 확인
-      if (decoded.exp && decoded.exp > currentTime) {
-        return true;
-      }
-    } catch (error) {
-      console.error('Invalid token:', error);
-    }
-  }
+//       // 토큰 만료 확인
+//       if (decoded.exp && decoded.exp > currentTime) {
+//         return true;
+//       }
+//     } catch (error) {
+//       console.error('Invalid token:', error);
+//     }
+//   }
 
-  // 토큰이 없거나 만료되었거나 유효하지 않은 경우
-  return false;
-}
+//   // 토큰이 없거나 만료되었거나 유효하지 않은 경우
+//   return false;
+// }
 
 // 상태 관리 및 자동 로그아웃 처리
 export function useTokenValidator() {
@@ -57,11 +58,10 @@ export function useTokenValidator() {
 
           // 컴포넌트 언마운트 시 타이머 해제
           return () => clearTimeout(timeoutId);
-        } else {
-          // 토큰이 만료된 경우 즉시 로그아웃 처리
-          Cookies.remove('access_token');
-          setLoggedIn(false);
         }
+        // 토큰이 만료된 경우 즉시 로그아웃 처리
+        Cookies.remove('access_token');
+        setLoggedIn(false);
       } catch (error) {
         console.error('Invalid token:', error);
         Cookies.remove('access_token');

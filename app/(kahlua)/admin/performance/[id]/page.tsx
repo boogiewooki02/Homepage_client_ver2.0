@@ -1,14 +1,11 @@
 'use client';
 
-import { authInstance } from '@/api/auth/axios';
-import EditModal from '@/components/admin/EditModal';
-import InfoList from '@/components/templates/admin/Info';
-import AdminButton from '@/components/ui/admin/Button';
-import ImageBox from '@/components/ui/admin/ImageBox';
-import TicketInfoList from '@/components/ui/admin/TicketInfo';
-import Banner from '@/components/ui/Banner';
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
+
 import {
   defaultData,
   defaultFreshmanTicketData,
@@ -19,9 +16,14 @@ import {
   performanceImage,
   performanceInfoList,
 } from '../../performanceInfo/performanceData';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+
+import { authInstance } from '@/api/auth/axios';
+import EditModal from '@/components/admin/EditModal';
+import InfoList from '@/components/templates/admin/Info';
+import AdminButton from '@/components/ui/admin/Button';
+import ImageBox from '@/components/ui/admin/ImageBox';
+import TicketInfoList from '@/components/ui/admin/TicketInfo';
+import Banner from '@/components/ui/Banner';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -166,10 +168,6 @@ const EditPerformancePage = () => {
       alert('공연 정보 수정에 실패했습니다.');
     }
   }, [data, image, freshmanTicketData, generalTicketData, params.id, router]);
-
-  const onCancelEdit = useCallback(() => {
-    router.push(`/ticket/${params.id}`);
-  }, [router, params.id]);
 
   const onDeletePerformance = useCallback(async () => {
     try {

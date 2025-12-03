@@ -1,5 +1,5 @@
-import React from 'react';
 import Image from 'next/image';
+import React from 'react';
 
 interface ReservedErrorModalProps {
   isOpen: boolean;
@@ -7,11 +7,11 @@ interface ReservedErrorModalProps {
   onAlreadyReserved: () => void;
 }
 
-const ReservedErrorModal: React.FC<ReservedErrorModalProps> = ({
+const ReservedErrorModal = ({
   isOpen,
   onClose,
   onAlreadyReserved,
-}) => {
+}: ReservedErrorModalProps) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (

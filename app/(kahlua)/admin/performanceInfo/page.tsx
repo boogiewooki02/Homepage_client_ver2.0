@@ -1,16 +1,9 @@
 'use client';
 
-import { authInstance } from '@/api/auth/axios';
-import CancelModal from '@/components/admin/CancelModal';
-import EditModal from '@/components/admin/EditModal';
-import InfoList from '@/components/templates/admin/Info';
-import AdminButton from '@/components/ui/admin/Button';
-import ImageBox from '@/components/ui/admin/ImageBox';
-import TicketInfoList from '@/components/ui/admin/TicketInfo';
-import Banner from '@/components/ui/Banner';
 import WestIcon from '@mui/icons-material/West';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+
 import {
   defaultData,
   defaultFreshmanTicketData,
@@ -21,6 +14,15 @@ import {
   performanceImage,
   performanceInfoList,
 } from './performanceData';
+
+import { authInstance } from '@/api/auth/axios';
+import CancelModal from '@/components/admin/CancelModal';
+import EditModal from '@/components/admin/EditModal';
+import InfoList from '@/components/templates/admin/Info';
+import AdminButton from '@/components/ui/admin/Button';
+import ImageBox from '@/components/ui/admin/ImageBox';
+import TicketInfoList from '@/components/ui/admin/TicketInfo';
+import Banner from '@/components/ui/Banner';
 
 const PerformancePage = () => {
   const [data, setData] = useState<{ [key: string]: any }>(defaultData);

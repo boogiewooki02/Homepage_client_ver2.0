@@ -1,13 +1,21 @@
-import React from 'react';
 import Image from 'next/image';
+import { Dispatch, MouseEvent, SetStateAction } from 'react';
 
-const TicketDetails: React.FC<{
+interface TicketDetailsProps {
   ticketType: string;
-  onClick: (event: React.MouseEvent) => void;
+  onClick: (event: MouseEvent) => void;
   member: number;
   maxTicket: number;
-  setMember: React.Dispatch<React.SetStateAction<number>>;
-}> = ({ ticketType, onClick, member, setMember, maxTicket }) => {
+  setMember: Dispatch<SetStateAction<number>>;
+}
+
+const TicketDetails = ({
+  ticketType,
+  onClick,
+  member,
+  setMember,
+  maxTicket,
+}: TicketDetailsProps) => {
   const max = ticketType === '신입생 티켓' ? 1 : maxTicket;
   const min = 1;
   const ticket = ticketType === '신입생 티켓' ? 'freshman' : 'general';

@@ -1,19 +1,22 @@
-import InfoList from '@/components/templates/admin/Info';
+import { ReactNode } from 'react';
+
 import { InputFieldType } from './type';
+
+import InfoList from '@/components/templates/admin/Info';
 
 interface TicketInfoProps {
   data: any;
   fieldList: InputFieldType[];
   onChange: (newValue: number, title: string) => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const TicketInfoList: React.FC<TicketInfoProps> = ({
+const TicketInfoList = ({
   data,
   fieldList,
   onChange,
   children,
-}) => {
+}: TicketInfoProps) => {
   return (
     <div className="flex flex-row w-full h-auto gap-[8px]">
       <p className="flex w-[120px] pad:w-[160px] h-[48px] items-center">

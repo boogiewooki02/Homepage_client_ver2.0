@@ -1,6 +1,6 @@
-import * as React from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import * as React from 'react';
 
 const selectBoxStyles = {
   padding: 0,
@@ -18,13 +18,13 @@ interface SelectBoxProps {
   children: string;
 }
 
-const LoginSelectBox: React.FC<SelectBoxProps> = ({
+const LoginSelectBox = ({
   data,
   setData,
   id,
   itemList,
   children,
-}) => (
+}: SelectBoxProps) => (
   <div className="flex flex-row w-[200px] h-[48px] px-[20px] py-[10px] justify-center items-center gap-[24px] rounded-[12px] bg-black">
     <p className="text-primary-50">{children}</p>
     <Select

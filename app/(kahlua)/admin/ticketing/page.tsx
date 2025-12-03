@@ -1,15 +1,17 @@
 'use client';
-import { authInstance } from '@/api/auth/axios';
-import { totalTicket } from '@/atoms';
-import TicketInfoSection from '@/components/admin/ticketing/TicketInfoSection';
-import { information } from '@/components/data/Information';
+
 import PublishIcon from '@mui/icons-material/Publish';
 import WestIcon from '@mui/icons-material/West';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-const page = () => {
+import { authInstance } from '@/api/auth/axios';
+import { totalTicket } from '@/atoms';
+import TicketInfoSection from '@/components/admin/ticketing/TicketInfoSection';
+import { information } from '@/components/data/Information';
+
+const AdminTicketingPage = () => {
   const typeArr = ['All', '신입생', '일반'];
   const [type, setType] = useState('All');
   const total = useRecoilValue(totalTicket);
@@ -19,15 +21,13 @@ const page = () => {
       const response = await authInstance.get('/admin/tickets/download', {
         responseType: 'blob',
       });
-      console.log(response.data);
 
       const blob = response.data;
-
       const fileObjectUrl = window.URL.createObjectURL(blob);
+
       const link = document.createElement('a');
       link.href = fileObjectUrl;
       link.style.display = 'none';
-
       link.download = 'ticket_list.xlsx';
 
       document.body.appendChild(link);
@@ -91,7 +91,7 @@ const page = () => {
       {/* admin 홈으로 Button */}
       <div className="flex h-auto mx-auto w-full px-4 pad:px-8 dt:px-[120px]">
         <Link
-          href={'/admin'}
+          href="/admin"
           key="admin"
           className="flex flex-row gap-2 items-center my-6"
         >
@@ -103,4 +103,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default AdminTicketingPage;

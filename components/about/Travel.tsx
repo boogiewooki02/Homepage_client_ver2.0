@@ -1,10 +1,11 @@
+import Card from './Card';
+import OneImage from './OneImage';
+import TwoImages from './TwoImages';
+
 import beer from '@/public/image/about/beer.svg';
 import travel1 from '@/public/image/about/travel1.avif';
 import travel2 from '@/public/image/about/travel2.avif';
 import travel3 from '@/public/image/about/travel3.avif';
-import Card from './Card';
-import OneImage from './OneImage';
-import TwoImages from './TwoImages';
 
 const Travel = () => {
   const dtImages = [

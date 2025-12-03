@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-
 import Cookie from 'js-cookie';
+import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
+
 import { isLoggedInState } from '@/atoms/authAtom';
 
 export const useAuthCheck = () => {

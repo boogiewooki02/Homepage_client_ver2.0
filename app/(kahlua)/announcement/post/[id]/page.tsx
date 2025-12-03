@@ -1,20 +1,22 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import CommentList from '@/components/notice/CommentList';
+
 import Image from 'next/image';
-import arrow from '@/public/image/notice/Left.svg';
-import DeletePopup from '@/components/notice/DeletePostPopup';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
+import { authInstance } from '@/api/auth/axios';
 import CommentInput from '@/components/notice/CommentInput';
+import CommentList from '@/components/notice/CommentList';
+import DeletePopup from '@/components/notice/DeletePostPopup';
+import { Comment as CommentType } from '@/components/notice/dto';
 import Post from '@/components/notice/Post';
+import arrow from '@/public/image/notice/Left.svg';
 import {
   addCommentOrReply,
-  handleDeleteCommentOrReply,
   handleDeleteCancel,
+  handleDeleteCommentOrReply,
   handleDeleteConfirm,
 } from '@/utils/noticeUtils';
-import { authInstance } from '@/api/auth/axios';
-import { Comment as CommentType } from '@/components/notice/dto';
 
 interface PostData {
   title: string;
@@ -47,7 +49,7 @@ const Page = () => {
   const [validCommentCount, setValidCommentCount] = useState<number>(0);
   const [commentText, setCommentText] = useState('');
   const [showDeletePopup, setShowDeletePopup] = useState(false);
-  const [replyText, setReplyText] = useState('');
+  const [, setReplyText] = useState('');
   const [user, setUser] = useState<string>('');
 
   const fetchComments = async () => {

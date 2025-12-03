@@ -1,4 +1,5 @@
 'use client';
+
 import TicektList from './TicketList';
 
 const MainContainer = () => {

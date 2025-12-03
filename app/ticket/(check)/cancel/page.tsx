@@ -1,10 +1,12 @@
 'use client';
-import CancelRead from '@/components/templates/ticket/CancelRead';
-import TicketStatus from '@/components/templates/ticket/TicketStatus';
-import { axiosInstance } from '@/api/auth/axios';
+
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
+
+import { axiosInstance } from '@/api/auth/axios';
+import CancelRead from '@/components/templates/ticket/CancelRead';
+import TicketStatus from '@/components/templates/ticket/TicketStatus';
 
 const ReservationDetails = () => {
   const params = useSearchParams();
@@ -59,7 +61,7 @@ const ReservationDetails = () => {
       className={`w-full pad:w-[796px] dt:w-[996px] flex flex-col relative mx-auto top-20 ${dynamicHeightClass}`}
     >
       <div className="relative w-full h-[200px] pad:rounded-t-xl overflow-hidden">
-        <div className="absolute inset-0 bg-ticket-complete bg-center bg-cover filter blur-[6px] z-[-1]"></div>
+        <div className="absolute inset-0 bg-ticket-complete bg-center bg-cover filter blur-[6px] z-[-1]" />
         <div className="relative flex h-full items-center justify-center pad:bg-gray-90 bg-opacity-60 rounded-t-xl">
           <p className="h-12 text-gray-0 text-center text-2xl pad:text-[32px]  font-semibold leading-[48px]">
             예매가 취소되었습니다.

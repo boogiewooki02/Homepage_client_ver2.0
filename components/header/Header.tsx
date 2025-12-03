@@ -1,26 +1,25 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
-import Cookie from 'js-cookie';
-import { useRecoilState } from 'recoil';
+import { ThemeProvider, createTheme } from '@mui/material';
 import Drawer from '@mui/material/Drawer';
-import { createTheme, ThemeProvider } from '@mui/material';
-
-import logo_black from '@/public/image/KAHLUA-black.svg';
-import logo_white from '@/public/image/KAHLUA.svg';
-import table_menu from '@/public/image/tabler_menu-2.svg';
-import table_menu_white from '@/public/image/tabler_menu-2-white.svg';
-
-import { authInstance } from '@/api/auth/axios';
-import { isLoggedInState } from '@/atoms/authAtom';
-import { useAuthCheck } from '@/hooks/useAuthCheck';
+import Cookie from 'js-cookie';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 import DesktopNavBar from './DesktopNavBar';
 import KahluaDropdown from './KahluaDropdown';
 import MobileDrawer from './MobileDrawer';
+
+import { authInstance } from '@/api/auth/axios';
+import { isLoggedInState } from '@/atoms/authAtom';
+import { useAuthCheck } from '@/hooks/useAuthCheck';
+import logo_black from '@/public/image/KAHLUA-black.svg';
+import logo_white from '@/public/image/KAHLUA.svg';
+import table_menu_white from '@/public/image/tabler_menu-2-white.svg';
+import table_menu from '@/public/image/tabler_menu-2.svg';
 
 // MUI 테마 커스텀
 const theme = createTheme({

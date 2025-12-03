@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+
 import { Input } from '@/components/ui/InputBox';
 import {
   filterDepartmentValue,
-  filterNameValue,
-  filterStudentIdValue,
-  filterPhoneNumber,
   filterEmailValue,
+  filterNameValue,
+  filterPhoneNumber,
+  filterStudentIdValue,
 } from '@/utils/filterUtils';
 
 interface FreshmanInfoProps {
@@ -25,10 +26,7 @@ interface FreshmanInfoProps {
   };
 }
 
-const FreshmanInfo: React.FC<FreshmanInfoProps> = ({
-  onInfoChange,
-  userInfo,
-}) => {
+const FreshmanInfo = ({ onInfoChange, userInfo }: FreshmanInfoProps) => {
   const [phoneValue, setPhoneValue] = useState(userInfo.phone_num || '');
   const [nameValue, setNameValue] = useState(userInfo.name || '');
   const [departmentValue, setDepartmentValue] = useState(

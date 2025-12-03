@@ -2,11 +2,12 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { axiosInstance } from '@/api/auth/axios';
 import { useSetRecoilState } from 'recoil';
+
+import { axiosInstance } from '@/api/auth/axios';
 import { isLoggedInState } from '@/atoms/authAtom';
 
-const page = () => {
+const GoogleLoginPage = () => {
   const router = useRouter();
   const setIsLoggedIn = useSetRecoilState(isLoggedInState);
 
@@ -55,4 +56,4 @@ const page = () => {
   return <div className="h-screen">Redirecting...</div>;
 };
 
-export default page;
+export default GoogleLoginPage;

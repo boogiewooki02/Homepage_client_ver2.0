@@ -1,6 +1,7 @@
 import { TextField } from '@mui/material';
-import { TextType } from './type';
 import React from 'react';
+
+import { TextType } from './type';
 
 export default function Text({
   field,

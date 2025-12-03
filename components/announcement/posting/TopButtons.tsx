@@ -1,6 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+
 import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+
 import CancelPopup from '@/components/announcement/posting/CancelPopup';
 
 interface TopButtonsProps {
@@ -8,7 +10,7 @@ interface TopButtonsProps {
   onPublish: () => void;
 }
 
-const TopButtons: React.FC<TopButtonsProps> = ({ isPostActive, onPublish }) => {
+const TopButtons = ({ isPostActive, onPublish }: TopButtonsProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 

@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import React from 'react';
 import Image from 'next/image';
+import React, { useEffect, useRef } from 'react';
 
 interface LocationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  address: string; // ✅ 부모에서 전달받은 주소
-  mapLink: string; // ✅ 부모에서 전달받은 카카오맵 링크
+  address: string;
+  mapLink: string;
 }
 
 declare global {
@@ -17,15 +16,15 @@ declare global {
 
 const apikey = process.env.NEXT_PUBLIC_KAKAOMAP_KEY;
 
-const LocationModal: React.FC<LocationModalProps> = ({
+const LocationModal = ({
   isOpen,
   onClose,
   address,
   mapLink,
-}) => {
+}: LocationModalProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const [latitude, setLatitude] = useState<number | null>(null);
-  const [longitude, setLongitude] = useState<number | null>(null);
+  const latitudeRef = useRef<number | null>(null);
+  const longitudeRef = useRef<number | null>(null);
 
   const handleOverlayClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -58,10 +57,8 @@ const LocationModal: React.FC<LocationModalProps> = ({
             const lat = parseFloat(result[0].y);
             const lng = parseFloat(result[0].x);
 
-            setLatitude(lat);
-            setLongitude(lng);
-
-            console.log(`📌 변환된 좌표: ${lat}, ${lng}`);
+            latitudeRef.current = lat;
+            longitudeRef.current = lng;
 
             const container = mapContainerRef.current;
             if (!container) return;
@@ -75,7 +72,7 @@ const LocationModal: React.FC<LocationModalProps> = ({
 
             const marker = new window.kakao.maps.Marker({
               position: new window.kakao.maps.LatLng(lat, lng),
-              map: map,
+              map,
               draggable: true,
             });
 

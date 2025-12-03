@@ -1,6 +1,8 @@
-import { ReservationRequest } from '@/types/reservation';
 import { useState } from 'react';
 import Calendar from 'react-calendar';
+
+import { ReservationRequest } from '@/types/reservation';
+
 import 'react-calendar/dist/Calendar.css'; // 기본 스타일
 import Modal from '../ui/Modal';
 import './CalendarUI.css';

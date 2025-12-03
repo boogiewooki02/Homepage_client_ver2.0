@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Comment from './Comment';
 import { Comment as CommentType } from './dto';
 
@@ -12,13 +13,13 @@ interface CommentListProps {
   onDeleteReply: (commentId: string, replyId: string) => void;
 }
 
-const CommentList: React.FC<CommentListProps> = ({
+const CommentList = ({
   comments,
   onAddReply,
   onDeleteComment,
   onDeleteReply,
   currentUser,
-}) => {
+}: CommentListProps) => {
   const structuredComments = buildCommentTree(comments);
 
   return (

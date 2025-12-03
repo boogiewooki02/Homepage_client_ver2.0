@@ -1,15 +1,16 @@
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ApplicantStatistics from './applicant/ApplicantStatistics';
-import TicketStatistics from './ticketing/TicketStatistics';
-import MessageStatistics from './message/MessageStatistics';
 import Link from 'next/link';
 
-interface urlProps {
+import ApplicantStatistics from './applicant/ApplicantStatistics';
+import MessageStatistics from './message/MessageStatistics';
+import TicketStatistics from './ticketing/TicketStatistics';
+
+interface AdminPageButtonProps {
   name: string;
   url: string;
 }
 
-const AdminPageButton: React.FC<urlProps> = ({ name, url }) => {
+const AdminPageButton = ({ name, url }: AdminPageButtonProps) => {
   return (
     <div className="w-full">
       <Link href={url}>

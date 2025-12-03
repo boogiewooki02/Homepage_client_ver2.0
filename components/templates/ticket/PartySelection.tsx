@@ -1,4 +1,5 @@
 'use client';
+
 import { SelectBox } from '@/components/ui/selectBox';
 
 export interface State {
@@ -43,7 +44,7 @@ interface PartySelectionProps {
   state: State;
 }
 
-const PartySelection: React.FC<PartySelectionProps> = ({ dispatch, state }) => {
+const PartySelection = ({ dispatch, state }: PartySelectionProps) => {
   return (
     <div className="flex flex-col mt-10 mb-10 w-full px-4 pad:px-12">
       <div className="flex h-[30px]">

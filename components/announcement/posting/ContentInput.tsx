@@ -5,7 +5,7 @@ interface ContentInputProps {
   setContent: (value: string) => void;
 }
 
-const ContentInput: React.FC<ContentInputProps> = ({ content, setContent }) => (
+const ContentInput = ({ content, setContent }: ContentInputProps) => (
   <textarea
     placeholder="내용을 입력하세요"
     value={content}

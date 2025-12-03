@@ -1,81 +1,67 @@
-import React, { useState, useEffect } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, ChartOptions } from 'chart.js';
+import { ArcElement, Chart as ChartJS, ChartOptions, Tooltip } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useEffect, useState } from 'react';
+import { Pie } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Tooltip, ChartDataLabels);
 
+type PieChartData = {
+  labels: string[];
+  datasets: Array<{
+    data: number[];
+    backgroundColor: string[];
+  }>;
+};
+
 interface PieChartProps {
-  chartData: any;
+  chartData: PieChartData;
 }
 
-const PieChart: React.FC<PieChartProps> = ({ chartData }) => {
+const PieChart = ({ chartData }: PieChartProps) => {
   const [legendPosition, setLegendPosition] = useState<'right' | 'bottom'>(
     'right'
   );
 
   useEffect(() => {
-    // 화면 크기에 따라 legend 위치 변경
     const handleResize = () => {
-      if (window.innerWidth >= 834) {
-        setLegendPosition('right');
-      } else {
-        setLegendPosition('bottom');
-      }
+      setLegendPosition(window.innerWidth >= 834 ? 'right' : 'bottom');
     };
-
-    // 초기 설정
     handleResize();
-
-    // 리사이즈 이벤트 리스너 등록
     window.addEventListener('resize', handleResize);
-
-    // 클린업
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const options: ChartOptions<'pie'> = {
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { display: false },
       datalabels: {
         color: '#fff',
-        font: {
-          size: 14,
-        },
+        font: { size: 14 },
         formatter: (value, context) => {
-          if (value === 0) return '';
-          const dataset = context.dataset;
-          const percent =
-            ((value / (dataset.data as number[]).reduce((a, b) => a + b, 0)) *
-              100) |
-            0;
-          return `${percent}%`;
+          if (!value) return '';
+          const dataset = context.dataset.data as number[];
+          const total = dataset.reduce((sum, v) => sum + v, 0);
+          return `${Math.floor((value / total) * 100)}%`;
         },
       },
     },
     responsive: true,
     maintainAspectRatio: false,
     layout: {
-      padding: {
-        right: legendPosition === 'right' ? 24 : 0,
-      },
+      padding: { right: legendPosition === 'right' ? 24 : 0 },
     },
   };
 
-  const customLegend = chartData?.labels.map((label: string, index: number) => (
-    <div key={index} className="flex items-center mb-4 w-[167px]">
+  const customLegend = chartData.labels?.map((label, i) => (
+    <div key={label} className="flex items-center mb-4 w-[167px]">
       <div
+        className="mr-4"
         style={{
-          width: '60px',
-          height: '24px',
-          backgroundColor: chartData.datasets[0].backgroundColor[index],
-          marginRight: '16px',
+          width: 60,
+          height: 24,
+          backgroundColor: chartData.datasets[0].backgroundColor?.[i],
         }}
-      ></div>
+      />
       <span className="text-[16px]">{label}</span>
     </div>
   ));
@@ -88,14 +74,11 @@ const PieChart: React.FC<PieChartProps> = ({ chartData }) => {
     >
       <div
         className="flex items-center justify-center"
-        style={{
-          width: '280px',
-          height: '280px',
-          padding: '37.62px',
-        }}
+        style={{ width: 280, height: 280, padding: '37.62px' }}
       >
         <Pie data={chartData} options={options} />
       </div>
+
       <div
         className={`${
           legendPosition === 'right' ? 'ml-6 mt-12' : 'mt-6'

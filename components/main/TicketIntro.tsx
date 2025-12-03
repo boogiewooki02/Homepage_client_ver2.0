@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import React from 'react';
 
-import { TicketInfo, TicketButton } from './TicketInfo';
-import { formatDate, formatDateTime } from '@/utils/dateUtils';
+import { TicketButton, TicketInfo } from './TicketInfo';
+
 import { PerformanceResponse } from '@/types/performace';
+import { formatDate, formatDateTime } from '@/utils/dateUtils';
 
 interface TicketIntroProps {
   className?: string;

@@ -1,10 +1,11 @@
-import guitar from '@/public/image/recruit/guitar.svg';
-import concert1 from '@/public/image/about/concert1.avif';
-import concert2 from '@/public/image/about/concert2.avif';
-import concert3 from '@/public/image/about/concert3.avif';
 import Card from './Card';
 import OneImage from './OneImage';
 import TwoImages from './TwoImages';
+
+import concert1 from '@/public/image/about/concert1.avif';
+import concert2 from '@/public/image/about/concert2.avif';
+import concert3 from '@/public/image/about/concert3.avif';
+import guitar from '@/public/image/recruit/guitar.svg';
 
 const Concert = () => {
   const dtImages = [

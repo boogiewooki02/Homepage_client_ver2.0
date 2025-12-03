@@ -1,8 +1,9 @@
+import { useCallback } from 'react';
+
 import Date from '@/components/ui/admin/Date';
 import DateTime from '@/components/ui/admin/DateTime';
 import Text from '@/components/ui/admin/TextBox';
 import { InputFieldType } from '@/components/ui/admin/type';
-import { useCallback } from 'react';
 
 interface AdminInfoProps {
   data: Record<string, any>;
@@ -11,10 +12,9 @@ interface AdminInfoProps {
 }
 
 // title, inputBox 형식의 information list
-const InfoList: React.FC<AdminInfoProps> = ({ data, fieldList, onChange }) => {
+const InfoList = ({ data, fieldList, onChange }: AdminInfoProps) => {
   const handleChange = useCallback(
     (newValue: any, field: InputFieldType) => {
-      console.log('InfoList onChange:', field.label, newValue);
       onChange(newValue, field.label);
     },
     [onChange]

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import FullHeart from '@/public/image/notice/FullHeart.svg';
+import { useEffect, useState } from 'react';
+
+import { authInstance } from '@/api/auth/axios';
 import EmptyHeart from '@/public/image/notice/EmptyHeart.svg';
-import { authInstance, axiosInstance } from '@/api/auth/axios';
+import FullHeart from '@/public/image/notice/FullHeart.svg';
 
 interface LikeButtonProps {
   postId: number;
@@ -10,11 +11,11 @@ interface LikeButtonProps {
   initialIsLiked?: boolean;
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({
+const LikeButton = ({
   postId,
   initialCount,
   initialIsLiked = false,
-}) => {
+}: LikeButtonProps) => {
   const [isFilled, setIsFilled] = useState(initialIsLiked);
   const [heartCount, setHeartCount] = useState(initialCount);
 

@@ -55,7 +55,7 @@ const TicketInfo = ({ performanceName, place, time, day }: TicketInfoProps) => {
 const TicketButton = ({ className }: buttonProps) => {
   return (
     <Link
-      href={'/ticket'}
+      href="/ticket"
       className={`flex flex-row items-center w-auto h-auto px-6 py-2 gap-[10px] bg-gray-90 text-gray-0 text-[16px] pad:text-[20px] font-medium rounded-[48px] ${className}`}
     >
       공연 예매하기

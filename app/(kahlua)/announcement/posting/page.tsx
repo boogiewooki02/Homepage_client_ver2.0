@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Suspense } from 'react';
+
 import PageContent from '@/components/announcement/posting/PageContent';
 
 const Page = () => {

@@ -7,7 +7,7 @@ interface ModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ErrorModal: React.FC<ModalProps> = ({ isOpen, setIsOpen }) => {
+const ErrorModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const handleModalClose = () => {
     setIsOpen(false);
     window.location.href = `/`;

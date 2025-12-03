@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-interface multipleOptionProps {
+interface MultipleOptionProps {
   option1: string;
   option2: string;
   option3: string;
@@ -12,7 +12,7 @@ interface multipleOptionProps {
   className: string;
 }
 
-const MultipleOptionBox: React.FC<multipleOptionProps> = ({
+const MultipleOptionBox = ({
   option1,
   option2,
   option3,
@@ -20,7 +20,7 @@ const MultipleOptionBox: React.FC<multipleOptionProps> = ({
   option5,
   selection,
   className,
-}) => {
+}: MultipleOptionProps) => {
   const [selected, setSelected] = React.useState<string[]>(['', '']);
 
   const handleSelection = (option: string) => {
@@ -51,7 +51,7 @@ const MultipleOptionBox: React.FC<multipleOptionProps> = ({
     <div>
       <div className={`flex flex-col gap-6 pad:flex-row ${className}`}>
         <div
-          onClick={(e) => handleSelection(option1)}
+          onClick={() => handleSelection(option1)}
           className={`flex items-center justify-between px-4 h-12 w-[180px] rounded-xl border ${selected[0] === option1 || selected[1] === option1 ? 'border-primary-50 text-primary-50' : 'border-gray-40 text-gray-90'} bg-gray-0 text-[16px] font-normal leading-6 text-center`}
         >
           {option1}
@@ -67,7 +67,7 @@ const MultipleOptionBox: React.FC<multipleOptionProps> = ({
           )}
         </div>
         <div
-          onClick={(e) => handleSelection(option2)}
+          onClick={() => handleSelection(option2)}
           className={`pad:mt-0 flex items-center justify-between px-4 h-12 w-[180px] rounded-xl border ${selected[0] === option2 || selected[1] === option2 ? 'border-primary-50 text-primary-50' : 'border-gray-40 text-gray-90'} bg-gray-0 text-[16px] font-normal leading-6 text-center`}
         >
           {option2}
@@ -83,7 +83,7 @@ const MultipleOptionBox: React.FC<multipleOptionProps> = ({
           )}
         </div>
         <div
-          onClick={(e) => handleSelection(option3)}
+          onClick={() => handleSelection(option3)}
           className={`pad:mt-0 flex items-center justify-between px-4 h-12 w-[180px] rounded-xl border ${selected[0] === option3 || selected[1] === option3 ? 'border-primary-50 text-primary-50' : 'border-gray-40 text-gray-90'} bg-gray-0 text-[16px] font-normal leading-6 text-center`}
         >
           {option3}
@@ -101,7 +101,7 @@ const MultipleOptionBox: React.FC<multipleOptionProps> = ({
       </div>
       <div className="flex flex-col gap-6 pad:flex-row mt-6">
         <div
-          onClick={(e) => handleSelection(option4)}
+          onClick={() => handleSelection(option4)}
           className={`pad:mt-0 flex items-center justify-between px-4 h-12 w-[180px] rounded-xl border ${selected[0] === option4 || selected[1] === option4 ? 'border-primary-50 text-primary-50' : 'border-gray-40 text-gray-90'} bg-gray-0 text-[16px] font-normal leading-6 text-center`}
         >
           {option4}
@@ -117,7 +117,7 @@ const MultipleOptionBox: React.FC<multipleOptionProps> = ({
           )}
         </div>
         <div
-          onClick={(e) => handleSelection(option5)}
+          onClick={() => handleSelection(option5)}
           className={`pad:mt-0 flex items-center justify-between px-4 h-12 w-[180px] rounded-xl border ${selected[0] === option5 || selected[1] === option5 ? 'border-primary-50 text-primary-50' : 'border-gray-40 text-gray-90'} bg-gray-0 text-[16px] font-normal leading-6 text-center`}
         >
           {option5}

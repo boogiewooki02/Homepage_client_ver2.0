@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Modal from '../ui/Modal';
 
 interface ModalProps {
@@ -6,7 +5,7 @@ interface ModalProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CancelModal: React.FC<ModalProps> = ({ isOpen, setIsOpen }) => {
+const CancelModal = ({ isOpen, setIsOpen }: ModalProps) => {
   const handleModalClose = () => {
     setIsOpen(false);
     window.location.href = `/admin`;

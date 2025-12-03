@@ -5,20 +5,13 @@ interface ReservationSuccessModalProps {
 const ReservationSuccessModal = ({
   formattedDateTime,
 }: ReservationSuccessModalProps) => {
-
   // 날짜와 시간을 분리(모바일 전용)
-  const datePart =
-    formattedDateTime.split(' ')[0] +
-    ' ' +
-    formattedDateTime.split(' ')[1] +
-    ' ' +
-    formattedDateTime.split(' ')[2];
-  const timePart =
-    formattedDateTime.split(' ')[3] +
-    ' ' +
-    formattedDateTime.split(' ')[4] +
-    ' ' +
-    formattedDateTime.split(' ')[5];
+  const datePart = `${formattedDateTime.split(' ')[0]} ${
+    formattedDateTime.split(' ')[1]
+  } ${formattedDateTime.split(' ')[2]}`;
+  const timePart = `${formattedDateTime.split(' ')[3]} ${
+    formattedDateTime.split(' ')[4]
+  } ${formattedDateTime.split(' ')[5]}`;
 
   return (
     <div className="flex flex-col text-center gap-6">

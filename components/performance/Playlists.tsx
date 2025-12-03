@@ -1,9 +1,19 @@
 'use client';
-import { useEffect, useState } from 'react';
+
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
+
 import { selectedYear } from '@/atoms';
+import chevron_down_blue from '@/public/image/performance/chevron-down-blue.svg';
+import thumbnail15 from '@/public/image/performance/thumbnails/0.avif';
 import thumbnail0 from '@/public/image/performance/thumbnails/1.avif';
+import thumbnail9 from '@/public/image/performance/thumbnails/10.avif';
+import thumbnail10 from '@/public/image/performance/thumbnails/11.avif';
+import thumbnail11 from '@/public/image/performance/thumbnails/12.avif';
+import thumbnail12 from '@/public/image/performance/thumbnails/13.avif';
+import thumbnail13 from '@/public/image/performance/thumbnails/14.avif';
+import thumbnail14 from '@/public/image/performance/thumbnails/15.avif';
 import thumbnail1 from '@/public/image/performance/thumbnails/2.avif';
 import thumbnail2 from '@/public/image/performance/thumbnails/3.avif';
 import thumbnail3 from '@/public/image/performance/thumbnails/4.avif';
@@ -12,14 +22,6 @@ import thumbnail5 from '@/public/image/performance/thumbnails/6.avif';
 import thumbnail6 from '@/public/image/performance/thumbnails/7.avif';
 import thumbnail7 from '@/public/image/performance/thumbnails/8.avif';
 import thumbnail8 from '@/public/image/performance/thumbnails/9.avif';
-import thumbnail9 from '@/public/image/performance/thumbnails/10.avif';
-import thumbnail10 from '@/public/image/performance/thumbnails/11.avif';
-import thumbnail11 from '@/public/image/performance/thumbnails/12.avif';
-import thumbnail12 from '@/public/image/performance/thumbnails/13.avif';
-import thumbnail13 from '@/public/image/performance/thumbnails/14.avif';
-import thumbnail14 from '@/public/image/performance/thumbnails/15.avif';
-import thumbnail15 from '@/public/image/performance/thumbnails/0.avif';
-import chevron_down_blue from '@/public/image/performance/chevron-down-blue.svg';
 
 const detail = [
   {

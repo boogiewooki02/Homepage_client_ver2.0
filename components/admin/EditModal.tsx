@@ -9,13 +9,13 @@ interface ModalProps {
   buttonContent?: React.ReactNode;
 }
 
-const EditModal: React.FC<ModalProps> = ({
+const EditModal = ({
   isOpen,
   setIsOpen,
   handleSubmit,
   mainContent = <p>공연 정보를 수정하시겠습니까?</p>,
   buttonContent = <p>수정하기</p>,
-}) => {
+}: ModalProps) => {
   return (
     <ButtonModal
       isOpen={isOpen}

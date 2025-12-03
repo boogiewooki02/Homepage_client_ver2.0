@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
 
@@ -38,9 +39,8 @@ const Table = ({
   const filteredMembers = members.filter((member) => {
     if (searchQuery) {
       return member.name.includes(searchQuery);
-    } else {
-      return isWaiting ? member.approvalStatus === 'PENDING' : true;
     }
+    return isWaiting ? member.approvalStatus === 'PENDING' : true;
   });
 
   // 드롭다운 토글 핸들러

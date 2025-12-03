@@ -41,7 +41,7 @@ interface CLInfoProps {
   };
 }
 
-const CLInfo: React.FC<CLInfoProps> = ({ onInfoChange, CoverLetterInfo }) => {
+const CLInfo = ({ onInfoChange, CoverLetterInfo }: CLInfoProps) => {
   const { session1, session2, motivation, career, instrument, determination } =
     CoverLetterInfo;
 

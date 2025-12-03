@@ -1,13 +1,14 @@
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+
+import { authInstance } from '@/api/auth/axios';
 import CommunityRule from '@/components/announcement/posting/CommunityRule';
 import ContentInput from '@/components/announcement/posting/ContentInput';
 import ImageUpload from '@/components/announcement/posting/ImageUpload';
 import TitleInput from '@/components/announcement/posting/TitleInput';
 import TopButtons from '@/components/announcement/posting/TopButtons';
-import { authInstance } from '@/api/auth/axios';
 
 const PageContent = () => {
   const searchParams = useSearchParams();

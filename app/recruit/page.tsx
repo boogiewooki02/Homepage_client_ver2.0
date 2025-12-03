@@ -1,38 +1,32 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import logo_white from '@/public/image/KAHLUA.svg';
-import vocal from '@/public/image/recruit/vocal.svg';
-import guitar from '@/public/image/recruit/guitar.svg';
-import drum from '@/public/image/recruit/drum.svg';
-import syn from '@/public/image/recruit/syn.svg';
+import React, { useEffect, useState } from 'react';
 
 import FAQ from './FAQ';
-import RequirementCard from '@/components/recruit/RequirementCard';
-import SessionCard from '@/components/recruit/SessionCard';
-import ScheduleCard from '@/components/recruit/ScheduleCard';
+
 import {
+  DynamicRecruitingInfo,
   formatFullDate,
   formatMonth,
   formatMonthToDate,
   formatTime,
   formatYear,
   getOnlyNum,
-  DynamicRecruitingInfo,
 } from '@/components/data/RecruitingInfo';
+import RequirementCard from '@/components/recruit/RequirementCard';
+import ScheduleCard from '@/components/recruit/ScheduleCard';
+import SessionCard from '@/components/recruit/SessionCard';
+import logo_white from '@/public/image/KAHLUA.svg';
+import drum from '@/public/image/recruit/drum.svg';
+import guitar from '@/public/image/recruit/guitar.svg';
+import syn from '@/public/image/recruit/syn.svg';
+import vocal from '@/public/image/recruit/vocal.svg';
 
-const page = () => {
+const RecruitPage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isInPeriod, setIsInPeriod] = useState(false);
-
-  const nowDate = new Date();
-  const nowKoreanTime = new Date(
-    nowDate.toLocaleString('en-US', { timeZone: 'Asia/Seoul' })
-  );
-  const isDays =
-    nowKoreanTime >= DynamicRecruitingInfo.recruitingStartDate &&
-    nowKoreanTime <= DynamicRecruitingInfo.recruitingFinishDate;
 
   // redering과정에서 document를 사용할 수 없어서 발생하는 문제 해결
   useEffect(() => {
@@ -49,7 +43,7 @@ const page = () => {
       )}
       <div
         className="flex top-0 items-center justify-center h-auto pad:h-screen w-full bg-performance bg-center text-gray-0"
-        style={{ marginTop: '-64px', paddingTop: '64px' }} // 헤더 높이만큼 마진 조정
+        style={{ marginTop: '-64px', paddingTop: '64px' }}
       >
         <div className="flex flex-col items-center justify-center text-center max-pad:py-[120px] max-pad:px-[16px] w-full pad:w-[786px] dt:w-[1200px]">
           <div className="flex relative h-[40px] w-[234px] pad:h-[64px] pad:w-[376px] dt:h-[88px] dt:w-[516px]">
@@ -160,7 +154,7 @@ const Schedule = () => {
           title="오디션"
           period={`~ ${formatMonthToDate(DynamicRecruitingInfo.audition)} ${formatTime(DynamicRecruitingInfo.audition)}`}
           // description={`오디션 뒷풀이<br/>당일 ${formatTime(DynamicRecruitingInfo.afterParty)}`}
-          description={`오디션 뒷풀이 추후 공지 <br/>(오디션 당일에 진행 예정)`}
+          description="오디션 뒷풀이 추후 공지 <br/>(오디션 당일에 진행 예정)"
           titleClassName=""
           desClassName=""
         />
@@ -183,4 +177,4 @@ const Schedule = () => {
   );
 };
 
-export default page;
+export default RecruitPage;

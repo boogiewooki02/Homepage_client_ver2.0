@@ -1,16 +1,17 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
+
 import { authInstance } from '@/api/auth/axios';
 import Header from '@/components/admin/Header';
 import StatusIcon from '@/components/admin/member/StatusIcon';
 import TableSection, {
   TableSectionRef,
 } from '@/components/admin/member/table/TableSection';
-import WaitingIcon from '@/public/image/admin/WaitingIcon.svg';
-import WaitingMobileIcon from '@/public/image/admin/WaitingMobileIcon.svg';
 import CompletedIcon from '@/public/image/admin/CompletedIcon.svg';
 import CompletedMobileIcon from '@/public/image/admin/CompletedMobileIcon.svg';
+import WaitingIcon from '@/public/image/admin/WaitingIcon.svg';
+import WaitingMobileIcon from '@/public/image/admin/WaitingMobileIcon.svg';
 
 const MemberPage = () => {
   const [isWaiting, setIsWaiting] = useState(false);

@@ -1,6 +1,6 @@
 import Banner from '@/components/about/Banner';
-import Ensemble from '@/components/about/Ensemble';
 import Concert from '@/components/about/Concert';
+import Ensemble from '@/components/about/Ensemble';
 import Networking from '@/components/about/Networking';
 import Travel from '@/components/about/Travel';
 

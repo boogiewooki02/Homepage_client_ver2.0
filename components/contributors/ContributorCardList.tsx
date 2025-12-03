@@ -1,5 +1,7 @@
 'use client';
+
 import React, { useEffect, useRef } from 'react';
+
 import ContributorCard from './ContributorCard';
 import { ContributorList } from './ContributorList';
 

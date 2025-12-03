@@ -1,12 +1,16 @@
 'use client';
-import { useState } from 'react';
-import ButtonModal from '../ui/ButtonModal';
+
 import { useRouter } from 'next/navigation';
-import { authInstance } from '@/api/auth/axios';
-import { CategoryToggle } from './CategoryToggle';
-import ReservationList from './ReservationList';
-import MyPostsList from './MyPostsList';
+import { useState } from 'react';
+
+import ButtonModal from '../ui/ButtonModal';
+
 import { toggleList } from './categoryDto';
+import { CategoryToggle } from './CategoryToggle';
+import MyPostsList from './MyPostsList';
+import ReservationList from './ReservationList';
+
+import { authInstance } from '@/api/auth/axios';
 
 const List = () => {
   const [toggle, setToggle] = useState(toggleList[0].toggle);

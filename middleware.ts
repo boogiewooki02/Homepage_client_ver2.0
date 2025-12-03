@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
 import { jwtDecode } from 'jwt-decode';
 import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
 const restrictedPages = {
   undefined: ['/reservation', '/announcement', '/mypage', '/admin'],

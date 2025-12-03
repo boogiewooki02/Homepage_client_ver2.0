@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+
 import google from '@/public/image/login/google.svg';
 import kakao from '@/public/image/login/kakao.svg';
 

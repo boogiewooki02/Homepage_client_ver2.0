@@ -1,18 +1,18 @@
 'use client';
+
+import PublishIcon from '@mui/icons-material/Publish';
+import WestIcon from '@mui/icons-material/West';
 import Image from 'next/image';
-import React, { useEffect } from 'react';
-import applicant_image from '@/public/image/admin/image.svg';
-import { useState } from 'react';
-import ApplicantCard from '@/components/admin/applicant/ApplicantCard';
-import chevron_down_blue from '@/public/image/performance/chevron-down-blue.svg';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+
 import { authInstance } from '@/api/auth/axios';
 import { totalApplicant } from '@/atoms';
-import { useRecoilState } from 'recoil';
+import ApplicantCard from '@/components/admin/applicant/ApplicantCard';
 import { DynamicRecruitingInfo } from '@/components/data/RecruitingInfo';
-import PublishIcon from '@mui/icons-material/Publish';
-import Link from 'next/link';
-import WestIcon from '@mui/icons-material/West';
+import applicant_image from '@/public/image/admin/image.svg';
+import chevron_down_blue from '@/public/image/performance/chevron-down-blue.svg';
 
 interface ApplicantProps {
   id: number;
@@ -30,8 +30,7 @@ interface ApplicantProps {
   readiness: string;
 }
 
-const page = () => {
-  const router = useRouter();
+const AdminApplicantPage = () => {
   const sessionArr = ['ALL', '보컬', '기타', '드럼', '베이스', '신디'];
   const [session, setSession] = useState('ALL');
   const [applicantList, setApplicantList] = useState<ApplicantProps[]>([]);
@@ -44,8 +43,6 @@ const page = () => {
       const response = await authInstance.get('/admin/apply/download', {
         responseType: 'blob',
       });
-      console.log(response.data);
-
       const blob = response.data;
 
       const fileObjectUrl = window.URL.createObjectURL(blob);
@@ -76,7 +73,7 @@ const page = () => {
   };
 
   const fetchApplicantList = async (session: string) => {
-    var preference = '';
+    let preference = '';
 
     if (session === '보컬') {
       preference = 'VOCAL';
@@ -223,4 +220,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default AdminApplicantPage;

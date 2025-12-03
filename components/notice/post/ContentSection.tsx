@@ -1,12 +1,9 @@
-// ContentSection.tsx
-import React from 'react';
-
 interface ContentSectionProps {
   text: string;
   imageUrls: string[] | null;
 }
 
-const ContentSection: React.FC<ContentSectionProps> = ({ text, imageUrls }) => {
+const ContentSection = ({ text, imageUrls }: ContentSectionProps) => {
   return (
     <>
       <div className="font-pretendard text-xl font-medium break-words whitespace-pre-wrap ">

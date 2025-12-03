@@ -1,4 +1,3 @@
-import { blueGrey } from '@mui/material/colors';
 import type { Config } from 'tailwindcss';
 
 const config: Config = {

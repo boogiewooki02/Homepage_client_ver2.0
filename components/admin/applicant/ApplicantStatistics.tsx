@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+
 import PieChart from './PieChart';
+
 import { authInstance } from '@/api/auth/axios';
 
 const ApplicantStatistics = () => {
@@ -9,7 +11,7 @@ const ApplicantStatistics = () => {
   const fetchData = async () => {
     try {
       const response = await authInstance.get('/admin/apply/statistics');
-      const result = response.data.result;
+      const { result } = response.data;
 
       const labels = ['보컬', '드럼', '기타', '베이스', '신디사이저'];
       const counts = [

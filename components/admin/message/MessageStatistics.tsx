@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import PieChart from '@/components/admin/applicant/PieChart';
+
 import { authInstance } from '@/api/auth/axios';
+import PieChart from '@/components/admin/applicant/PieChart';
 
 const MessageStatistics = () => {
   const [chartData, setChartData] = useState<any>(null);
@@ -9,7 +10,7 @@ const MessageStatistics = () => {
   const fetchData = async () => {
     try {
       const response = await authInstance.get('/admin/apply/statistics');
-      const result = response.data.result;
+      const { result } = response.data;
 
       const labels = ['참', '불참', '미정'];
       const counts = [

@@ -15,3 +15,11 @@ export interface PerformanceResponse {
   booking_start_date: string;
   booking_end_date: string;
 }
+
+export interface RecommendedPerformanceResponse {
+  id: number;
+  title: string;
+  poster_image_url: string;
+  booking_start_date: string;
+  booking_end_date: string;
+}

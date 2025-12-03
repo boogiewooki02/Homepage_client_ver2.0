@@ -1,10 +1,12 @@
 import { useState } from 'react';
+
+import Modal from '../ui/Modal';
+
+import ReservationFailureModal from './ReservationFailureModal';
 import ReservationNotice from './ReservationNotice';
 import ReservationSuccessModal from './ReservationSuccessModal';
-import ReservationFailureModal from './ReservationFailureModal';
-import Modal from '../ui/Modal';
+
 import { ReservationRequest } from '@/types/reservation';
-import { useRouter } from 'next/navigation';
 
 interface ReservationFormProps {
   reservation: ReservationRequest;
@@ -24,8 +26,6 @@ const ReservationForm = ({
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isFailureModalOpen, setIsFailureModalOpen] = useState(false);
-
-  const router = useRouter();
 
   // submit 제출시
   const handleSubmit = (e: React.FormEvent) => {

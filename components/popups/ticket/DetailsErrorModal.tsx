@@ -1,15 +1,12 @@
-import React from 'react';
 import Image from 'next/image';
+import React from 'react';
 
 interface DetailsErrorModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const DetailsErrorModal: React.FC<DetailsErrorModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const DetailsErrorModal = ({ isOpen, onClose }: DetailsErrorModalProps) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (

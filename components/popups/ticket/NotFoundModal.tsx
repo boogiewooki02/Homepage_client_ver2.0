@@ -1,4 +1,3 @@
-import React from 'react';
 import Image from 'next/image';
 
 interface NotFoundModalProps {
@@ -6,7 +5,7 @@ interface NotFoundModalProps {
   onClose: () => void;
 }
 
-const NotFoundModal: React.FC<NotFoundModalProps> = ({ isOpen, onClose }) => {
+const NotFoundModal = ({ isOpen, onClose }: NotFoundModalProps) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (

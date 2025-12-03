@@ -1,5 +1,5 @@
-import React from 'react';
 import Image from 'next/image';
+import React from 'react';
 
 interface CardProps {
   bgColor: string;
@@ -15,7 +15,7 @@ interface CardProps {
   altText: string;
 }
 
-const Card: React.FC<CardProps> = ({
+const Card = ({
   bgColor,
   title1,
   title2,
@@ -24,7 +24,7 @@ const Card: React.FC<CardProps> = ({
   descriptions,
   imageSrc,
   altText,
-}) => {
+}: CardProps) => {
   return (
     <div className="pad:w-96 ph:w-[304px] pad:h-[470px] ph:h-[364px] pad:mx-0 ph:ml-4 rounded-3xl">
       <div className="flex">
@@ -53,7 +53,7 @@ const Card: React.FC<CardProps> = ({
       <div
         className={`pad:w-96 ph:w-[304px] pad:h-[368px] ph:h-[262px] flex flex-col items-center rounded-r-3xl rounded-bl-3xl ${bgColor} text-gray-0`}
       >
-        <div className="flex-grow"></div>
+        <div className="flex-grow" />
         <p
           className={`${width} ${height} ph:h-36 pad:mb-8 ph:mb-6 pad:text-lg ph:text-base font-medium leading-[150%]`}
         >

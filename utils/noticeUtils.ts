@@ -1,5 +1,6 @@
-import { authInstance } from '@/api/auth/axios';
 import { Comment } from '../components/notice/dto';
+
+import { authInstance } from '@/api/auth/axios';
 import {
   AnnouncementProps,
   CommunityProps,
@@ -57,9 +58,8 @@ export const addCommentOrReply = async (
               }
             : comment
         );
-      } else {
-        return [newCommentOrReply, ...prevComments];
       }
+      return [newCommentOrReply, ...prevComments];
     });
 
     setChatCount((prev) => prev + 1);
@@ -97,10 +97,9 @@ export const handleDeleteCommentOrReply = async (
                 content: '삭제된 댓글입니다.',
                 user: '',
               };
-            } else {
-              deletedCommentCount++;
-              return null;
             }
+            deletedCommentCount++;
+            return null;
           }
 
           if (comment.replies) {

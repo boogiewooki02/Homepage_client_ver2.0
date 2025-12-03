@@ -1,31 +1,29 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import MobileTicketList from './MobileTicketList';
+
 import DesktopTicketList from './DesktopTicketList';
-import { axiosInstance } from '@/api/auth/axios';
+import MobileTicketList from './MobileTicketList';
 
-const RecommendedList = ({ id }: { id: number }) => {
-  const [ticketList, setTicketList] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+import { getPerformanceList } from '@/api/performance/performance';
+import { RecommendedPerformanceResponse } from '@/types/performace';
 
-  const getTicketLists = async () => {
-    try {
-      const response = await axiosInstance.get('/performances', {
-        params: { limit: 100 },
-      });
-      if (response.data.isSuccess) {
-        setTicketList(response.data.result.performances);
-      }
-    } catch (error) {
-      console.error('공연 목록 불러오는 중 오류 발생:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const RecommendedList = ({
+  id,
+  isLoading,
+}: {
+  id: number;
+  isLoading: boolean;
+}) => {
+  const [ticketList, setTicketList] = useState<
+    RecommendedPerformanceResponse[]
+  >([]);
 
   useEffect(() => {
-    getTicketLists();
+    (async () => {
+      const list = await getPerformanceList();
+      setTicketList(list);
+    })();
   }, []);
 
   return (
@@ -37,9 +35,12 @@ const RecommendedList = ({ id }: { id: number }) => {
       <div className="min-[834px]:hidden">
         <MobileTicketList tickets={ticketList} currentId={id} />
       </div>
-
       <div className="max-[833px]:hidden">
-        <DesktopTicketList tickets={ticketList} currentId={id} />
+        <DesktopTicketList
+          tickets={ticketList}
+          currentId={id}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

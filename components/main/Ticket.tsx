@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { TicketIntroPad, TicketIntroPhone } from './TicketIntro';
 
-import { PerformanceResponse } from '@/types/performace';
 import { fetchLatestPerformance } from '@/api/performance/performance';
+import { PerformanceResponse } from '@/types/performace';
 
 const Ticket = () => {
   const [performance, setPerformance] = useState<PerformanceResponse | null>(

@@ -1,10 +1,12 @@
 'use client';
+
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+
+import { selectedYear } from '@/atoms';
 import chevron_down from '@/public/image/performance/chevron-down.svg';
 import chevron_up from '@/public/image/performance/chevron-up.svg';
-import { useRecoilState } from 'recoil';
-import { selectedYear } from '@/atoms';
 
 const YearSelector = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { forwardRef } from 'react';
 
 export interface CancelButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
-const CancelButton = React.forwardRef<HTMLButtonElement, CancelButtonProps>(
+const CancelButton = forwardRef<HTMLButtonElement, CancelButtonProps>(
   (props, ref) => {
-    const { className, type, ...rest } = props;
+    const { className, ...rest } = props;
 
     return (
       <button

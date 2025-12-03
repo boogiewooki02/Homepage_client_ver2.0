@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Url } from './HeaderUrls';
 import { useRouter } from 'next/navigation';
+
+import { Url } from './HeaderUrls';
 
 interface DesktopNavBarProps {
   pathname: string;

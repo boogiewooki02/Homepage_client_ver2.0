@@ -1,5 +1,6 @@
-import ButtonModal from '@/components/ui/ButtonModal';
 import React, { useEffect } from 'react';
+
+import ButtonModal from '@/components/ui/ButtonModal';
 
 interface CancelPopupProps {
   isOpen: boolean;
@@ -7,11 +8,7 @@ interface CancelPopupProps {
   onConfirm: () => void;
 }
 
-const CancelPopup: React.FC<CancelPopupProps> = ({
-  isOpen,
-  onClose,
-  onConfirm,
-}) => {
+const CancelPopup = ({ isOpen, onClose, onConfirm }: CancelPopupProps) => {
   // 모달 열릴 때 스크롤 막기
   useEffect(() => {
     document.body.style.overflow = 'hidden';

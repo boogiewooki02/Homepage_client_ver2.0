@@ -1,18 +1,20 @@
 'use client';
-import React, { useState } from 'react';
-import phone_icon from '@/public/image/admin/tabler_device-mobile.svg';
-import department_icon from '@/public/image/admin/tabler_book-2.svg';
-import address_icon from '@/public/image/admin/tabler_map-pin.svg';
-import Image from 'next/image';
-import show_more from '@/public/image/admin/arrowUp.svg';
+
+import { ThemeProvider, createTheme } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import tabler_x from '@/public/image/admin/tabler_x.svg';
-import { createTheme, ThemeProvider } from '@mui/material';
+import Image from 'next/image';
+import React, { useState } from 'react';
+
 import { authInstance } from '@/api/auth/axios';
+import show_more from '@/public/image/admin/arrowUp.svg';
+import department_icon from '@/public/image/admin/tabler_book-2.svg';
+import phone_icon from '@/public/image/admin/tabler_device-mobile.svg';
+import address_icon from '@/public/image/admin/tabler_map-pin.svg';
+import tabler_x from '@/public/image/admin/tabler_x.svg';
 
 const theme = createTheme({
   components: {
@@ -197,7 +199,7 @@ const ApplicantCard = ({
       {/* 상세 정보 : dialog */}
       <ThemeProvider theme={theme}>
         <Dialog
-          fullWidth={true}
+          fullWidth
           maxWidth="md"
           open={open}
           onClose={handleClose}

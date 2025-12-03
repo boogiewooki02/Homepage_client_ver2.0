@@ -1,5 +1,8 @@
+import Image from 'next/image';
 import React, { useState } from 'react';
+
 import { InputFieldType } from './type';
+
 import { getPresignedUrl } from '@/api/s3/s3';
 
 interface ImageProps {
@@ -51,10 +54,12 @@ function ImageBox({ data, field, onChange }: ImageProps) {
         className="hidden"
       />
       {previewImage ? (
-        <img
+        <Image
           src={previewImage}
           alt={`uploaded-${label}`}
-          className="w-auto h-full object-cover rounded-[11px] transition duration-200 ease-in-out"
+          fill
+          className="object-cover rounded-[11px] transition duration-200 ease-in-out"
+          sizes="100%"
         />
       ) : (
         <span className="text-gray-40 text-sm">이미지 업로드</span>

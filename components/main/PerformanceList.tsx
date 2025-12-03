@@ -1,6 +1,6 @@
-import { SongList } from '@/components/data/SongList';
-import { song } from '@/components/data/SongList';
 import PerformanceCard from './PerformanceCard';
+
+import { SongList, song } from '@/components/data/SongList';
 
 interface SonglistProps {
   songs: song[];

@@ -9,12 +9,7 @@ const TicketSelection = () => {
         </div>
       </div>
       <div className="flex flex-col mt-6">
-        <SelectBox
-          name="현장 수령"
-          state={true}
-          alt="ticketSelection"
-          disabled
-        />
+        <SelectBox name="현장 수령" state alt="ticketSelection" disabled />
       </div>
     </div>
   );

@@ -1,14 +1,16 @@
 'use client';
 
-import * as React from 'react';
-import { useState, useMemo, useCallback } from 'react';
-import Banner from '@/components/ui/Banner';
-import InfoList from '@/components/templates/admin/Info'; // Use only this import
-import { defaultData, recruitingInfoList } from './recruitingData';
-import AdminButton from '@/components/ui/admin/Button';
 import WestIcon from '@mui/icons-material/West';
+import * as React from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
+import { defaultData, recruitingInfoList } from './recruitingData';
+
 import CancelModal from '@/components/admin/CancelModal';
 import EditModal from '@/components/admin/EditModal';
+import InfoList from '@/components/templates/admin/Info'; // Use only this import
+import AdminButton from '@/components/ui/admin/Button';
+import Banner from '@/components/ui/Banner';
 import { isChanged } from '@/utils/isChangedUtils';
 
 const RecruitingPage = () => {

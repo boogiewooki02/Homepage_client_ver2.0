@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import InfoTemplate from './InfoTemplate';
-import { filterEmailValue } from '@/utils/filterUtils';
+
 import { Input } from '@/components/ui/InputBox';
+import { filterEmailValue } from '@/utils/filterUtils';
 
 interface GeneralInfoProps {
   member: number;
@@ -21,13 +23,13 @@ interface GeneralInfoProps {
   };
 }
 
-const GeneralInfo: React.FC<GeneralInfoProps> = ({
+const GeneralInfo = ({
   member,
   setMember,
   onInfoComplete,
   onInfoChange,
   userInfo,
-}) => {
+}: GeneralInfoProps) => {
   const [buyer, setBuyer] = useState(userInfo.buyer || '');
   const [phone, setPhone] = useState(userInfo.phone_num || '');
   const [emailValue, setEmailValue] = useState(userInfo.email || '');
@@ -37,7 +39,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
   const [phonesArray, setPhonesArray] = useState<string[]>(
     userInfo.members.map((member) => member.phone_num)
   );
-  const [companions, setCompanions] = useState<string[]>(
+  const [, setCompanions] = useState<string[]>(
     userInfo.members.map((_, index) => `동반인 ${index + 1}`)
   );
 
@@ -184,7 +186,7 @@ const GeneralInfo: React.FC<GeneralInfoProps> = ({
         <InfoTemplate
           index={0}
           member={member}
-          role={'예매자'}
+          role="예매자"
           handleBuyerChange={handleBuyerChange}
           handlePhoneChange={handlePhoneChange}
         />

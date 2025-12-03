@@ -8,13 +8,13 @@ interface ModalProps {
   buttonContent: React.ReactNode;
 }
 
-const ButtonModal: React.FC<ModalProps> = ({
+const ButtonModal = ({
   isOpen,
   onClose,
   handleSubmit,
   mainContent,
   buttonContent,
-}) => {
+}: ModalProps) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {

@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
 import TicketDetail from '@/components/ticket/TicketDetail';
 
 const Page = () => {

@@ -2,9 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import TopRightRoundBorder from '@/components/ui/RoundBorder';
-
-import music from '@/public/image/main/mainMusic.svg';
 import arrow from '@/public/image/arrow_right.svg';
+import music from '@/public/image/main/mainMusic.svg';
 
 export default function About() {
   return (

@@ -1,8 +1,10 @@
-import { authInstance } from '@/api/auth/axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import WidePlaylistItem from '../ticket/WidePlaylistItem';
+
+import { authInstance } from '@/api/auth/axios';
 
 interface Performance {
   ticketInfoId: number;
@@ -47,6 +49,8 @@ const TicektList = () => {
     setIsLoading(false);
   };
 
+  const isInitialLoading = isLoading && data.length === 0;
+
   const observerCallback: IntersectionObserverCallback = useCallback(
     (entries) => {
       if (entries[0].isIntersecting && !isLoading) {
@@ -77,9 +81,9 @@ const TicektList = () => {
   const SkeletonCard = () => {
     return (
       <div className="animate-pulse w-[184px] dt:w-[273px]">
-        <div className="rounded-lg bg-gray-30 w-full h-[257px] dt:h-[380px]" />
-        <div className="mt-3 h-5 bg-gray-30 rounded w-3/4" />
-        <div className="mt-2 h-4 bg-gray-30 rounded w-2/3" />
+        <div className="rounded-lg bg-gray-10 w-full h-[257px] dt:h-[380px]" />
+        <div className="mt-3 h-5 bg-gray-10 rounded w-3/4" />
+        <div className="mt-2 h-4 bg-gray-10 rounded w-2/3" />
       </div>
     );
   };
@@ -87,10 +91,10 @@ const TicektList = () => {
   const SkeletonWide = () => {
     return (
       <div className="animate-pulse flex flex-row gap-[14px] pr-[14px] w-[344px] h-[184px] rounded-[10px] overflow-hidden">
-        <div className="relative w-[128px] h-[184px] bg-gray-30 rounded-l-[10px]" />
+        <div className="relative w-[128px] h-[184px] bg-gray-10 rounded-l-[10px]" />
         <div className="flex flex-col w-[200px] justify-center gap-[5px] py-4">
-          <div className="h-5 bg-gray-30 rounded w-4/5 mb-2" />
-          <div className="h-4 bg-gray-30 rounded w-3/4" />
+          <div className="h-5 bg-gray-10 rounded w-4/5 mb-2" />
+          <div className="h-4 bg-gray-10 rounded w-3/4" />
         </div>
       </div>
     );
@@ -98,21 +102,25 @@ const TicektList = () => {
 
   return (
     <div className="pad:w-[786px] dt:w-[1200px] h-full grid grid-cols-1 pad:grid-cols-4 pad:gap-x-4 dt:gap-x-9 gap-y-12">
-      {isLoading &&
-        Array.from({ length: 8 }).map((_, idx) => (
-          <div key={idx} className="max-[833px]:hidden">
-            <SkeletonCard />
-          </div>
-        ))}
-      {isLoading &&
-        Array.from({ length: 8 }).map((_, idx) => (
-          <div key={idx} className="hidden max-[833px]:block">
-            <SkeletonWide />
-          </div>
-        ))}
+      {isInitialLoading && (
+        <>
+          {Array.from({ length: 12 }).map((_, idx) => (
+            <div key={`desk-skeleton-${idx}`} className="max-[833px]:hidden">
+              <SkeletonCard />
+            </div>
+          ))}
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <div
+              key={`mobile-skeleton-${idx}`}
+              className="hidden max-[833px]:block"
+            >
+              <SkeletonWide />
+            </div>
+          ))}
+        </>
+      )}
 
-      {/* 태블릿 & 데스크탑 */}
-      {!isLoading &&
+      {!isInitialLoading &&
         data.map((performance) => (
           <div
             key={performance.ticketInfoId}
@@ -123,19 +131,17 @@ const TicektList = () => {
                 예매중
               </div>
             )}
-            <Link
-              href={`/ticket/${performance.ticketInfoId}`}
-              className="block"
-            >
+            <Link href={`/ticket/${performance.ticketInfoId}`}>
               <div className="relative w-full h-[257px] dt:h-[380px] rounded-lg overflow-hidden cursor-pointer">
                 <Image
                   src={performance.posterUrl}
                   alt={performance.title}
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  className="object-cover"
                 />
               </div>
             </Link>
+
             <p className="mt-3 text-left font-pretendard text-base font-semibold text-gray-90">
               {performance.title}
             </p>
@@ -145,8 +151,7 @@ const TicektList = () => {
           </div>
         ))}
 
-      {/* 모바일 */}
-      {!isLoading &&
+      {!isInitialLoading &&
         data.map((performance) => (
           <div
             key={performance.ticketInfoId}

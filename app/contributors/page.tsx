@@ -1,7 +1,9 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
-import Title from '@/components/contributors/Title';
+
 import ContributorCardList from '@/components/contributors/ContributorCardList';
+import Title from '@/components/contributors/Title';
 
 const Page = () => {
   const [isScrolled, setIsScrolled] = useState(false);

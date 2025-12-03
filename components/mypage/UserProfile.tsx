@@ -1,17 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import defaultProfileImg from '@/public/image/mypage/defaultProfile.svg';
-import ImageUploadButton from '@/public/image/mypage/imgPlusButton.svg';
-
+import { getPresignedUrl } from '@/api/s3/s3';
 import {
   getProfileImage,
   getUserInfo,
   patchProfileImage,
 } from '@/api/user/user';
-import { getPresignedUrl } from '@/api/s3/s3';
+import defaultProfileImg from '@/public/image/mypage/defaultProfile.svg';
+import ImageUploadButton from '@/public/image/mypage/imgPlusButton.svg';
 import { uploadImageToS3 } from '@/utils/s3Utils';
 
 interface UserProps {

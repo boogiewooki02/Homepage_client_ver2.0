@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react';
+
 import { authInstance } from '@/api/auth/axios';
 import { ReservationRequest, ReservationResponse } from '@/types/reservation';
-import { useEffect, useState } from 'react';
 
 export const reservationStatuses = [
   { color: 'bg-gray-15', label: '예약 불가능' },
@@ -247,7 +248,13 @@ const TimeTable = ({
                   'reserved' ||
                   getTimeSlotStatus(`${hour}:00`, `${hour}:30`) ===
                     'my-reservation') && (
-                  <span className="absolute text-xs text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <span
+                    className="   absolute text-xs text-black
+                        top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+                        text-center
+                        break-words
+                        w-[32px]"
+                  >
                     {getReservedByName(`${hour}:00`, `${hour}:30`)}
                   </span>
                 )}
@@ -283,7 +290,13 @@ const TimeTable = ({
                   'reserved' ||
                   getTimeSlotStatus(`${hour}:30`, `${hour + 1}:00`) ===
                     'my-reservation') && (
-                  <span className="absolute text-xs text-black top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  <span
+                    className="absolute text-xs text-black
+                  top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
+                  text-center
+                  break-words
+                  w-[32px]"
+                  >
                     {getReservedByName(`${hour}:30`, `${hour + 1}:00`)}
                   </span>
                 )}
@@ -297,7 +310,7 @@ const TimeTable = ({
           <div key={index} className="flex items-center">
             <span
               className={`inline-block w-4 h-4 pad:w-6 pad:h-6 ${status.color} mr-2`}
-            ></span>
+            />
             {status.label}
           </div>
         ))}

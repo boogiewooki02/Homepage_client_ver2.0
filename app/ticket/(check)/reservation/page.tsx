@@ -1,14 +1,16 @@
 'use client';
+
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+
+import { axiosInstance } from '@/api/auth/axios';
+import { information } from '@/components/data/Information';
 import CancelModal from '@/components/popups/ticket/CancelModal';
 import NotFoundModal from '@/components/popups/ticket/NotFoundModal';
 import MustRead from '@/components/templates/ticket/MustRead';
 import TicketStatus from '@/components/templates/ticket/TicketStatus';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
-import { axiosInstance } from '@/api/auth/axios';
 import { filterPhoneNumber } from '@/utils/filterUtils';
-import { information } from '@/components/data/Information';
 
 const Reservation = () => {
   const params = useSearchParams();

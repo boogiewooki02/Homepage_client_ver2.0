@@ -1,10 +1,13 @@
 'use client';
-import { RecoilRoot } from 'recoil';
+
 import { Roboto } from 'next/font/google';
-import Footer from '@/components/Footer';
-import Header from '@/components/header/Header';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { RecoilRoot } from 'recoil';
+
+import Footer from '@/components/Footer';
+import Header from '@/components/header/Header';
+
 import './globals.css';
 
 import * as gtag from '@/libs/gtag';
@@ -62,58 +65,55 @@ export default function RootLayout({
   }, []);
 
   return (
-    <>
-      <RecoilRoot>
-        <html lang="ko">
-          <head>
-            <title>KAHLUA BAND</title>
-            {/*<!-- Google tag (gtag.js) -->*/}
-            <script
-              async
-              src="https://www.googletagmanager.com/gtag/js?id=G-YQQMCPC12M"
-            ></script>
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
+    <RecoilRoot>
+      <html lang="ko">
+        <head>
+          <title>KAHLUA BAND</title>
+          {/* <!-- Google tag (gtag.js) --> */}
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-YQQMCPC12M"
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag() {dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', '${gtag.GA_TRACKING_ID}');
               `,
-              }}
-            />
-            <meta property="og:title" content="KAHLUA BAND" />
-            <meta
-              property="og:description"
-              content="안녕하세요 홍익대학교 컴퓨터공학과 밴드부 Kahlua 입니다!"
-              // content="안녕하세요 컴퓨터공학과 밴드부 Kahlua 입니다!"
-            />
-            <meta property="og:type" content="website" />
-            <meta property="og:url" content="https://kahluaband.com" />
-          </head>
-          <body className={roboto.className}>
-            <div className="font-pretendard w-full h-auto mb-40">
-              <Header />
-              {children}
-            </div>
-            {!isCompletePage &&
-              !isFreshmanTicketPage &&
-              !isGeneralTicketPage &&
-              !isCancelPage &&
-              !isReservationPage &&
-              !isSearchPage &&
-              !isNoticePage &&
-              !isApplyCompletePage &&
-              !isApplyPage &&
-              !isLoginPage &&
-              !isAdminApplicantPage &&
-              !isAdminTicketingPage &&
-              !isRoomReservationPage &&
-              !(isMobile && isTicketPage) &&
-              !(isMobile && isTicketDetailPage) && <Footer />}
-          </body>
-        </html>
-      </RecoilRoot>
-    </>
+            }}
+          />
+          <meta property="og:title" content="KAHLUA BAND" />
+          <meta
+            property="og:description"
+            content="안녕하세요 홍익대학교 컴퓨터공학과 밴드부 Kahlua 입니다!"
+          />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://kahluaband.com" />
+        </head>
+        <body className={roboto.className}>
+          <div className="font-pretendard w-full h-auto mb-40">
+            <Header />
+            {children}
+          </div>
+          {!isCompletePage &&
+            !isFreshmanTicketPage &&
+            !isGeneralTicketPage &&
+            !isCancelPage &&
+            !isReservationPage &&
+            !isSearchPage &&
+            !isNoticePage &&
+            !isApplyCompletePage &&
+            !isApplyPage &&
+            !isLoginPage &&
+            !isAdminApplicantPage &&
+            !isAdminTicketingPage &&
+            !isRoomReservationPage &&
+            !(isMobile && isTicketPage) &&
+            !(isMobile && isTicketDetailPage) && <Footer />}
+        </body>
+      </html>
+    </RecoilRoot>
   );
 }

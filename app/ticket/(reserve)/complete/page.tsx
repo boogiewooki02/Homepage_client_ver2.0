@@ -1,13 +1,15 @@
 'use client';
-import MustRead from '@/components/templates/ticket/MustRead';
-import TicketStatus from '@/components/templates/ticket/TicketStatus';
+
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useState, useEffect, Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
+
 import { axiosInstance } from '@/api/auth/axios';
 import { information } from '@/components/data/Information';
+import MustRead from '@/components/templates/ticket/MustRead';
+import TicketStatus from '@/components/templates/ticket/TicketStatus';
 
-const Complete: React.FC = () => {
+const Complete = () => {
   const params = useSearchParams();
   const reservationId = params.get('reservationId');
 
@@ -62,7 +64,7 @@ const Complete: React.FC = () => {
       className={`w-full pad:w-[786px] dt:w-[996px] flex flex-col relative mx-auto top-20 ${dynamicHeightClass}`}
     >
       <div className="relative w-full h-[200px] pad:rounded-t-xl overflow-hidden">
-        <div className="absolute inset-0 bg-ticket-complete bg-center bg-cover filter blur-[6px] z-[-1]"></div>
+        <div className="absolute inset-0 bg-ticket-complete bg-center bg-cover filter blur-[6px] z-[-1]" />
         <div className="relative flex flex-col h-full items-center justify-center pad:bg-gray-90 bg-opacity-60 rounded-t-xl">
           <p className="h-12 text-gray-0 text-center text-2xl pad:text-[32px] font-semibold leading-[48px]">
             예매가 완료되었습니다.
@@ -97,7 +99,7 @@ const Complete: React.FC = () => {
   );
 };
 
-const CompleteWrapper: React.FC = () => (
+const CompleteWrapper = () => (
   <Suspense fallback={<div>Loading...</div>}>
     <Complete />
   </Suspense>

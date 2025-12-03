@@ -1,10 +1,13 @@
 'use client';
+
 import React, { useState } from 'react';
+
 import DeletePopup from './DeletePostPopup';
-import TitleSection from '@/components/notice/post/TitleSection';
-import InfoSection from '@/components/notice/post/InfoSection';
-import ContentSection from '@/components/notice/post/ContentSection';
+
 import { authInstance } from '@/api/auth/axios';
+import ContentSection from '@/components/notice/post/ContentSection';
+import InfoSection from '@/components/notice/post/InfoSection';
+import TitleSection from '@/components/notice/post/TitleSection';
 
 interface NoticeData {
   title?: string;

@@ -7,7 +7,7 @@ export interface CheckboxProps
 }
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
-  ({ className, children, checked, onChange, ...props }, ref) => {
+  ({ className, children, checked, onChange, ...props }) => {
     const id = React.useId();
 
     return (

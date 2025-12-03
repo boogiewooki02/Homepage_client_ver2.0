@@ -9,12 +9,7 @@ const PaymentSelection = () => {
         </div>
       </div>
       <div className="flex flex-col mt-6">
-        <SelectBox
-          name="계좌이체"
-          state={true}
-          alt="PaymentSelection"
-          disabled
-        />
+        <SelectBox name="계좌이체" state alt="PaymentSelection" disabled />
       </div>
     </div>
   );

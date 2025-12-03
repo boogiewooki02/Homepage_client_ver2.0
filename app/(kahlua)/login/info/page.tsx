@@ -2,12 +2,13 @@
 
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+
+import { authInstance } from '@/api/auth/axios';
+import { isLoggedInState } from '@/atoms/authAtom';
 import LoginModal from '@/components/login/loginModal';
 import LoginSelectBox from '@/components/login/LoginSelectBox';
 import NameInput from '@/components/login/nameInput';
-import { authInstance } from '@/api/auth/axios';
-import { useSetRecoilState } from 'recoil';
-import { isLoggedInState } from '@/atoms/authAtom';
 
 // 기수 24 ~ 1기
 const currentYear = new Date().getFullYear();
@@ -51,7 +52,7 @@ const Page = () => {
 
     try {
       const response = await authInstance.post('/user', {
-        name: name,
+        name,
         term: termData,
         session: sessionData,
       });

@@ -1,5 +1,8 @@
 import { axiosInstance } from '@/api/auth/axios';
-import { PerformanceResponse } from '@/types/performace';
+import {
+  PerformanceResponse,
+  RecommendedPerformanceResponse,
+} from '@/types/performace';
 
 export const fetchLatestPerformance =
   async (): Promise<PerformanceResponse | null> => {
@@ -11,3 +14,17 @@ export const fetchLatestPerformance =
       return null;
     }
   };
+
+export async function getPerformanceList(): Promise<
+  RecommendedPerformanceResponse[]
+> {
+  try {
+    const { data } = await axiosInstance.get('/performances', {
+      params: { limit: 100 },
+    });
+    return data?.result?.performances ?? [];
+  } catch (err) {
+    console.error('공연 목록 불러오기 실패:', err);
+    return [];
+  }
+}

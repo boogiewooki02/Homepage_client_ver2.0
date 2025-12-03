@@ -1,7 +1,9 @@
 const ReservationNotice = () => {
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="text-[18px] pad:text-xl font-semibold">예약 전 유의사항</h2>
+      <h2 className="text-[18px] pad:text-xl font-semibold">
+        예약 전 유의사항
+      </h2>
       <ul className="text-sm pad:text-base list-disc pl-5 text-gray-40">
         <li>
           홈페이지 예약 정보 업데이트가 늦어지거나, 동시접속자가 많아지는 경우

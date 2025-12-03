@@ -1,6 +1,7 @@
 'use client';
-import React from 'react';
+
 import { StaticImageData } from 'next/image';
+import React from 'react';
 
 import OneImage from './OneImage';
 
@@ -14,7 +15,7 @@ interface TwoImagesProps {
   }[];
 }
 
-const TwoImages: React.FC<TwoImagesProps> = ({ className = '', images }) => {
+const TwoImages = ({ className = '', images }: TwoImagesProps) => {
   return (
     <div className={`${className}`}>
       {images.map((image, index) => (

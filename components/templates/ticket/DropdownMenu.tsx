@@ -1,8 +1,10 @@
 'use client';
-import DropDownBox from '@/components/ui/DropDownBox';
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+
+import DropDownBox from '@/components/ui/DropDownBox';
 
 interface TicketOptionProps {
   isDays: boolean;

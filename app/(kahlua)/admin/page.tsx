@@ -1,6 +1,7 @@
 'use client';
-import Header from '@/components/admin/Header';
+
 import AdminPageButton from '@/components/admin/adminPageButton';
+import Header from '@/components/admin/Header';
 
 const LEFT_COLUMN_ITEMS = [
   { name: '공연 예매 현황', url: '/admin/ticketing' },

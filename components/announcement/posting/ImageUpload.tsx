@@ -1,5 +1,6 @@
-import { authInstance } from '@/api/auth/axios';
 import React, { useEffect, useRef, useState } from 'react';
+
+import { authInstance } from '@/api/auth/axios';
 
 interface ImageUploadProps {
   image: string[];
@@ -7,13 +8,9 @@ interface ImageUploadProps {
   isEditMode: boolean;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({
-  image,
-  setImage,
-  isEditMode,
-}) => {
+const ImageUpload = ({ image, setImage, isEditMode }: ImageUploadProps) => {
   const [images, setImages] = useState<string[]>(image);
-  const [hasScrollbar, setHasScrollbar] = useState(false);
+  const [hasScrollbar] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const scrollToRight = () => {
@@ -53,7 +50,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const files = event.target.files;
+    const { files } = event.target;
     if (files) {
       const uploadedUrls = await Promise.all(
         Array.from(files).map(async (file) => {

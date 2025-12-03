@@ -1,31 +1,31 @@
 'use client';
 
-import * as React from 'react';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
-interface twoOptionProps {
+interface TwoOptionProps {
   option1: string;
   option2: string;
   seletion: (selected: string) => void;
   className: string;
 }
 
-const TwoOptionBox: React.FC<twoOptionProps> = ({
+const TwoOptionBox = ({
   option1,
   option2,
   seletion,
   className,
-}) => {
-  const [selected, setSelected] = React.useState<string>(option1);
+}: TwoOptionProps) => {
+  const [selected, setSelected] = useState<string>(option1);
 
-  React.useEffect(() => {
+  useEffect(() => {
     seletion(selected);
   }, [selected]);
 
   return (
     <div className={`flex flex-row gap-4 pad:flex-col ${className}`}>
       <div
-        onClick={(e) => setSelected(option1)}
+        onClick={() => setSelected(option1)}
         className={`mt-2 flex items-center justify-between px-4 h-12 w-[156px] pad:w-[282px] rounded-xl border ${selected === option1 ? 'border-primary-50 text-primary-50' : 'border-gray-40 text-gray-90'} bg-gray-0 text-[16px] font-normal leading-6 text-center`}
       >
         {option1}
@@ -34,13 +34,13 @@ const TwoOptionBox: React.FC<twoOptionProps> = ({
             src="/image/ticket/check.svg"
             width={20}
             height={20}
-            alt={'text'}
+            alt="text"
             className=""
           />
         )}
       </div>
       <div
-        onClick={(e) => setSelected(option2)}
+        onClick={() => setSelected(option2)}
         className={`mt-2 pad:mt-0 flex items-center justify-between px-4 h-12 w-[156px] pad:w-[282px] rounded-xl border ${selected === option2 ? 'border-primary-50 text-primary-50' : 'border-gray-40 text-gray-90'} bg-gray-0 text-[16px] font-normal leading-6 text-center`}
       >
         {option2}
@@ -49,7 +49,7 @@ const TwoOptionBox: React.FC<twoOptionProps> = ({
             src="/image/ticket/check.svg"
             width={20}
             height={20}
-            alt={'text'}
+            alt="text"
             className=""
           />
         )}

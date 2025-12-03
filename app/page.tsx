@@ -14,7 +14,6 @@ const Home = () => {
         <Ticket />
       </div>
 
-      {/* 배경색 변경*/}
       <p className="flex w-full h-[120px] bg-gradient-to-b from-gray-0 to-gray-90 " />
 
       <div className="flex flex-col w-full h-auto justify-start items-center max-pad:px-[16px] bg-gray-90 bg-notice">

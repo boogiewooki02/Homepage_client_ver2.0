@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
-import TicketLists from './TicketLists';
-import MobileTicketLists from './MobileTicketLists';
-import { authInstance } from '@/api/auth/axios';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+
+import MobileTicketLists from './MobileTicketLists';
+import TicketLists from './TicketLists';
+
+import { authInstance } from '@/api/auth/axios';
 import { totalTicket } from '@/atoms';
 
 interface TicketProps {
@@ -32,8 +34,8 @@ const TicketInfoSection = ({ type }: { type: string }) => {
     []
   );
   const [ticketState, setTicketState] = useState<Record<number, string>>({});
-  const [total, setTotal] = useRecoilState(totalTicket);
-  const [members, setMembers] = useState<TicketMemberProps[][]>([]);
+  const [, setTotal] = useRecoilState(totalTicket);
+  const [, setMembers] = useState<TicketMemberProps[][]>([]);
 
   const router = useRouter();
 
@@ -74,19 +76,13 @@ const TicketInfoSection = ({ type }: { type: string }) => {
   const handleTicketStatus = async (ticketId: number, status: string) => {
     if (status === '결제 완료') {
       try {
-        const response = await authInstance.patch(
-          `/admin/tickets/${ticketId}/ticket-complete`
-        );
-        console.log(response.data);
+        await authInstance.patch(`/admin/tickets/${ticketId}/ticket-complete`);
       } catch (error) {
         console.log(error);
       }
     } else if (status === '예매 취소') {
       try {
-        const response = await authInstance.patch(
-          `/admin/tickets/${ticketId}/cancel-complete`
-        );
-        console.log(response.data);
+        await authInstance.patch(`/admin/tickets/${ticketId}/cancel-complete`);
       } catch (error) {
         console.log(error);
       }

@@ -1,8 +1,10 @@
 'use client';
-import React, { useState } from 'react';
-import { Input } from '@/components/ui/InputBox';
+
 import Image from 'next/image';
-import { filterPhoneNumber, filterNameValue } from '@/utils/filterUtils';
+import { useState } from 'react';
+
+import { Input } from '@/components/ui/InputBox';
+import { filterNameValue, filterPhoneNumber } from '@/utils/filterUtils';
 
 interface InfoTemplateProps {
   index: number;
@@ -17,7 +19,7 @@ interface InfoTemplateProps {
   removeCompanion?: (index: number) => void;
 }
 
-const InfoTemplate: React.FC<InfoTemplateProps> = ({
+const InfoTemplate = ({
   index,
   role,
   member,
@@ -25,10 +27,8 @@ const InfoTemplate: React.FC<InfoTemplateProps> = ({
   handleNamesArrayChange,
   handlePhoneChange,
   handlePhonesArrayChange,
-  setMember,
-  companion,
   removeCompanion,
-}) => {
+}: InfoTemplateProps) => {
   const [phoneValue, setPhoneValue] = useState('');
   const [nameValue, setNameValue] = useState('');
 

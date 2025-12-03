@@ -1,10 +1,12 @@
 'use client';
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import NotFoundModal from '@/components/popups/ticket/NotFoundModal';
-import { axiosInstance } from '@/api/auth/axios';
 
-const Search: React.FC = () => {
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+
+import { axiosInstance } from '@/api/auth/axios';
+import NotFoundModal from '@/components/popups/ticket/NotFoundModal';
+
+const Search = () => {
   const [reservationId, setReservationId] = useState('');
   const [dynamicHeightClass, setDynamicHeightClass] = useState('');
   const [showNotFoundModal, setShowNotFoundModal] = useState(false);
@@ -25,7 +27,7 @@ const Search: React.FC = () => {
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    const { value } = event.target;
     if (value.length <= 10) {
       setReservationId(value);
     }

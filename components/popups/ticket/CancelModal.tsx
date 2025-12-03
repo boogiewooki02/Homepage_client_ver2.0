@@ -1,7 +1,8 @@
-import React from 'react';
 import Image from 'next/image';
-import { ModalInput } from '@/components/ui/ModalInput';
+import React from 'react';
+
 import { CancelButton } from '@/components/ui/CancelButton';
+import { ModalInput } from '@/components/ui/ModalInput';
 
 interface CancelModalProps {
   isOpen: boolean;
@@ -12,14 +13,14 @@ interface CancelModalProps {
   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const CancelModal: React.FC<CancelModalProps> = ({
+const CancelModal = ({
   isOpen,
   onClose,
   onConfirm,
   isFreshman,
   inputValue,
   onInputChange,
-}) => {
+}: CancelModalProps) => {
   if (!isOpen) return null;
 
   const handleOverlayClick = (

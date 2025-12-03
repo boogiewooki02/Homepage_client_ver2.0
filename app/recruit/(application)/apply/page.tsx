@@ -1,14 +1,14 @@
 'use client';
 
-import * as React from 'react';
 import { useEffect, useState } from 'react';
+
+import { axiosInstance } from '@/api/auth/axios';
+import LastCheckModal from '@/components/popups/ticket/LastCheckModal';
 import ApplicantInfo from '@/components/templates/apply/ApplicantInfo';
 import CLInfo from '@/components/templates/apply/CLInfo';
 import OtherInfo from '@/components/templates/apply/OtherInfo';
-import LastCheckModal from '@/components/popups/ticket/LastCheckModal';
-import { axiosInstance } from '@/api/auth/axios';
 
-const page = () => {
+const ApplyPage = () => {
   const [PersonalInfo, setPersonalInfo] = useState({
     name: '',
     birth_date: '',
@@ -133,7 +133,6 @@ const page = () => {
             'Content-Type': 'application/json',
           },
         });
-        console.log(response.data);
 
         if (response.status === 200) {
           window.location.href = `/recruit/complete`;
@@ -173,7 +172,7 @@ const page = () => {
         />
       </div>
       <button
-        onClick={(e) => setShowLastCheckModal(true)}
+        onClick={() => setShowLastCheckModal(true)}
         disabled={!isComplete || isSubmitting}
         className={`flex justify-center items-center text-center h-[60px] w-[328px] pad:w-[384px] text-[18px] rounded-[12px] mt-[40px] ph:mb-[100px] pad:mb-[140px] dt:mb-[180px] ${isComplete ? 'bg-primary-50 text-gray-0' : 'bg-gray-10 text-gray-40 cursor-not-allowed'}`}
       >
@@ -193,4 +192,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ApplyPage;

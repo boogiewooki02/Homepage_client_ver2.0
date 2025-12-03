@@ -1,16 +1,18 @@
 'use client';
 
 import {
-  useState,
-  useEffect,
-  useMemo,
   forwardRef,
+  useEffect,
   useImperativeHandle,
+  useMemo,
+  useState,
 } from 'react';
-import { Member } from '@/components/admin/member/dto';
-import { authInstance } from '@/api/auth/axios';
-import SearchBar from '@/components/admin/member/SearchBar';
+
 import Table from './Table';
+
+import { authInstance } from '@/api/auth/axios';
+import { Member } from '@/components/admin/member/dto';
+import SearchBar from '@/components/admin/member/SearchBar';
 
 // TableSection 컴포넌트에 필요한 props 타입 정의
 interface TableSectionProps {
@@ -146,9 +148,8 @@ const TableSection = forwardRef<TableSectionRef, TableSectionProps>(
         const start = currentPage * pageSize;
         const end = start + pageSize;
         return filtered.slice(start, end);
-      } else {
-        return members;
       }
+      return members;
     }, [isSearching, searchQuery, allMembers, members, currentPage]);
 
     // 페이지 변경 or 탭 변경(isWaiting) 시 데이터 새로 fetch + 변경사항 초기화
@@ -169,11 +170,9 @@ const TableSection = forwardRef<TableSectionRef, TableSectionProps>(
           setIsSearching(true);
           setCurrentPage(0);
         }
-      } else {
-        if (isSearching) {
-          setIsSearching(false);
-          setCurrentPage(0);
-        }
+      } else if (isSearching) {
+        setIsSearching(false);
+        setCurrentPage(0);
       }
     }, [searchQuery]);
 

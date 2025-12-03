@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import logo_white from '@/public/image/KAHLUA.svg';
 
 const Title = () => {

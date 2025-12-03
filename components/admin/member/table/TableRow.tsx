@@ -1,4 +1,5 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import DropdownMenu from './DropdownMenu';
 
 interface TableRowProps {
@@ -74,7 +75,7 @@ const TableRow = ({
           ref={(el) => {
             dropdownRef.current = el;
           }}
-          isOpen={true}
+          isOpen
           position={dropdownPosition}
           options={['KAHLUA', 'ADMIN', 'UNACCEPTED']}
           onSelect={(newGrade) => {

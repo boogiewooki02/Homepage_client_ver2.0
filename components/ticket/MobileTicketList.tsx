@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import WidePlaylistItem from './WidePlaylistItem';
+
 import { shuffleArray } from '../../utils/shuffleArrayUtils';
+
+import WidePlaylistItem from './WidePlaylistItem';
 
 const MobileTicketList = ({
   tickets,

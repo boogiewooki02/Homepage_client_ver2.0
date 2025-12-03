@@ -1,5 +1,5 @@
-import React from 'react';
 import Send from '@mui/icons-material/Send';
+import React from 'react';
 
 interface CommentInputProps {
   commentText: string;
@@ -8,12 +8,12 @@ interface CommentInputProps {
   user: string;
 }
 
-const CommentInput: React.FC<CommentInputProps> = ({
+const CommentInput = ({
   commentText,
   setCommentText,
   onAddComment,
   user,
-}) => {
+}: CommentInputProps) => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.nativeEvent.isComposing) return;
     if (e.key === 'Enter' && user) onAddComment();

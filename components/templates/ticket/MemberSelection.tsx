@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+
 import Image from 'next/image';
 
 type MemberSelectionProps = {
@@ -11,14 +11,14 @@ type MemberSelectionProps = {
   setMember: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const MemberSelection: React.FC<MemberSelectionProps> = ({
+const MemberSelection = ({
   description,
   min,
   max,
   ticket,
   member,
   setMember,
-}) => {
+}: MemberSelectionProps) => {
   const handleIncrement = () => {
     setMember((prevMember) => {
       const newMember = prevMember < max ? prevMember + 1 : prevMember;

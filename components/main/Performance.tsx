@@ -30,7 +30,7 @@ export default Performance;
 
 const PerformanceButton = ({ className }: buttonProps) => (
   <Link
-    href={'/performance'}
+    href="/performance"
     className={`flex flex-row items-center w-auto h-auto px-6 py-2 gap-[10px] bg-gray-90 text-gray-0 text-[16px] pad:text-[20px] font-medium rounded-[48px] ${className}`}
   >
     공연 영상 보러가기

@@ -6,13 +6,7 @@ interface TicketProps {
   className?: string;
 }
 
-const Ticket: React.FC<TicketProps> = ({
-  ticket,
-  price,
-  state,
-  onClick,
-  className,
-}) => {
+const Ticket = ({ ticket, price, state, onClick, className }: TicketProps) => {
   const baseClass =
     'px-4 dt:px-5 mt-5 flex items-center justify-between w-[230px] dt:w-[352px] h-14 text-[16px] font-normal leading-6';
 
@@ -27,7 +21,8 @@ const Ticket: React.FC<TicketProps> = ({
         <p className="ml-auto w-[65px] text-right">예매가능</p>
       </button>
     );
-  } else if (state === 'possible') {
+  }
+  if (state === 'possible') {
     return (
       <button
         onClick={onClick}
@@ -38,19 +33,18 @@ const Ticket: React.FC<TicketProps> = ({
         <p className="ml-auto w-[65px] text-right">예매가능</p>
       </button>
     );
-  } else {
-    return (
-      <button
-        onClick={onClick}
-        disabled={true}
-        className={`${className} ${baseClass} text-gray-30`}
-      >
-        <p className="w-[60px] text-start">{ticket}</p>
-        <p className="w-[60px] text-left">{price}</p>
-        <p className="ml-auto w-[65px] text-right">예매불가</p>
-      </button>
-    );
   }
+  return (
+    <button
+      onClick={onClick}
+      disabled
+      className={`${className} ${baseClass} text-gray-30`}
+    >
+      <p className="w-[60px] text-start">{ticket}</p>
+      <p className="w-[60px] text-left">{price}</p>
+      <p className="ml-auto w-[65px] text-right">예매불가</p>
+    </button>
+  );
 };
 
 export default Ticket;
