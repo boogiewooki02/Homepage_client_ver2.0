@@ -31,7 +31,11 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
       }
 
       setValue(newValue);
-      const dateString = newValue.toLocaleDateString('en-CA');
+      const yyyy = newValue.getFullYear();
+      const mm = String(newValue.getMonth() + 1).padStart(2, '0');
+      const dd = String(newValue.getDate()).padStart(2, '0');
+
+      const dateString = `${yyyy}-${mm}-${dd}`;
       onChange('reservationDate', dateString);
     }
   };
@@ -39,9 +43,14 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
   const handleModalConfirm = () => {
     if (tempDate) {
       setValue(tempDate);
-      const dateString = tempDate.toLocaleDateString('en-CA');
+      const yyyy = tempDate.getFullYear();
+      const mm = String(tempDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(tempDate.getDate()).padStart(2, '0');
+
+      const dateString = `${yyyy}-${mm}-${dd}`;
       onChange('reservationDate', dateString);
     }
+
     setIsModalOpen(false);
     setTempDate(null);
   };
