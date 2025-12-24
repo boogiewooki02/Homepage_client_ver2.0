@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Calendar from 'react-calendar';
 
+import Modal from '@/components/ui/Modal';
 import { ReservationRequest } from '@/types/reservation';
 
-import 'react-calendar/dist/Calendar.css'; // 기본 스타일
-import Modal from '../ui/Modal';
+import 'react-calendar/dist/Calendar.css';
+
 import './CalendarUI.css';
 
-// react-calnedar에서 요구하는 타입 형식 (변경 x)
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
@@ -20,7 +20,19 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempDate, setTempDate] = useState<Date | null>(null);
 
-  const handleDateChange = async (newValue: Value) => {
+  const [todayStart] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  });
+
+  const twoWeeksFromToday = useMemo(() => {
+    if (!todayStart) return null;
+    const d = new Date(todayStart);
+    d.setDate(d.getDate() + 14);
+    return d;
+  }, [todayStart]);
+
+  const handleDateChange = (newValue: Value) => {
     if (newValue instanceof Date) {
       const day = newValue.getDay();
 
@@ -35,8 +47,7 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
       const mm = String(newValue.getMonth() + 1).padStart(2, '0');
       const dd = String(newValue.getDate()).padStart(2, '0');
 
-      const dateString = `${yyyy}-${mm}-${dd}`;
-      onChange('reservationDate', dateString);
+      onChange('reservationDate', `${yyyy}-${mm}-${dd}`);
     }
   };
 
@@ -47,8 +58,7 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
       const mm = String(tempDate.getMonth() + 1).padStart(2, '0');
       const dd = String(tempDate.getDate()).padStart(2, '0');
 
-      const dateString = `${yyyy}-${mm}-${dd}`;
-      onChange('reservationDate', dateString);
+      onChange('reservationDate', `${yyyy}-${mm}-${dd}`);
     }
 
     setIsModalOpen(false);
@@ -56,29 +66,16 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
   };
 
   const isSelectable = (date: Date) => {
-    const today = new Date();
+    if (!todayStart || !twoWeeksFromToday) return false;
 
-    // 날짜 비교를 위해 양쪽 모두 현지 시간대의 00:00:00으로 설정
     const compareDate = new Date(
       date.getFullYear(),
       date.getMonth(),
       date.getDate()
     );
-    const compareToday = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    );
-
     const day = date.getDay();
 
-    const twoWeeksFromToday = new Date(compareToday);
-    twoWeeksFromToday.setDate(compareToday.getDate() + 14);
-
-    // 오늘 이전 날짜는 비활성화
-    if (compareDate < compareToday) return false;
-
-    // 오늘 기준 2주 이후 날짜는 비활성화
+    if (compareDate < todayStart) return false;
     if (compareDate > twoWeeksFromToday) return false;
 
     // 월, 목, 토, 일요일만 선택 가능 (2025년 2학기)
