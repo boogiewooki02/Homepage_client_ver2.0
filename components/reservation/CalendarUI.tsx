@@ -20,19 +20,17 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempDate, setTempDate] = useState<Date | null>(null);
 
-  const [todayStart] = useState(() => {
+  const { minDate, maxDate } = useMemo(() => {
     const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  });
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  const twoWeeksFromToday = useMemo(() => {
-    if (!todayStart) return null;
-    const d = new Date(todayStart);
-    d.setDate(d.getDate() + 14);
-    return d;
-  }, [todayStart]);
+    const twoWeeksLater = new Date(today);
+    twoWeeksLater.setDate(today.getDate() + 14);
 
-  const handleDateChange = (newValue: Value) => {
+    return { minDate: today, maxDate: twoWeeksLater };
+  }, []);
+
+  const handleDateChange = async (newValue: Value) => {
     if (newValue instanceof Date) {
       const day = newValue.getDay();
 
@@ -65,18 +63,32 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
     setTempDate(null);
   };
 
+  // 요일 체크만 담당하는 함수
   const isSelectable = (date: Date) => {
-    if (!todayStart || !twoWeeksFromToday) return false;
+    // const today = new Date();
 
-    const compareDate = new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate()
-    );
+    // // 날짜 비교를 위해 양쪽 모두 현지 시간대의 00:00:00으로 설정
+    // const compareDate = new Date(
+    //   date.getFullYear(),
+    //   date.getMonth(),
+    //   date.getDate()
+    // );
+    // const compareToday = new Date(
+    //   today.getFullYear(),
+    //   today.getMonth(),
+    //   today.getDate()
+    // );
+
     const day = date.getDay();
 
-    if (compareDate < todayStart) return false;
-    if (compareDate > twoWeeksFromToday) return false;
+    // const twoWeeksFromToday = new Date(compareToday);
+    // twoWeeksFromToday.setDate(compareToday.getDate() + 14);
+
+    // // 오늘 이전 날짜는 비활성화
+    // if (compareDate < compareToday) return false;
+
+    // // 오늘 기준 2주 이후 날짜는 비활성화
+    // if (compareDate > twoWeeksFromToday) return false;
 
     // 월, 목, 토, 일요일만 선택 가능 (2025년 2학기)
     return day === 1 || day === 4 || day === 6 || day === 0;
@@ -98,6 +110,8 @@ const CalendarUI = ({ onChange }: CalendarProps) => {
         }
         prevLabel="<"
         nextLabel=">"
+        minDate={minDate}
+        maxDate={maxDate}
         tileDisabled={({ date }) => !isSelectable(date)}
       />
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
