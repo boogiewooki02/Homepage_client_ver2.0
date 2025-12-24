@@ -35,6 +35,15 @@ const TimeTable = ({
   const [countClick, setCountClick] = useState<number>(0);
   const [user, setUser] = useState<User | null>(null);
 
+  // 날짜(reservationDate)가 변경될 때마다 선택된 시간 상태를 초기화
+  useEffect(() => {
+    setSelectedTimes([]);
+    setCountClick(0);
+    // 부모 상태의 시간 값도 초기화하고 싶다면 아래 주석 해제
+    onChange('startTime', '');
+    onChange('endTime', '');
+  }, [reservation.reservationDate]);
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
