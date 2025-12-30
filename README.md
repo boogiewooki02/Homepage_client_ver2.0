@@ -4,7 +4,7 @@ kahluaproject Next.js version
 ![Kahlua (1)](https://github.com/kahluaband/Homepage_FE_20th/assets/109282927/0dc8d6f6-08e0-4339-ab41-a0adf53e2b0a)
 🧷 https://kahluaband.com
 
-# KAHLUA_BE
+# KAHLUA_FE
 **KAHLUA BAND website** Frontend using Next.js 14
 
 ## 프로젝트 소개
